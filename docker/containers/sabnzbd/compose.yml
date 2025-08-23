@@ -1,0 +1,44 @@
+########################### NETWORKS
+networks:
+  media-management:
+    external: true
+
+########################### VOLUMES
+volumes:
+  sabnzbd.etc:
+  sabnzbd.scripts:
+  downloads:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.0.20.200,soft,nfsvers=4"
+      device: ":/Downloads"
+
+########################### LOCKDOWN
+x-lockdown: &lockdown
+  # prevents write access to the image itself
+  read_only: true
+  # prevents any process within the container to gain more privileges
+  security_opt:
+    - "no-new-privileges=true"
+
+########################### SERVICES
+services:
+  sabnzbd:
+    container_name: sabnzbd
+    image: ghcr.io/11notes/sabnzbd:4.5.3
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      # required for read-only image
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    ports:
+      - 8080:8080
+    volumes:
+      - sabnzbd.etc:/sabnzbd/etc
+      - sabnzbd.scripts:/sabnzbd/scripts
+      - downloads:/downloads
+    environment:
+      - TZ=Europe/Amsterdam

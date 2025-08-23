@@ -1,0 +1,27 @@
+########################### NETWORKS
+networks:
+  media-management:
+    external: true
+
+########################### VOLUMES
+volumes:
+  config:
+
+########################### SERVICES
+services:
+  recyclarr:
+    container_name: recyclarr
+    image: ghcr.io/recyclarr/recyclarr
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    volumes:
+      - config:/config
+    environment:
+      - TZ=${TZ}

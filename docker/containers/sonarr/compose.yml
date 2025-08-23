@@ -1,0 +1,108 @@
+########################### NETWORKS
+networks:
+  pangolin:
+    external: true
+  media-management:
+    external: true
+
+########################### VOLUMES
+volumes:
+  series_en-sonarr.etc:
+  series_anime-sonarr.etc:
+  series_de-sonarr.etc:
+  downloads:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.0.20.200,soft,nfsvers=4"
+      device: ":/Downloads"
+  media:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.0.20.200,soft,nfsvers=4"
+      device: ":/Media"
+
+########################### LOCKDOWN
+x-lockdown: &lockdown
+  read_only: true
+  security_opt:
+    - "no-new-privileges=true"
+
+########################### SERVICES
+services:
+  series_en-sonarr:
+    container_name: ${SERIES_EN_ID}-sonarr
+    image: ghcr.io/11notes/sonarr:${SONARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    ports:
+#      - 8989:8989
+      - 127.0.0.1:8989:8989
+    volumes:
+      - ${SERIES_EN_ID}-sonarr.etc:/sonarr/etc
+      - downloads:/downloads
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - SONARR__APP__INSTANCENAME=${SERIES_EN_ID}
+      - SONARR__AUTH__APIKEY=${SERIES_EN__AUTH__APIKEY}
+
+  series_anime-sonarr:
+    container_name: ${SERIES_ANIME_ID}-sonarr
+    image: ghcr.io/11notes/sonarr:${SONARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    ports:
+#      - 8990:8990
+      - 127.0.0.1:8990:8990
+    volumes:
+      - ${SERIES_ANIME_ID}-sonarr.etc:/sonarr/etc
+      - downloads:/downloads
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - SONARR__APP__INSTANCENAME=${SERIES_ANIME_ID}
+      - SONARR__AUTH__APIKEY=${SERIES_ANIME__AUTH__APIKEY}
+      - SONARR__SERVER__PORT=8990
+
+  series_de-sonarr:
+    container_name: ${SERIES_DE_ID}-sonarr
+    image: ghcr.io/11notes/sonarr:${SONARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    ports:
+#      - 8991:8991
+      - 127.0.0.1:8991:8991
+    volumes:
+      - ${SERIES_DE_ID}-sonarr.etc:/sonarr/etc
+      - downloads:/downloads
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - SONARR__APP__INSTANCENAME=${SERIES_DE_ID}
+      - SONARR__AUTH__APIKEY=${SERIES_DE__AUTH__APIKEY}
+      - SONARR__SERVER__PORT=8991
+
+
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1.00'
+#          memory: 1G
+#        reservations:
+#          cpus: '0.5'
+#          memory: 100M

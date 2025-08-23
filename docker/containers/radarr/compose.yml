@@ -1,0 +1,108 @@
+########################### NETWORKS
+networks:
+  pangolin:
+    external: true
+  media-management:
+    external: true
+
+########################### VOLUMES
+volumes:
+  movies_en-radarr.etc:
+  movies_anime-radarr.etc:
+  movies_de-radarr.etc:
+  downloads:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.0.20.200,soft,nfsvers=4"
+      device: ":/Downloads"
+  media:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.0.20.200,soft,nfsvers=4"
+      device: ":/Media"
+
+########################### LOCKDOWN
+x-lockdown: &lockdown
+  read_only: true
+  security_opt:
+    - "no-new-privileges=true"
+
+########################### SERVICES
+services:
+  movies_en-radarr:
+    container_name: ${MOVIES_EN_ID}-radarr
+    image: ghcr.io/11notes/radarr:${RADARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    ports:
+      - 7878:7878
+#      - 127.0.0.1:7878:7878
+    volumes:
+      - ${MOVIES_EN_ID}-radarr.etc:/radarr/etc
+      - downloads:/downloads
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - RADARR__APP__INSTANCENAME=${MOVIES_EN_ID}
+      - RADARR__AUTH__APIKEY=${MOVIES_EN__AUTH__APIKEY}
+
+  movies_anime-radarr:
+    container_name: ${MOVIES_ANIME_ID}-radarr
+    image: ghcr.io/11notes/radarr:${RADARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    ports:
+      - 7879:7879
+#      - 127.0.0.1:7879:7879
+    volumes:
+      - ${MOVIES_ANIME_ID}-radarr.etc:/radarr/etc
+      - downloads:/downloads
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - RADARR__APP__INSTANCENAME=${MOVIES_ANIME_ID}
+      - RADARR__AUTH__APIKEY=${MOVIES_ANIME__AUTH__APIKEY}
+      - RADARR__SERVER__PORT=7879
+
+  movies_de-radarr:
+    container_name: ${MOVIES_DE_ID}-radarr
+    image: ghcr.io/11notes/radarr:${RADARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    ports:
+      - 7880:7880
+#      - 127.0.0.1:7880:7880
+    volumes:
+      - ${MOVIES_DE_ID}-radarr.etc:/radarr/etc
+      - downloads:/downloads
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - RADARR__APP__INSTANCENAME=${MOVIES_DE_ID}
+      - RADARR__AUTH__APIKEY=${MOVIES_DE__AUTH__APIKEY}
+      - RADARR__SERVER__PORT=7880
+
+
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1.00'
+#          memory: 1G
+#        reservations:
+#          cpus: '0.5'
+#          memory: 100M

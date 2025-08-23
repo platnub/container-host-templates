@@ -1,0 +1,76 @@
+########################### NETWORKS
+networks:
+  jellyfin:
+    external: true
+  media-management:
+    external: true
+
+########################### VOLUMES
+volumes:
+  en-config:
+  de-config:
+
+########################### SERVICES
+services:
+  chown:
+    image: "alpine"
+    restart: no
+    entrypoint: ["/bin/ash", "-c"]
+    command: 
+      - |
+        chown -R ${PUID}:${PGID} /en && chown -R ${PUID}:${PGID} /de
+    volumes:
+      - "en-config:/en/app/config"
+      - "de-config:/de/app/config"
+
+  jellyseerr-en:
+    container_name: jellyseerr-en
+    image: fallenbagel/jellyseerr:preview-OIDC
+    restart: unless-stopped
+    user: ${PUID}:${PGID}
+    networks:
+      - jellyfin
+      - media-management
+    ports:
+      - 127.0.0.1:5055:5055
+    volumes:
+      - en-config:/app/config
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ}
+      - PORT=5055
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    depends_on:
+      chown:
+        condition: service_completed_successfully
+
+  jellyseerr-de:
+    container_name: jellyseerr-de
+    image: fallenbagel/jellyseerr:preview-OIDC
+    restart: unless-stopped
+    user: ${PUID}:${PGID}
+    networks:
+      - jellyfin
+      - media-management
+    ports:
+      - 127.0.0.1:5056:5056
+    volumes:
+      - de-config:/app/config
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ}
+      - PORT=5056
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5056/api/v1/status || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    depends_on:
+      chown:
+        condition: service_completed_successfully

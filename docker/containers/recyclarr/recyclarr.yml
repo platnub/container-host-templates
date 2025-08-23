@@ -1,0 +1,570 @@
+radarr:
+  movies_en-radarr: # Live action movies - 1080p - English
+    base_url: http://movies_en-radarr:7878
+    api_key: <API KEY movies_en-radarr>
+
+    # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
+    media_naming:
+      folder: jellyfin-tmdb
+      movie:
+        rename: true
+        standard: jellyfin-tmdb
+
+    include:
+      - template: radarr-quality-definition-movie
+      - template: radarr-quality-profile-hd-bluray-web
+      - template: radarr-custom-formats-hd-bluray-web
+
+    quality_profiles:
+      - name: HD Bluray + WEB
+        reset_unmatched_scores:
+          except:
+            - 'Language: Original + English'
+
+    # Custom Format Configuration
+    delete_old_custom_formats: true # Removes "Recyclarr configured" formats if they aren't configured below
+    replace_existing_custom_formats: true
+
+    custom_formats: # https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats
+
+      - trash_ids:
+          # Uncomment the next six lines to allow x265 HD releases with HDR/DV
+          # - dc98083864ea246d05a42df0d05f81cc # x265 (HD)
+        # assign_scores_to:
+          # - name: HD Bluray + WEB
+            # score: 0
+      - trash_ids:
+          - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (no HDR/DV)
+        assign_scores_to:
+          - name: HD Bluray + WEB
+
+      # Movie Versions - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#movie-versions
+      - trash_ids:
+          - 0f12c086e289cf966fa5948eac571f44 # Hybrid
+          - 570bc9ebecd92723d2d21500f4be314c # Remaster
+          - e0c07d59beb37348e975a930d5e50319 # Criterion Collection
+          - 9d27d9d2181838f76dee150882bdc58c # Masters of Cinema
+          - db9b4c4b53d312a3ca5f1378f6440fc9 # Vinegar Syndrome
+          - e9001909a4c88013a359d0b9920d7bea # Theatrical Cut
+          - 957d0f44b592285f26449575e8b1167e # Special Edition
+        assign_scores_to:
+          - name: HD Bluray + WEB
+
+      # Miscellaneous - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#miscellaneous
+      - trash_ids:
+          - b2be17d608fc88818940cd1833b0b24c # 720p
+          - 820b09bb9acbfde9c35c71e0e565dad8 # 1080p
+          - b6832f586342ef70d9c128d40c07b872 # Bad Dual Groups
+          - cc444569854e9de0b084ab2b8b1532b2 # Black and White Editions
+          - ae9b7c9ebde1f3bd336a8cbd1ec4c5e5 # No-RlsGroup
+          - 0d91270a7255a1e388fa85e959f359d8 # FreeLeech
+          - 4b900e171accbfb172729b63323ea8ca # Multi (Option to detect multiple subs?)
+        assign_scores_to:
+          - name: HD Bluray + WEB
+
+      # HQ Release Groups - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#hq-release-groups
+      - trash_ids:
+          - ed27ebfef2f323e964fb1f61391bcb35 # HD Bluray Tier 01
+          - c20c8647f2746a1f4c4262b0fbbeeeae # HD Bluray Tier 02
+          - 5608c71bcebba0a5e666223bae8c9227 # HD Bluray Tier 03
+        assign_scores_to:
+          - name: HD Bluray + WEB
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  movies_anime-radarr: # Anime movies - 1080p - Prioritize original language. Tries to download English dub too.
+    base_url: http://movies_anime-radarr:7879
+    api_key: <API KEY movies_anime-radarr>
+
+    # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
+    media_naming:
+      folder: jellyfin-tmdb
+      movie:
+        rename: true
+        standard: jellyfin-anime-tmdb
+
+    include:
+      - template: radarr-quality-definition-anime
+      - template: radarr-quality-profile-anime
+      - template: radarr-custom-formats-anime
+      - template: radarr-quality-profile-hd-bluray-web
+      - template: radarr-custom-formats-hd-bluray-web
+
+    quality_profiles:
+      - name: HD Bluray + WEB
+        reset_unmatched_scores:
+          except:
+            - 'Language: Original + English'
+      - name: Remux-1080p - Anime
+        reset_unmatched_scores:
+          except:
+            - 'Language: Original + English'
+
+    # Custom Format Configuration
+    delete_old_custom_formats: true # Removes "Recyclarr configured" formats if they aren't configured below
+    replace_existing_custom_formats: true
+
+    custom_formats: # https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats
+
+      # Unwanted - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#unwanted
+      - trash_ids:
+          - cae4ca30163749b891686f95532519bd # AV1
+          - ed38b889b31be83fda192888e2286d83 # BR-DISK
+          - e6886871085226c3da1830830146846c # Generated Dynamic HDR
+          - 90a6f9a284dff5103f6346090e6280c8 # LQ
+          - e204b80c87be9497a8a6eaff48f72905 # LQ (Release Title)
+          - 712d74cd88bceb883ee32f773656b1f5 # Sing-Along Versions
+          - b8cd450cbfa689c0259a01d9e29ba3d6 # 3D
+          - dc98083864ea246d05a42df0d05f81cc # x265 (HD)
+          - bfd8eb01832d646a0a89c4deb46f8564 # Upscaled
+          - 0a3f082873eb454bde444150b70253cc # Extras
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+
+      # Anime - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#anime
+      - trash_ids:
+          - 064af5f084a0a24458cc8ecd3220f93f # Uncensored
+          - 4a3b087eea2ce012fcc1ce319259a3be # Anime Dual Audio
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+            score: 10
+
+      # Anime - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#anime
+      - trash_ids:
+          - b23eae459cc960816f2d6ba84af45055 # Dubs Only
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+
+      # Miscellaneous - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#miscellaneous
+      - trash_ids:
+          - b2be17d608fc88818940cd1833b0b24c # 720p
+          - 820b09bb9acbfde9c35c71e0e565dad8 # 1080p
+          - b6832f586342ef70d9c128d40c07b872 # Bad Dual Groups
+          - cc444569854e9de0b084ab2b8b1532b2 # Black and White Editions
+          - ae9b7c9ebde1f3bd336a8cbd1ec4c5e5 # No-RlsGroup
+          - 0d91270a7255a1e388fa85e959f359d8 # FreeLeech
+          - 4b900e171accbfb172729b63323ea8ca # Multi (Option to detect multiple subs?)
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+
+      - trash_ids:
+          # Uncomment the next six lines to allow x265 HD releases with HDR/DV
+          # - dc98083864ea246d05a42df0d05f81cc # x265 (HD)
+        # assign_scores_to:
+          # - name: HD Bluray + WEB
+            # score: 0
+      - trash_ids:
+          - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (no HDR/DV)
+        assign_scores_to:
+          - name: HD Bluray + WEB
+
+      # Movie Versions - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#movie-versions
+      - trash_ids:
+          - 0f12c086e289cf966fa5948eac571f44 # Hybrid
+          - 570bc9ebecd92723d2d21500f4be314c # Remaster
+          - e0c07d59beb37348e975a930d5e50319 # Criterion Collection
+          - 9d27d9d2181838f76dee150882bdc58c # Masters of Cinema
+          - db9b4c4b53d312a3ca5f1378f6440fc9 # Vinegar Syndrome
+          - e9001909a4c88013a359d0b9920d7bea # Theatrical Cut
+          - 957d0f44b592285f26449575e8b1167e # Special Edition
+        assign_scores_to:
+          - name: HD Bluray + WEB
+
+      # Miscellaneous - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#miscellaneous
+      - trash_ids:
+          - b2be17d608fc88818940cd1833b0b24c # 720p
+          - 820b09bb9acbfde9c35c71e0e565dad8 # 1080p
+          - b6832f586342ef70d9c128d40c07b872 # Bad Dual Groups
+          - cc444569854e9de0b084ab2b8b1532b2 # Black and White Editions
+          - ae9b7c9ebde1f3bd336a8cbd1ec4c5e5 # No-RlsGroup
+          - 0d91270a7255a1e388fa85e959f359d8 # FreeLeech
+          - 4b900e171accbfb172729b63323ea8ca # Multi (Option to detect multiple subs?)
+        assign_scores_to:
+          - name: HD Bluray + WEB
+
+      # HQ Release Groups - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#hq-release-groups
+      - trash_ids:
+          - ed27ebfef2f323e964fb1f61391bcb35 # HD Bluray Tier 01
+          - c20c8647f2746a1f4c4262b0fbbeeeae # HD Bluray Tier 02
+          - 5608c71bcebba0a5e666223bae8c9227 # HD Bluray Tier 03
+        assign_scores_to:
+          - name: HD Bluray + WEB
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  movies_de-radarr: # Live action movies - 1080p - German
+    base_url: http://movies_de-radarr:7880
+    api_key: <API KEY movies_de-radarr>
+
+    # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
+    media_naming:
+      folder: jellyfin-tmdb
+      movie:
+        rename: true
+        standard: jellyfin-tmdb
+
+    include:
+      - template: radarr-quality-definition-movie
+      - template: radarr-custom-formats-hd-bluray-web-german
+      - template: radarr-quality-profile-hd-bluray-web-german
+
+    quality_profiles:
+      - name: HD Bluray + WEB (GER)
+        min_format_score: 10000 # Uncomment this line to skip English Releases
+
+    # Custom Format Configuration
+    delete_old_custom_formats: true # Removes "Recyclarr configured" formats if they aren't configured below
+    replace_existing_custom_formats: true
+
+    custom_formats: # https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats
+
+      ### x265 - IMPORTANT: Only use on of the options below.
+      - trash_ids:
+#          - 839bea857ed2c0a8e084f3cbdbd65ecb # Uncomment this line to allow HDR/DV x265 HD releases
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+
+      - trash_ids:
+          - dc98083864ea246d05a42df0d05f81cc # Uncomment this line to block all x265 HD releases
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+            score: -35000
+
+      # Movie Versions - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#movie-versions
+      - trash_ids:
+          - 0f12c086e289cf966fa5948eac571f44 # Hybrid
+          - 570bc9ebecd92723d2d21500f4be314c # Remaster
+          - e0c07d59beb37348e975a930d5e50319 # Criterion Collection
+          - 9d27d9d2181838f76dee150882bdc58c # Masters of Cinema
+          - db9b4c4b53d312a3ca5f1378f6440fc9 # Vinegar Syndrome
+          - e9001909a4c88013a359d0b9920d7bea # Theatrical Cut
+          - 957d0f44b592285f26449575e8b1167e # Special Edition
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+
+      # German Source Groups - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#german-source-groups
+      - trash_ids:
+          - 8608a2ed20c636b8a62de108e9147713 # German Remux Tier 01
+          - f9cf598d55ce532d63596b060a6db9ee # German Remux Tier 02
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+sonarr:
+  series_en-sonarr: # Live action shows - 1080p - English
+    base_url: http://series_en-sonarr:8989
+    api_key: <API KEY series_en-sonarr>
+
+    # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
+    media_naming:
+      series: jellyfin-tvdb
+      season: default
+      episodes:
+        rename: true
+        standard: default
+        daily: default
+        anime: default
+
+    include:
+      - template: sonarr-quality-definition-series
+      # Choose between the standard or alternative quality profile setup (choose one only)
+      # - template: sonarr-v4-quality-profile-web-1080p
+      - template: sonarr-v4-quality-profile-web-1080p-alternative # Includes more qualities - https://github.com/recyclarr/config-templates/blob/master/sonarr/includes/quality-profiles/sonarr-v4-quality-profile-web-1080p-alternative.yml
+      - template: sonarr-v4-custom-formats-web-1080p
+
+    quality_profiles:
+      - name: WEB-1080p
+        reset_unmatched_scores:
+          except:
+            - 'Language: Original + English'
+
+    # Custom Format Configuration
+    delete_old_custom_formats: true # Removes "Recyclarr configured" formats if they aren't configured below
+    replace_existing_custom_formats: true
+
+    custom_formats: # https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats
+
+      # Series Versions - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#series-versions
+      - trash_ids:
+          - 3a4127d8aa781b44120d907f2cd62627 # Hybrid
+          - b735f09d3c025cbb7d75a5d38325b73b # Remaster
+        assign_scores_to:
+          - name: WEB-1080p
+
+      # Miscellaneous - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#miscellaneous
+      - trash_ids:
+          - c99279ee27a154c2f20d1d505cc99e25 # 720p
+          - 290078c8b266272a5cc8e251b5e2eb0b # 1080p
+          - cddfb4e32db826151d97352b8e37c648 # x264
+          - 7ba05c6e0e14e793538174c679126996 # Multi (Option to detect multiple subs?)
+          - d7c747094a7c65f4c2de083c24899e8b # FreeLeech
+          - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
+          - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
+          - e0c1a67f23908a55b6ae9834e8ed6727 # Single Episode
+          - 4a20cfb76b5f92a8ca22b894b32e71be # Multi-Episode
+          - 3bc5f395426614e155e585a2f056cdf1 # Season Pack
+        assign_scores_to:
+          - name: WEB-1080p
+
+      # HQ Source Groups - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#hq-source-groups
+      - trash_ids:
+          - 9965a052eb87b0d10313b1cea89eb451 # Remux Tier 01
+          - 8a1d0c3d7497e741736761a1da866a2e # Remux Tier 02
+          - d6819cba26b1a6508138d25fb5e32293 # HD Bluray Tier 01
+          - c2216b7b8aa545dc1ce8388c618f8d57 # HD Bluray Tier 02
+        assign_scores_to:
+          - name: WEB-1080p
+
+      # Extra Streaming Services
+      - trash_ids:
+          # Dutch - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#dutch-streaming-services
+          - b2b980877494b560443631eb1f473867 # NLZ
+          - 5d2317d99af813b6529c7ebf01c83533 # VDL
+          # UK - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#uk-streaming-services
+          - bbcaf03147de0f73be2be4a9078dfa03 # 4OD
+          - fcc09418f67ccaddcf3b641a22c5cfd7 # ALL4
+          - dc503e2425126fa1d0a9ad6168c83b3f # iP
+          - fa5a16b951004c23e980d2913694a137 # ITVX
+          - 9f72dc1059a6b277c21cee6a1f15f13f # MY5
+          - b66a699fba6f9df91becab798d7502e5 # NOW
+          # Misc Streaming Services - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#misc-streaming-services
+          - e6e299075e22ac8f541f722254c8350a # AUBC
+          - defb0b4c8b3f6a15927c0f14c6e69c94 # CBC
+          - 4e9a630db98d5391aec1368a0256e2fe # Crav
+          - dc5f2bb0e0262155b5fedd0f6c5d2b55 # DSCP
+          - fb1a91cdc0f26f7ca0696e0e95274645 # OViD
+          - fe4062eac43d4ea75955f8ae48adcf1e # STRP
+          - c30d2958827d1867c73318a5a2957eb1 # RED
+          - 3ac5d84fce98bab1b531393e9c82f467 # Qibi
+        assign_scores_to:
+          - name: WEB-1080p
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  series_anime-sonarr: # Anime series - 1080p - Prioritize original language. Tries to download English dub too.
+    base_url: http://series_anime-sonarr:8990
+    api_key: <API KEY series_anime-sonarr>
+
+    # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
+    media_naming:
+      series: jellyfin-tvdb
+      season: default
+      episodes:
+        rename: true
+        standard: default
+        daily: default
+        anime: default
+    include:
+      - template: sonarr-quality-definition-anime
+      - template: sonarr-v4-quality-profile-anime
+      - template: sonarr-v4-custom-formats-anime
+      # Choose between the standard or alternative quality profile setup (choose one only)
+      # - template: sonarr-v4-quality-profile-web-1080p
+      - template: sonarr-v4-quality-profile-web-1080p-alternative # Includes more qualities - https://github.com/recyclarr/config-templates/blob/master/sonarr/includes/quality-profiles/sonarr-v4-quality-profile-web-1080p-alternative.yml
+      - template: sonarr-v4-custom-formats-web-1080p
+
+    quality_profiles:
+      - name: WEB-1080p
+        reset_unmatched_scores:
+          except:
+            - 'Language: Original + English'
+      - name: Remux-1080p - Anime
+        reset_unmatched_scores:
+          except:
+            - 'Language: Original + English'
+
+    # Custom Format Configuration
+    delete_old_custom_formats: false # Removes "Recyclarr configured" formats if they aren't configured below
+    replace_existing_custom_formats: false
+
+    custom_formats: # https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats
+
+      # Unwanted - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#unwanted
+      - trash_ids:
+          - 85c61753df5da1fb2aab6f2a47426b09 # BR-DISK
+          - 9c11cd3f07101cdba90a2d81cf0e56b4 # LQ
+          - e2315f990da2e2cbfc9fa5b7a6fcfe48 # LQ (Release Title)
+          - 47435ece6b99a0b477caf360e79ba0bb # x265 (HD)
+          - fbcb31d8dabd2a319072b84fc0b7249c # Extras
+          - 15a05bc7c1a36e2b57fd628f8977e2fc # AV1
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+
+      # Anime - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#anime
+      - trash_ids:
+          - 026d5aadd1a6b4e550b134cb6c72b3ca # Uncensored
+          - 418f50b10f1907201b6cfdf881f467b7 # Anime Dual Audio
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+            score: 500
+
+      # Anime - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#anime
+      - trash_ids:
+          - 9c14d194486c4014d422adc64092d794 # Dubs Only
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+
+      # Series Versions - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#series-versions
+      - trash_ids:
+          - 3a4127d8aa781b44120d907f2cd62627 # Hybrid
+          - b735f09d3c025cbb7d75a5d38325b73b # Remaster
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+
+      # Miscellaneous - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#miscellaneous
+      - trash_ids:
+          - c99279ee27a154c2f20d1d505cc99e25 # 720p
+          - 290078c8b266272a5cc8e251b5e2eb0b # 1080p
+          - cddfb4e32db826151d97352b8e37c648 # x264
+          - 7ba05c6e0e14e793538174c679126996 # Multi (Option to detect multiple subs?)
+          - d7c747094a7c65f4c2de083c24899e8b # FreeLeech
+          - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
+          - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
+          - e0c1a67f23908a55b6ae9834e8ed6727 # Single Episode
+          - 4a20cfb76b5f92a8ca22b894b32e71be # Multi-Episode
+          - 3bc5f395426614e155e585a2f056cdf1 # Season Pack
+        assign_scores_to:
+          - name: Remux-1080p - Anime
+
+# - - - - -
+
+      # Series Versions - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#series-versions
+      - trash_ids:
+          - 3a4127d8aa781b44120d907f2cd62627 # Hybrid
+          - b735f09d3c025cbb7d75a5d38325b73b # Remaster
+        assign_scores_to:
+          - name: WEB-1080p
+
+      # Miscellaneous - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#miscellaneous
+      - trash_ids:
+          - c99279ee27a154c2f20d1d505cc99e25 # 720p
+          - 290078c8b266272a5cc8e251b5e2eb0b # 1080p
+          - cddfb4e32db826151d97352b8e37c648 # x264
+          - 7ba05c6e0e14e793538174c679126996 # Multi (Option to detect multiple subs?)
+          - d7c747094a7c65f4c2de083c24899e8b # FreeLeech
+          - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
+          - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
+          - e0c1a67f23908a55b6ae9834e8ed6727 # Single Episode
+          - 4a20cfb76b5f92a8ca22b894b32e71be # Multi-Episode
+          - 3bc5f395426614e155e585a2f056cdf1 # Season Pack
+        assign_scores_to:
+          - name: WEB-1080p
+
+      # HQ Source Groups - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#hq-source-groups
+      - trash_ids:
+          - 9965a052eb87b0d10313b1cea89eb451 # Remux Tier 01
+          - 8a1d0c3d7497e741736761a1da866a2e # Remux Tier 02
+          - d6819cba26b1a6508138d25fb5e32293 # HD Bluray Tier 01
+          - c2216b7b8aa545dc1ce8388c618f8d57 # HD Bluray Tier 02
+        assign_scores_to:
+          - name: WEB-1080p
+
+      # Extra Streaming Services
+      - trash_ids:
+          # Dutch - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#dutch-streaming-services
+          - b2b980877494b560443631eb1f473867 # NLZ
+          - 5d2317d99af813b6529c7ebf01c83533 # VDL
+          # UK - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#uk-streaming-services
+          - bbcaf03147de0f73be2be4a9078dfa03 # 4OD
+          - fcc09418f67ccaddcf3b641a22c5cfd7 # ALL4
+          - dc503e2425126fa1d0a9ad6168c83b3f # iP
+          - fa5a16b951004c23e980d2913694a137 # ITVX
+          - 9f72dc1059a6b277c21cee6a1f15f13f # MY5
+          - b66a699fba6f9df91becab798d7502e5 # NOW
+          # Misc Streaming Services - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#misc-streaming-services
+          - e6e299075e22ac8f541f722254c8350a # AUBC
+          - defb0b4c8b3f6a15927c0f14c6e69c94 # CBC
+          - 4e9a630db98d5391aec1368a0256e2fe # Crav
+          - dc5f2bb0e0262155b5fedd0f6c5d2b55 # DSCP
+          - fb1a91cdc0f26f7ca0696e0e95274645 # OViD
+          - fe4062eac43d4ea75955f8ae48adcf1e # STRP
+          - c30d2958827d1867c73318a5a2957eb1 # RED
+          - 3ac5d84fce98bab1b531393e9c82f467 # Qibi
+        assign_scores_to:
+          - name: WEB-1080p
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  series_de-sonarr: # Live action shows - 1080p - German
+    base_url: http://series_de-sonarr:8991
+    api_key: <API KEY series_de-sonarr>
+
+    # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
+    media_naming:
+      series: jellyfin-tvdb
+      season: default
+      episodes:
+        rename: true
+        standard: default
+        daily: default
+        anime: default
+
+    include:
+      - template: sonarr-quality-definition-series
+      - template: sonarr-v4-custom-formats-hd-bluray-web-german
+      - template: sonarr-v4-quality-profile-hd-bluray-web-german
+
+    quality_profiles:
+      - name: HD Bluray + WEB (GER)
+        min_format_score: 10000 # Uncomment this line to skip English Releases
+
+    # Custom Format Configuration
+    delete_old_custom_formats: true # Removes "Recyclarr configured" formats if they aren't configured below
+    replace_existing_custom_formats: true
+
+    custom_formats: # https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats
+
+      ### HDR / DV
+      - trash_ids:
+          # Comment out the next line if you and all of your users' setups are fully DV compatible
+          - 9b27ab6498ec0f31a3353992e19434ca # DV (w/o HDR fallback)
+
+      ### x265 - IMPORTANT: Only use on of below options.
+      - trash_ids:
+#          - 9b64dff695c2115facf1b6ea59c9bd07 # Uncomment this to allow only HDR/DV x265 HD releases
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+
+      - trash_ids:
+          - 47435ece6b99a0b477caf360e79ba0bb # Uncomment this to block all x265 HD releases
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+            score: -35000
+
+      # Series Versions - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#series-versions
+      - trash_ids:
+          - 3a4127d8aa781b44120d907f2cd62627 # Hybrid
+          - b735f09d3c025cbb7d75a5d38325b73b # Remaster
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+
+      # Miscellaneous - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#miscellaneous
+      - trash_ids:
+          - cddfb4e32db826151d97352b8e37c648 # x264
+          - 7ba05c6e0e14e793538174c679126996 # Multi (Option to detect multiple subs?)
+          - d7c747094a7c65f4c2de083c24899e8b # FreeLeech
+          - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
+          - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
+          - e0c1a67f23908a55b6ae9834e8ed6727 # Single Episode
+          - 4a20cfb76b5f92a8ca22b894b32e71be # Multi-Episode
+          - 3bc5f395426614e155e585a2f056cdf1 # Season Pack
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+
+      # HQ Source Groups - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#hq-source-groups
+      - trash_ids:
+          - 9965a052eb87b0d10313b1cea89eb451 # Remux Tier 01
+          - 8a1d0c3d7497e741736761a1da866a2e # Remux Tier 02
+          - d6819cba26b1a6508138d25fb5e32293 # HD Bluray Tier 01
+          - c2216b7b8aa545dc1ce8388c618f8d57 # HD Bluray Tier 02
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
+
+      # German Source Groups - https://trash-guides.info/Sonarr/sonarr-collection-of-custom-formats/#german-source-groups
+      - trash_ids:
+          - 7940b2fb0278f27cf4f70187f2be95d6 # German Bluray Tier 01
+          - 83b336a90d90d6b35ca673b007f80661 # German Bluray Tier 02
+          - d8f8e1539827967e0e564833e6c08d33 # German Bluray Tier 03
+        assign_scores_to:
+          - name: HD Bluray + WEB (GER)
