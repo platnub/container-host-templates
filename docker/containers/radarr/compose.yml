@@ -1,0 +1,151 @@
+########################### NETWORKS
+networks:
+  media-management:
+    external: true
+
+########################### VOLUMES
+volumes:
+  movies_en-radarr.etc:
+  movies_anime-radarr.etc:
+  movies_de-radarr.etc:
+  scripts:
+  media:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.0.20.200,soft,nfsvers=4"
+      device: ":/Media"
+
+########################### LOCKDOWN
+x-lockdown: &lockdown
+  read_only: true
+  security_opt:
+    - "no-new-privileges=true"
+
+########################### SERVICES
+services:
+  movies_en-radarr:
+    container_name: ${MOVIES_EN_ID}-radarr
+    image: ghcr.io/11notes/radarr:${RADARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+#    ports:
+#      - 7878:7878
+    volumes:
+      - ${MOVIES_EN_ID}-radarr.etc:/radarr/etc
+      - scripts:/scripts
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - RADARR__APP__INSTANCENAME=${MOVIES_EN_ID}
+      - RADARR__AUTH__APIKEY=${MOVIES_EN__AUTH__APIKEY}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+        reservations:
+          cpus: '0.10'
+          memory: 100M
+
+  movies_anime-radarr:
+    container_name: ${MOVIES_ANIME_ID}-radarr
+    image: ghcr.io/11notes/radarr:${RADARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+#    ports:
+#      - 7879:7879
+    volumes:
+      - ${MOVIES_ANIME_ID}-radarr.etc:/radarr/etc
+      - scripts:/scripts
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - RADARR__APP__INSTANCENAME=${MOVIES_ANIME_ID}
+      - RADARR__AUTH__APIKEY=${MOVIES_ANIME__AUTH__APIKEY}
+      - RADARR__SERVER__PORT=7879
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+        reservations:
+          cpus: '0.10'
+          memory: 100M
+
+  movies_de-radarr:
+    container_name: ${MOVIES_DE_ID}-radarr
+    image: ghcr.io/11notes/radarr:${RADARR_VERSION}
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - "/tmp:uid=${PUID},gid=${PGID}"
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+#    ports:
+#      - 7880:7880
+    volumes:
+      - ${MOVIES_DE_ID}-radarr.etc:/radarr/etc
+      - scripts:/scripts
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - RADARR__APP__INSTANCENAME=${MOVIES_DE_ID}
+      - RADARR__AUTH__APIKEY=${MOVIES_DE__AUTH__APIKEY}
+      - RADARR__SERVER__PORT=7880
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+        reservations:
+          cpus: '0.10'
+          memory: 100M
+
+  unpackerr_radarr:
+    image: golift/unpackerr
+    container_name: unpackerr_radarr
+    volumes:
+      - media:/media
+    restart: unless-stopped
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    environment:
+      - TZ=${TZ}
+      - UN_LOG_FILE=/media/downloads/qbittorrent/unpackerr_radarr.log
+      - UN_FOLDER_0_PATH=/media/downloads/qbittorrent/complete
+      - UN_RADARR_0_URL=http://${MOVIES_EN_ID}-radarr:7878
+      - UN_RADARR_0_API_KEY=${MOVIES_EN__AUTH__APIKEY}
+      - UN_RADARR_1_URL=http://${MOVIES_ANIME_ID}-radarr:7879
+      - UN_RADARR_1_API_KEY=${MOVIES_ANIME__AUTH__APIKEY}
+      - UN_RADARR_2_URL=http://${MOVIES_DE_ID}-radarr:7880
+      - UN_RADARR_2_API_KEY=${MOVIES_DE__AUTH__APIKEY}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 200M
+        reservations:
+          cpus: '0.10'
+          memory: 20M
+
+
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1.00'
+#          memory: 1G
+#        reservations:
+#          cpus: '0.5'
+#          memory: 100M

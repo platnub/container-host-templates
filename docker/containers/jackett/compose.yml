@@ -1,0 +1,77 @@
+########################### NETWORKS
+networks:
+  media-management:
+    external: true
+  jackett:
+
+########################### VOLUMES
+volumes:
+  config:
+  media:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.0.20.200,soft,nfsvers=4"
+      device: ":/Media"
+
+########################### LOCKDOWN
+x-lockdown: &lockdown
+  # prevents write access to the image itself
+  read_only: true
+  # prevents any process within the container to gain more privileges
+  security_opt:
+    - "no-new-privileges=true"
+
+########################### SERVICES
+services:
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    read_only: true
+    restart: unless-stopped
+    <<: *lockdown
+    tmpfs:
+      - /run:exec
+    networks:
+      - media-management
+      - jackett
+    ports:
+      - 9117:9117
+    volumes:
+      - config:/config
+      - media:/media
+    environment:
+      - TZ=${TZ}
+      - AUTO_UPDATE=true #optional
+      - RUN_OPTS= #optional
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 750M
+        reservations:
+          cpus: '0.10'
+          memory: 500M
+
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr-jackett
+    restart: unless-stopped
+    networks:
+      - jackett
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FILE=${LOG_FILE:-none}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=${TZ}
+    volumes:
+      - /var/lib/flaresolver:/config
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 750M
+        reservations:
+          cpus: '0.10'
+          memory: 200M

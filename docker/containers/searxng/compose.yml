@@ -1,0 +1,89 @@
+########################### NETWORKS
+networks:
+  searxng:
+    external: true
+  tor:
+    name: tor
+
+########################### VOLUMES
+volumes:
+  tor-data:
+  valkey-data2:
+  searxng-data:
+  searxng.etc:
+
+########################### SERVICES
+services:
+  tor:
+    container_name: tor
+    image: osminogin/tor-simple
+    restart: always
+    networks:
+       - tor
+    volumes:
+      - tor-data:/var/lib/tor
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 250M
+        reservations:
+          cpus: '0.10'
+          memory: 50M
+
+  redis:
+    container_name: redis
+    image: docker.io/valkey/valkey:8-alpine
+    command: valkey-server --save 30 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      - searxng
+    volumes:
+      - valkey-data2:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 2G
+        reservations:
+          cpus: '0.10'
+          memory: 1G
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    networks:
+      - searxng
+      - tor
+    volumes:
+      - searxng.etc:/etc/searxng:rw
+      - searxng-data:/var/cache/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=http://${SEARXNG_HOSTNAME}/
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
+      - GRANIAN_WORKERS=${GRANIAN_WORKERS:-1}
+      - SEARXNG_IMAGE_PROXY=${SEARXNG_IMAGE_PROXY:-true}
+      - SEARXNG_VALKEY_URL=${SEARXNG_VALKEY_URL:-valkey://redis:6379/0}
+      - SEARXNG_STATIC_USE_HASH=${SEARXNG_STATIC_USE_HASH:-true}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    depends_on:
+      - tor
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1G
+        reservations:
+          cpus: '0.10'
+          memory: 250M

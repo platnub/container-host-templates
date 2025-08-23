@@ -1,0 +1,88 @@
+# Source: https://github.com/SimpleHomelab/Deployrr/blob/main/compose/socket-proxy.yml
+
+########################### NETWORKS
+networks:
+  socket-proxy:
+    name: socket-proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+
+########################### SERVICES
+services:
+  # Docker Socket Proxy - Security Enchanced Proxy for Docker Socket
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:latest
+    container_name: socket-proxy
+    security_opt:
+      - no-new-privileges:true
+    restart: always
+    networks:
+      socket-proxy:
+        ipv4_address: 192.168.0.254 # You can specify a static IP
+    privileged: true # true for VM. False (default) for unprivileged LXC container.
+    # ports:
+      #- "2375:2375"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    read_only: true
+    tmpfs:
+      - /run
+    environment:
+      - LOG_LEVEL=warning # debug,info,notice,warning,err,crit,alert,emerg
+      #- ALLOW_START=1 # Portainer
+      #- ALLOW_STOP=1 # Portainer
+      #- ALLOW_RESTARTS=1 # Portainer
+      # Not always needed
+      #- NETWORKS=1 # Portainer
+      - DISABLE_IPV6=1 #optional
+
+      # 0=to **revoke** access.
+      # 1=to **grant** access.
+
+      ### Access granted by default
+
+      # These API sections are mostly harmless and almost required for any service that uses the
+      # API, so they are granted by default.
+
+      - EVENTS=1
+      - PING=1
+      - VERSION=1
+
+      ### ! Access revoked by default !
+      #### Security-critical
+      # These API sections are considered security-critical, and thus access is revoked by
+      # default. Maximum caution when enabling these.
+
+      - AUTH=0
+      - SECRETS=0
+      - POST=0  # When disabled, only GET=and HEAD=operations are allowed,
+                # meaning any section of the API is read-only.
+
+      #### Not always needed
+      # You will possibly need to grant access to some of these API sections, which are not so
+      # extremely critical but can expose some information that your service does not need.
+
+      - BUILD=0
+      - COMMIT=0
+      - CONFIGS=0
+      - CONTAINERS=0
+      - ALLOW_START=0 # (containers/=id=/=start=)
+      - ALLOW_STOP=0 # (containers/=id=/=stop=)
+      - ALLOW_RESTARTS=0 # (containers/=id=/=stop=|=restart=|=kill=)
+      - DISTRIBUTION=0
+      - EXEC=0
+      - GRPC=0
+      - IMAGES=0
+      - INFO=0
+      - NODES=0
+      - PLUGINS=0
+      - SERVICES=0
+      - SESSION=0
+      - SWARM=0
+      - SYSTEM=0
+      - TASKS=0
+      - VOLUMES=0
+
+    # DOCKER-LABELS-PLACEHOLDER

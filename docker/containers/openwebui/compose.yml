@@ -1,0 +1,42 @@
+########################### NETWORKS
+networks:
+  openwebui:
+    external: true
+
+########################### VOLUMES
+volumes:
+  openwebui:
+
+########################### SERVICES
+services:
+  openwebui:
+    container_name: openwebui
+    image: ghcr.io/open-webui/open-webui:main
+    restart: unless-stopped
+    networks:
+      - openwebui
+    volumes:
+      - openwebui:/app/backend/data
+    environment:
+      - WEBUI_URL=${WEBUI_URL}
+      - HOST=${HOST}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
+      - OAUTH_PROVIDER_NAME=${OAUTH_PROVIDER_NAME}
+      - OPENID_PROVIDER_URL=${OPENID_PROVIDER_URL}
+      - OPENID_REDIRECT_URI=${OPENID_REDIRECT_URI}
+      - ENABLE_OAUTH_SIGNUP=${ENABLE_OAUTH_SIGNUP}
+      - ENABLE_SIGNUP=${ENABLE_SIGNUP}
+      - ENABLE_LOGIN_FORM=${ENABLE_LOGIN_FORM}
+      - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=${OAUTH_MERGE_ACCOUNTS_BY_EMAIL}
+      - DEFAULT_USER_ROLE=${DEFAULT_USER_ROLE}
+      - WEB_SEARCH_ENGINE=${WEB_SEARCH_ENGINE}
+      - SEARXNG_QUERY_URL=${SEARXNG_QUERY_URL}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 2G
+        reservations:
+          cpus: '0.10'
+          memory: 1G
