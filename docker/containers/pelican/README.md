@@ -81,3 +81,8 @@
    1. TCP Resource
    2. Configure the public port, private port and IP / Hostname for the resource
    3. Update the Traefik installation on the Pangolin-core server with the given instructions (including the compose file specifying the port `2022:2022/tcp`
+   4. Destroy and deploy the stack through Komodo
+### **Bonus Step**: Configuring SFTP for the Pelican Node
+1. When creating/editing the node go to tab 'Advanced Settings'
+   1. Modify the 'SFTP Port' to the appropriate port
+   2. Change 'SFTP Alias' to the base URL of the node without subdomain `example.com`
