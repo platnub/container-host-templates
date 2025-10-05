@@ -75,3 +75,9 @@
          - Auto Create Missing Users?: Enable
          - Auto Link MIssing Users?: Enable
          - Base URL: `https://authentik.alion.host`
+
+## Creating SFTP links
+1. Create a Pangolin 'RAW TCP/UDP Resource'
+   1. TCP Resource
+   2. Configure the public port, private port and IP / Hostname for the resource
+   3. Update the Traefik installation on the Pangolin-core server with the given instructions (including the compose file specifying the port `2022:2022/tcp`
