@@ -11,7 +11,7 @@
        cd /var/lib/docker/volumes/sabnzbd_sabnzbd.scripts/_data && wget https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/sabnzbd/scripts/Clean.py && wget https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/sabnzbd/scripts/replace_for.py && chmod +x Clean.py && chmod +x replace_for.py && chown 1000:1000 Clean.py && chown 1000:1000 replace_for.py
        ```
 4. Set scripts folder under Folders
-5. Configure SABNzbd following the [Trash guide](https://trash-guides.info/Downloaders/SABnzbd/Basic-Setup/)
+5. Configure SABNzbd following the [TRaSH guide](https://trash-guides.info/Downloaders/SABnzbd/Basic-Setup/)
      - Not configuring Tuning will let SABnzbd use ALL the download speed
      - Configure folders
          - `/downloads/sabnzbd/incomplete`
