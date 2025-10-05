@@ -77,6 +77,10 @@
          - Base URL: `https://authentik.alion.host`
 
 ## Creating SFTP links
+
+> [!INFORMATION]
+> Configure a password in Pelican after signing in with Authentik to be to authenticate when using SFTP
+
 1. Create a Pangolin 'RAW TCP/UDP Resource'
    1. TCP Resource
    2. Configure the public port, private port and IP / Hostname for the resource
