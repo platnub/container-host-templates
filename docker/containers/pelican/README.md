@@ -78,7 +78,7 @@
 
 ## Creating SFTP links
 
-> [!INFORMATION]
+> [!NOTE]
 > Configure a password in Pelican after signing in with Authentik to be to authenticate when using SFTP
 
 1. Create a Pangolin 'RAW TCP/UDP Resource'
