@@ -46,6 +46,10 @@
        ```
        sed -i 's|    IPv6: true|    IPv6: false|g' /etc/pelican/config.yml
        ```
+    3. Edit the same config file an modify `remote` to the public URL of the PANEL!!
+       ```
+       nano /etc/pelican/config.yml
+       ```
 
 ## Edit Settings
 
