@@ -41,4 +41,4 @@ services:
       - sabnzbd.scripts:/sabnzbd/scripts
       - downloads:/downloads
     environment:
-      - TZ=Europe/Amsterdam
+      - TZ=${TZ}
