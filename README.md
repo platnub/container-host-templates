@@ -50,9 +50,8 @@
 - <ins>**Gaming**</ins>
   - [Pelican Panel - Management Panel for game servers](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
     - [Pelican Node - Game server hosting node]
-- <ins>**Automation**</ins>
-  - [n8n - Automation workflow platform]
-- <ins>**AI**</ins>
+- <ins>**Automation & AI**</ins>
+  - [Archon - AI coding command center]
   - [Flowise - AI agent builder]
+  - [n8n - Automation workflow platform]
   - [OpenWebUI - AI agent dashboard]
-  - [Archon - AI coding command center] 
