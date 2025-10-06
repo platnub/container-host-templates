@@ -18,6 +18,7 @@
 - Core
   - [Socket Proxy - Proxy access to docker socket for added security](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
   - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
+    - Includes [Pangolin Newt - VPN tunnel]
   - [Newt - Pangolin tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
 - Authentication and Information
   - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
@@ -35,8 +36,9 @@
   - [Kapowarr - Books, comics and managa organization and management]
   - [Jackett - Indexer proxy]
   - [qBittorrent - Torrent download client]
-    - Includes VPN [Gluetun]
+    - Includes [Gluetun - VPN]
   - [SABnzbd - Usenet download client]
   - [Tdarr - Media transcoding automation]
 - Gaming
-  - [Pelican - Game server hosting](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
+  - [Pelican Panel - Game server hosting](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
+    - Includes [Pelican Node]
