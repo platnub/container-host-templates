@@ -18,7 +18,7 @@
 - <ins>**Core**</ins>
   - [Socket Proxy - Proxy access to docker socket](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
   - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
-    - Includes [Pangolin Newt - Pangolin VPN tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
+    - [Pangolin Newt - Pangolin VPN tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
     - Includes [CrowdSec - Crowd powered security]
 - <ins>**Authentication and Information**</ins>
   - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
@@ -41,4 +41,4 @@
   - [Tdarr - Media transcoding automation]
 - <ins>**Gaming**</ins>
   - [Pelican Panel - Game server hosting](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
-    - Includes [Pelican Node]
+    - [Pelican Node]
