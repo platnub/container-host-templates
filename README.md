@@ -40,5 +40,5 @@
   - [SABnzbd - Usenet download client]
   - [Tdarr - Media transcoding automation]
 - <ins>**Gaming**</ins>
-  - [Pelican Panel - Game server hosting](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
-    - [Pelican Node]
+  - [Pelican Panel - Management Panel for game servers](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
+    - [Pelican Node - Game server hosting node]
