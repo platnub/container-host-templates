@@ -16,7 +16,7 @@
 # Install containers
 ## Docker
 - Core
-  - [Socket Proxy - Proxy access to docker socket for added security](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
+  - [Socket Proxy - Proxy access to docker socket](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
   - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
     - Includes [Pangolin Newt - VPN tunnel]
   - [Newt - Pangolin tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
