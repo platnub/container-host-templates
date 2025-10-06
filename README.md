@@ -24,11 +24,14 @@
   - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
 - <ins>**Information**</ins>
   - [Grocy - Recipe and food stock dashboard]
+  - [Homepage - Service dashboard]
   - [Nextcloud - Cloud storage](https://github.com/platnub/container-host-templates/tree/main/docker/containers/nextcloud)
+    - Integrated with [Collabora - Cloud office suite]
   - [Vaultwarden - Password manager](https://github.com/platnub/titan-server/tree/main/docker/containers/vaultwarden)
 - <ins>**Media**</ins>
   - [Jellyfin - Netflix-like media streaming](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyfin)
   - [Jellyseerr - Media requests](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyseerr)
+  - [Tdarr - Media transcoding automation]
   - [Recyclarr - TRaSH guide sync](https://github.com/platnub/container-host-templates/tree/main/docker/containers/recyclarr)
   - [Radarr - Movie organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/radarr)
   - [Sonarr - Series organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sonarr)
@@ -41,8 +44,9 @@
   - [Jackett - Indexer proxy]
   - [qBittorrent - Torrent download client]
     - Includes [Gluetun - VPN]
+  - [Unpackerr - Unpack compressed torrent downloads]
+  - [Cleanuparr - Download cleaner for torrents]
   - [SABnzbd - Usenet download client]
-  - [Tdarr - Media transcoding automation]
 - <ins>**Gaming**</ins>
   - [Pelican Panel - Management Panel for game servers](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
     - [Pelican Node - Game server hosting node]
