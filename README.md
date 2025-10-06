@@ -1,5 +1,6 @@
 # Info
 - Komodo Docker container management backend
+- Containers running as unprivledged as possible
 - Pangolin reverse proxy frontend
   - Geoblocking
   - CrowdSec + CrowdSec Firewall Bouncer
