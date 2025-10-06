@@ -20,8 +20,10 @@
   - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
     - [Pangolin Newt - Pangolin VPN tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
     - Includes [CrowdSec - Crowd powered security]
-- <ins>**Authentication and Information**</ins>
+- <ins>**Authentication**</ins>
   - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
+- <ins>**Information**</ins>
+  - [Grocy - Recipe and food stock dashboard]
   - [Nextcloud - Cloud storage](https://github.com/platnub/container-host-templates/tree/main/docker/containers/nextcloud)
   - [Vaultwarden - Password manager](https://github.com/platnub/titan-server/tree/main/docker/containers/vaultwarden)
 - <ins>**Media**</ins>
@@ -44,3 +46,9 @@
 - <ins>**Gaming**</ins>
   - [Pelican Panel - Management Panel for game servers](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
     - [Pelican Node - Game server hosting node]
+- <ins>**Automation**</ins>
+  - [n8n - Automation workflow platform]
+- <ins>**AI**</ins>
+  - [Flowise - AI agent builder]
+  - [OpenWebUI - AI agent dashboard]
+  - [Archon - AI coding command center] 
