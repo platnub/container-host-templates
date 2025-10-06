@@ -1,22 +1,23 @@
 # Info
- - Komodo Docker container management backend
- - Pangolin reverse proxy frontend
-   - Geoblocking
-   - CrowdSec + CrowdSec Firewall Bouncer
- - Full Proxmox VM & Debian OS installation and configuration scripts
- - Authentik SSO system-wide integration including for Pangolin resource authentication & management
+- Komodo Docker container management backend
+- Pangolin reverse proxy frontend
+  - Geoblocking
+  - CrowdSec + CrowdSec Firewall Bouncer
+- Full Proxmox VM & Debian OS installation and configuration scripts
+- Authentik SSO system-wide integration including for Pangolin resource authentication & management
 
 # Install a VM
- - [Docker](https://github.com/platnub/titan-server/tree/main/virtual-machines)
+- [Docker](https://github.com/platnub/titan-server/tree/main/virtual-machines)
 
 # Configure VM
- - [Docker engine & Komodo mangement](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
+- [Docker engine & Komodo mangement](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
 
 # Install containers
- - Docker - Core
-   - [Socket Proxy - Proxy access to docker socket for added security](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
-   - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
-   - [Newt - Pangolin tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
- - Docker - Services
-   - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
-   - [Vaultwarden - Password manager](https://github.com/platnub/titan-server/tree/main/docker/containers/vaultwarden)
+- Docker - Core
+  - [Socket Proxy - Proxy access to docker socket for added security](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
+  - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
+  - [Newt - Pangolin tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
+- Docker - Services
+  - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
+  - [Vaultwarden - Password manager](https://github.com/platnub/titan-server/tree/main/docker/containers/vaultwarden)
+- - 
