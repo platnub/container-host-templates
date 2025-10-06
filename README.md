@@ -35,6 +35,7 @@
   - [Kapowarr - Books, comics and managa organization and management]
   - [Jackett - Indexer proxy]
   - [qBittorrent - Torrent download client]
+    - Includes VPN [Gluetun]
   - [SABnzbd - Usenet download client]
   - [Tdarr - Media transcoding automation]
 - Gaming
