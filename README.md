@@ -15,16 +15,16 @@
 
 # Install containers
 ## Docker
-- Core
+- <ins>**Core**</ins>
   - [Socket Proxy - Proxy access to docker socket](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
   - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
     - Includes [Pangolin Newt - VPN tunnel]
   - [Newt - Pangolin tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
-- Authentication and Information
+- <ins>**Authentication and Information**</ins>
   - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
   - [Nextcloud - Cloud storage](https://github.com/platnub/container-host-templates/tree/main/docker/containers/nextcloud)
   - [Vaultwarden - Password manager](https://github.com/platnub/titan-server/tree/main/docker/containers/vaultwarden)
-- Media
+- <ins>**Media**</ins>
   - [Jellyfin - Netflix-like media streaming](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyfin)
   - [Jellyseerr - Media requests](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyseerr)
   - [Recyclarr - TRaSH guide sync](https://github.com/platnub/container-host-templates/tree/main/docker/containers/recyclarr)
@@ -39,6 +39,6 @@
     - Includes [Gluetun - VPN]
   - [SABnzbd - Usenet download client]
   - [Tdarr - Media transcoding automation]
-- Gaming
+- <ins>**Gaming**</ins>
   - [Pelican Panel - Game server hosting](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
     - Includes [Pelican Node]
