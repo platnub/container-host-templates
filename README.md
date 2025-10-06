@@ -29,8 +29,8 @@
   - [Recyclarr - TRaSH guide sync](https://github.com/platnub/container-host-templates/tree/main/docker/containers/recyclarr)
   - [Radarr - Movie organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/radarr)
   - [Sonarr - Series organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sonarr)
-  - [Jackett - Indexer proxy]()
-  - [qBittorrent - Torrent download client]()
-  - [SABnzbd - Usenet download client]()
+  - [Jackett - Indexer proxy]
+  - [qBittorrent - Torrent download client]
+  - [SABnzbd - Usenet download client]
 - Gaming
   - [Pelican - Game server hosting](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
