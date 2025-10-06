@@ -32,5 +32,6 @@
   - [Jackett - Indexer proxy]
   - [qBittorrent - Torrent download client]
   - [SABnzbd - Usenet download client]
+  - [Tdarr - Media transcoding automation]
 - Gaming
   - [Pelican - Game server hosting](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
