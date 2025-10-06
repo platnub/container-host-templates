@@ -4,7 +4,7 @@
 - Pangolin reverse proxy frontend
   - Geoblocking
   - CrowdSec + CrowdSec Firewall Bouncer
-- Full Proxmox VM & Debian OS installation and configuration scripts
+- Full Proxmox VM-Debian OS installation and configuration scripts
 - Authentik SSO system-wide integration including for Pangolin resource authentication & management
 
 # Install a VM
