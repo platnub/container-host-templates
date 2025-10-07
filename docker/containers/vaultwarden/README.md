@@ -1,4 +1,4 @@
-# Pangolin Configuration
+# Pangolin Resource configuration
 - Target
   - Method: 'http'
   - IP / Hostname: `vaultwarden`
