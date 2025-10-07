@@ -9,7 +9,7 @@
 
 # Manuals
 ## Installing
-1. Create stack in Komodo using [compose.yml]() and [.env]()
+1. Create stack in Komodo using [compose.yml](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/radarr/compose.yml) and [.env](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/radarr/.env)
 2. Edit .env and generate a unique secret for each Radarr instance using `openssl rand -hex 32`
 3. Deploy the stack using Komodo
 4. Create the media folders in the terminal through Komodo
