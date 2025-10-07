@@ -1,8 +1,9 @@
 # Pangolin Resource configuration
-- Target
-  - Method: 'http'
-  - IP / Hostname: `vaultwarden`
-  - Port: `80`
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `vaultwarden`
+    - Port: `80`
 - Authentication
   - Use Platform SSO: Enabled
 - Rules
