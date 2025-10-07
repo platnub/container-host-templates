@@ -1,5 +1,6 @@
 # Links
  - [Servarr Environment Variables](https://wiki.servarr.com/useful-tools#using-environment-variables-for-config)
+
 # Manuals
 ## Installing
 1. Create stack in Komodo using [compose.yml]() and [.env]()
@@ -8,12 +9,12 @@
 4. Create the media folders
      - A placeholder is necessary otherwise Sonarr will not recognize an empty media folder.
        ```
-       mkdir -p /media/movies_en
-       mkdir -p /media/movies_anime
-       mkdir -p /media/movies_de
-       touch /media/movies_en/placeholder
-       touch /media/movies_anime/placeholder
-       touch /media/movies_de/placeholder
+       mkdir -p /media/series_en
+       mkdir -p /media/series_anime
+       mkdir -p /media/series_de
+       touch /media/series_en/placeholder
+       touch /media/series_anime/placeholder
+       touch /media/series_de/placeholder
        ```
 5. Open each Sonarr and create a Forms login
 6. Set the media folder for each Sonarr instance.
@@ -22,3 +23,44 @@
      - EN: `WEB-1080p`
      - Anime: `Remux-1080p - Anime` & `WEB-1080p`
      - DE: `HD Bluray + WEB (GER)`
+
+# Pangolin Resource configuration
+## Series EN Sonarr
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `series_en-sonarr`
+    - Port: `8989`
+- Authentication
+  - Use Platform SSO: Enabled
+- Rules
+  - Priority: `1`
+    - Action: 'Always Allow'
+    - Match Type: 'Path'
+    - Value: `/api/v3/indexer/*`
+## Series Anime Sonarr
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `series_en-sonarr`
+    - Port: `8990`
+- Authentication
+  - Use Platform SSO: Enabled
+- Rules
+  - Priority: `1`
+    - Action: 'Always Allow'
+    - Match Type: 'Path'
+    - Value: `/api/v3/indexer/*`
+## Series DE Sonarr
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `series_en-sonarr`
+    - Port: `8991`
+- Authentication
+  - Use Platform SSO: Enabled
+- Rules
+  - Priority: `1`
+    - Action: 'Always Allow'
+    - Match Type: 'Path'
+    - Value: `/api/v3/indexer/*`
