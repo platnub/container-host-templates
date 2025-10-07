@@ -28,3 +28,44 @@
      - EN: HD Bluray + WEB
      - Anime: Remux-1080p - Anime
      - DE: HD Bluray + WEB (GER)
+
+# Pangolin Resource configuration
+## Movies EN Radarr
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `movies_en-radarr`
+    - Port: `7878`
+- Authentication
+  - Use Platform SSO: Enabled
+- Rules
+  - Priority: `1`
+    - Action: 'Always Allow'
+    - Match Type: 'Path'
+    - Value: `/api/v3/indexer/*`
+## Movies Anime Radarr
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `movies_en-radarr`
+    - Port: `7879`
+- Authentication
+  - Use Platform SSO: Enabled
+- Rules
+  - Priority: `1`
+    - Action: 'Always Allow'
+    - Match Type: 'Path'
+    - Value: `/api/v3/indexer/*`
+## Movies DE Radarr
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `movies_en-radarr`
+    - Port: `7880`
+- Authentication
+  - Use Platform SSO: Enabled
+- Rules
+  - Priority: `1`
+    - Action: 'Always Allow'
+    - Match Type: 'Path'
+    - Value: `/api/v3/indexer/*`
