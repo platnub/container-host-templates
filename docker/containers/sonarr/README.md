@@ -1,3 +1,9 @@
+> [!IMPORTANT]  
+> <ins>**Requirements**</ins>
+> - Jellyfin
+> - [SABnzbd](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sabnzbd)
+> - qBittorrent
+
 # Links
  - [Servarr Environment Variables](https://wiki.servarr.com/useful-tools#using-environment-variables-for-config)
 
