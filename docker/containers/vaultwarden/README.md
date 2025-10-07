@@ -1,3 +1,16 @@
-# Info
- - Pangolin connection: http://vaultwarden
-   - Leave unprotected
+# Pangolin Configuration
+- Target
+  - Method: 'http'
+  - IP / Hostname: `vaultwarden`
+  - Port: `80`
+- Authentication
+  - Use Platform SSO: Enabled
+- Rules
+  - Priority: `1`
+    - Action: 'Pass to Auth'
+    - Match Type: 'Path'
+    - Value: `/admin/*`
+  - Priority: `2`
+    - Action: 'Always Allow'
+    - Match Type: 'Path'
+    - Value: `/*`
