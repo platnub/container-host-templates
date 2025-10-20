@@ -23,6 +23,7 @@
         2. Collabora
         3. Imaginary
         4. Nextcloud Talk
+        5. _Save Settings_
     6. Download and start containers
     7. Disable port 8080 in the Docker configuration and destroy & deploy the containers
 4. Open the terminal of container 'nextcloud-aio-nextcloud' using Komodo
