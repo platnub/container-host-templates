@@ -28,9 +28,6 @@
     7. Disable port 8080 in the Docker configuration and destroy & deploy the containers
 4. Open the terminal of container 'nextcloud-aio-nextcloud' using Komodo
     1. Run `php occ maintenance:repair --include-expensive`
-5. Configre Collabora
-    1. Go into administrative settings > office
-    2. Append the Pangolin public IP to the WOPI allow-list.
 
 ## SSO Setup using (preinstalled) [OpenID COnnect user backend](https://apps.nextcloud.com/apps/user_oidc) plugin
 1. Follow the instructions from [Authentik - Nextcloud integration](https://integrations.goauthentik.io/chat-communication-collaboration/nextcloud)
@@ -91,3 +88,8 @@
 1. If using WinSCP to connect, in the site manager open 'Advanced... > Connection' and disable 'Optimize connection buffer size'
 2. Upload the files in the user folder
 3. Run the command `php occ files:scan --all` in the terminal of conatiner 'nextcloud-aio-nextcloud' using Komodo
+
+## Optional setup
+1. Delete infected files using ClamAV
+    1. Open 'Administrative settings > Security'
+    2. Under "Antivirus for Files' set 'When infected files are found during a background scan' to 'Delete file'
