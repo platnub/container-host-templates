@@ -15,7 +15,7 @@ services:
     restart: always
     user: ${PUID}:${PGID}
     ports:
-      - '80:80'
+      - '8800:80'
     networks:
       - vaultwarden
     volumes:
