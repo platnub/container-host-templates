@@ -1,4 +1,13 @@
 # Manuals
+## Pangolin Resource configuration
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `nextcloud-aio-apache`
+    - Port: `11000`
+- Authentication
+  - Use Platform SSO: Disabled
+
 ## Installation
 1. Setup NFS share
     1. Connect to dmz-information host using SHH
