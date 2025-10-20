@@ -32,9 +32,62 @@
     1. Go into administrative settings > office
     2. Append the Pangolin public IP to the WOPI allow-list.
 
-## SSO Setup using (preinstalled) [OpenID COnnect user backend](https://apps.nextcloud.com/apps/user_oidc) plguin
-1. Login to Authentik as administrator and open 'Admin interface'
-    1. /....
-2. Open 'Administrator settings' in Nextcloud using admin account
-    1. Add a 'Registered Provider'
-    2. 
+## SSO Setup using (preinstalled) [OpenID COnnect user backend](https://apps.nextcloud.com/apps/user_oidc) plugin
+1. Follow the instructions from [Authentik - Nextcloud integration](https://integrations.goauthentik.io/chat-communication-collaboration/nextcloud)
+    1. Login to Authentik as administrator and open 'Admin interface'
+        1. Create Property mapping under 'Customization > Property mappings'
+            1. Type: 'Scope mapping'
+            2. Name: `Nextcloud Profile`
+            3. Scope name: `nextcloud`
+            4. Expression:
+               ```
+               # Extract all groups the user is a member of
+               groups = [group.name for group in user.ak_groups.all()]
+               
+               # In Nextcloud, administrators must be members of a fixed group called "admin".
+               
+               # If a user is an admin in authentik, ensure that "admin" is appended to their group list.
+               if user.is_superuser and "admin" not in groups:
+                   groups.append("admin")
+               
+               return {
+                   "name": request.user.name,
+                   "groups": groups,
+                   # Set a quota by using the "nextcloud_quota" property in the user's attributes
+                   "quota": user.group_attributes().get("nextcloud_quota", None),
+                   # To connect an existing Nextcloud user, set "nextcloud_user_id" to the Nextcloud username.
+                   "user_id": user.attributes.get("nextcloud_user_id", str(user.uuid)),
+               }
+               ```
+        2. Create Application with Provider
+            1. Application
+                1. Name: `Nextcloud`
+                2. Slug: `nextcloud`
+                3. UI Settings > Launch URL: `https://nc.example.com`
+            2. Provider
+                1. Type: 'OAuth2/OpenID Provider'
+                2. Authorization flow: '...implicit-consent'
+                3. Client type: Confidential
+                4. Redirect URIs: Strict: `https://nc.example.com/apps/user_oidc/code`
+                5. 'Advanced protocol settings > Available Scopes' select 'Nextcloud profile'
+                6. 'Advanced protocol settings > Subject mode' select 'Based on the user's UUID'
+    2. Open 'Administrator settings' in Nextcloud using admin account and go to 'OpenID Connect'
+        1. Add a 'Registered Provider'
+            1. Indentifier: `Authentik`
+            2. Client ID: ...
+            3. Client secret: ...
+            4. Discovery endpoint: `https://authentik.example.com/application/o/nextcloud/.well-known/openid-configuration`
+            5. Scope: `email profile nextcloud openid`
+            6. Attribute mapping
+                1. User ID: `sub`
+                2. Groups: `groups`
+                3. Display name: `name`
+                4. Email: `email`
+            7. Disable 'Use unique user ID'
+            8. Enable 'Use group provisioning'
+            9. Group whitelist regex: `^admin$`
+    3. Disable default Nextcloud login. Open terminal of container 'nextcloud-aio-nextcloud' using Komodo and run `php occ config:app:set --value=0 user_oidc allow_multiple_user_backends`
+## Uploading user files
+1. If using WinSCP to connect, in the site manager open 'Advanced Settings > Connection' and disable 'Connection buffer size'
+2. Upload the files in the user folder
+3. Run the command `php occ files:scan --all` in the terminal of conatiner 'nextcloud-aio-nextcloud' using Komodo
