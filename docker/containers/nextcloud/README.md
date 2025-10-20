@@ -88,6 +88,6 @@
             9. Group whitelist regex: `^admin$`
     3. Disable default Nextcloud login. Open terminal of container 'nextcloud-aio-nextcloud' using Komodo and run `php occ config:app:set --value=0 user_oidc allow_multiple_user_backends`
 ## Uploading user files
-1. If using WinSCP to connect, in the site manager open 'Advanced Settings > Connection' and disable 'Connection buffer size'
+1. If using WinSCP to connect, in the site manager open 'Advanced... > Connection' and disable 'Optimize connection buffer size'
 2. Upload the files in the user folder
 3. Run the command `php occ files:scan --all` in the terminal of conatiner 'nextcloud-aio-nextcloud' using Komodo
