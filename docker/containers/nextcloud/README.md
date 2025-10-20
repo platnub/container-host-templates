@@ -14,3 +14,8 @@
        <NFS_HOST>:/Nextcloud    /nfs/nextcloud_data   nfs auto,nofail,noatime,noolock,intr,tcp,actimeo=1800 0 0
        ```
 2. Deploy Nextcloud in Komodo using the [compose.yml](https://github.com/platnub/container-host-templates/blob/main/docker/containers/nextcloud/compose.yml) and [.env](https://github.com/platnub/container-host-templates/blob/main/docker/containers/nextcloud/.env) files.
+3. Open the terminal of container 'nextcloud-aio-nextcloud' using Komodo
+    1. Run `php occ maintenance:repair --include-expensive`
+4. Configre Collabora
+    1. Go into administrative settings > office
+    2. Append the Pangolin public IP to the WOPI allow-list.
