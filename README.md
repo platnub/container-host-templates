@@ -56,3 +56,4 @@
   - [Flowise - AI agent builder]
   - [n8n - Automation workflow platform]
   - [OpenWebUI - AI agent dashboard]
+  - [SearXNG - Metasearch engine]
