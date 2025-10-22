@@ -43,11 +43,11 @@
     - [rreading-glasses - Book metadata server]
   - [Kapowarr - Comics and managa organization and management]
   - [Jackett - Indexer proxy]
+  - [SABnzbd - Usenet download client](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sabnzbd)
   - [qBittorrent - Torrent download client]
     - Includes [Gluetun - VPN]
   - [Unpackerr - Unpack compressed torrent downloads]
   - [Cleanuparr - Download cleaner for torrents]
-  - [SABnzbd - Usenet download client]
 - <ins>**Gaming**</ins>
   - [Pelican Panel - Management Panel for game servers](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
     - [Pelican Node - Game server hosting node]
