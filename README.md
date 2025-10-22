@@ -31,7 +31,7 @@
 - <ins>**Media**</ins>
   - [Jellyfin - Netflix-like media streaming](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyfin)
   - [Jellyseerr - Media requests](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyseerr)
-  - [Tdarr - Media transcoding automation]
+  - [Tdarr - Media transcoding automation](https://github.com/platnub/container-host-templates/tree/main/docker/containers/tdarr)
     - Uses [Tdarr-one-flow](https://github.com/samssausages/Tdarr-One-Flow)
   - [Recyclarr - TRaSH guide sync](https://github.com/platnub/container-host-templates/tree/main/docker/containers/recyclarr)
   - [Radarr - Movie organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/radarr)
