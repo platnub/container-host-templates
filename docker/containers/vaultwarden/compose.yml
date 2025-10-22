@@ -14,8 +14,6 @@ services:
     image: vaultwarden/server:latest
     restart: always
     user: ${PUID}:${PGID}
-    ports:
-      - '8800:80'
     networks:
       - vaultwarden
     volumes:
