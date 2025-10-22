@@ -19,14 +19,14 @@
   - [Socket Proxy - Proxy access to docker socket](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
   - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
     - [Pangolin Newt - Pangolin VPN tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
-    - Includes [CrowdSec - Crowd powered security]
+    - Includes CrowdSec - Crowd powered security
 - <ins>**Authentication**</ins>
   - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
 - <ins>**Information**</ins>
   - [Grocy - Recipe and food stock dashboard]
   - [Homepage - Service dashboard]
   - [Nextcloud - Cloud storage](https://github.com/platnub/container-host-templates/tree/main/docker/containers/nextcloud)
-    - Integrated with [Collabora - Cloud office suite]
+    - Integrated with Collabora - Cloud office suite
   - [Vaultwarden - Password manager](https://github.com/platnub/titan-server/tree/main/docker/containers/vaultwarden)
 - <ins>**Media**</ins>
   - [Jellyfin - Netflix-like media streaming](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyfin)
