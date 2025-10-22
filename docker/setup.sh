@@ -18,7 +18,7 @@ echo "--------------------------------------------------------------------------
 echo "Setting password for komodo user..."
 passwd komodo
 
-#Configure timezone
+# Configure timezone
 dpkg-reconfigure tzdata
 
 # Install SSH and UFW
@@ -28,8 +28,17 @@ apt-get install fail2ban -y
 apt-get install ufw -y
 apt-get install wget -y
 
-# Change SSH port, disable IPv6, Setup UFW firewall
+# Configure automatic upgrades
+cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/52unattended-upgrades-local
+sed -i 's|//Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";|Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+sed -i 's|//Unattended-Upgrade::Remove-New-Unused-Dependencies "true";|Unattended-Upgrade::Remove-New-Unused-Dependencies "true";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+sed -i 's|//Unattended-Upgrade::Remove-Unused-Dependencies "false";|Unattended-Upgrade::Remove-Unused-Dependencies "false";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+sed -i 's|//Unattended-Upgrade::Automatic-Reboot "false";|Unattended-Upgrade::Automatic-Reboot "true";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+sed -i 's|//Unattended-Upgrade::Automatic-Reboot-WithUsers "true";|Unattended-Upgrade::Automatic-Reboot-WithUsers "true";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+sed -i 's|//Unattended-Upgrade::Automatic-Reboot-Time "02:30";|Unattended-Upgrade::Automatic-Reboot-Time "02:00";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+dpkg-reconfigure unattended-upgrades
 
+# Change SSH port, disable IPv6, Setup UFW firewall
 sed -i "s/\#Port 22/Port $ssh_port /" /etc/ssh/sshd_config
 systemctl daemon-reload
 systemctl restart sshd
