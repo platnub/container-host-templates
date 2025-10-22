@@ -1,11 +1,16 @@
 # Info
+- Full Proxmox VM-Debian OS installation and configuration scripts
+  - Automatic update downloads at 1:00-1:30
+  - Automatic upgrade at 1:45-2:15
+  - Automatic reboot if upgrade requires it at 2:30
 - Komodo Docker container management backend
 - Containers running as unprivledged as possible
 - Pangolin reverse proxy frontend
   - Geoblocking
   - CrowdSec + CrowdSec Firewall Bouncer
-- Full Proxmox VM-Debian OS installation and configuration scripts
 - Authentik SSO system-wide integration including for Pangolin resource authentication & management
+- Fully automated media request, download, compression and management system
+- Game server hosting using Pelican
 
 # Install a VM
 - [Docker](https://github.com/platnub/titan-server/tree/main/virtual-machines)
