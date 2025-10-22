@@ -21,7 +21,7 @@
     - [Pangolin Newt - Pangolin VPN tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
     - Includes CrowdSec - Crowd powered security
 - <ins>**Authentication**</ins>
-  - [Authentik - SSO](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
+  - [Authentik - Single sign on](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
 - <ins>**Information**</ins>
   - [Grocy - Recipe and food stock dashboard]
   - [Homepage - Service dashboard]
