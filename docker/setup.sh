@@ -18,6 +18,9 @@ echo "--------------------------------------------------------------------------
 echo "Setting password for komodo user..."
 passwd komodo
 
+#Configure timezone
+dpkg-reconfigure tzdata
+
 # Install SSH and UFW
 apt-get update -y && apt-get upgrade -y
 apt-get install ssh -y
