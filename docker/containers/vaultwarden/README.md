@@ -3,7 +3,7 @@
   - Target
     - Method: 'http'
     - IP / Hostname: `vaultwarden`
-    - Port: `8800`
+    - Port: `80`
 - Authentication
   - Use Platform SSO: Enabled
 - Rules
