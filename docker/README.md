@@ -28,8 +28,7 @@
    systemctl --user status periphery
    
     ```
-4. Connect to the VM through SSH using a sudo priveledged user
-   Configure automatic upgrades - [Periodic Updates](https://wiki.debian.org/PeriodicUpdates)
+4. Connect to the VM through SSH using a sudo priveledged user. Configure automatic upgrades - [Periodic Updates](https://wiki.debian.org/PeriodicUpdates)
    ```
    # Configure automatic upgrades
    cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/52unattended-upgrades-local
