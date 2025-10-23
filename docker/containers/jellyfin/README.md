@@ -5,6 +5,7 @@
  - [Jellyfin SSO Plugin](https://github.com/9p4/jellyfin-plugin-sso/)
  - [Collection of Plugins & Themes](https://github.com/awesome-jellyfin/awesome-jellyfin)
 ## Themes
+ - [Finity](https://github.com/prism2001/finity)
  - [Ultrachromic](https://github.com/CTalvio/Ultrachromic)
  - [Zesty](https://forum.jellyfin.org/t-%F0%9F%8D%8B%EF%B8%8F-zestytheme)
 # Manuals
