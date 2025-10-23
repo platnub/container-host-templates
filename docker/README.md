@@ -29,7 +29,7 @@
    systemctl --user status periphery
    
     ```
-4. Configure automatic updates - [Periodic Updates](https://wiki.debian.org/PeriodicUpdates)
+4. Configure automatic upgrades - [Periodic Updates](https://wiki.debian.org/PeriodicUpdates)
    ```
    # Configure automatic upgrades
    cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/52unattended-upgrades-local
