@@ -1,8 +1,7 @@
 # ‼️ Requirements for **EVERY** docker container
  1. Configuration script below
      - The only 2 exceptions are Pangolin host and Komodo host
- 2. User account created
- 3. A healthy mindset
+ 2. A healthy mindset
 
 ---
 
@@ -29,7 +28,8 @@
    systemctl --user status periphery
    
     ```
-4. Configure automatic upgrades - [Periodic Updates](https://wiki.debian.org/PeriodicUpdates)
+4. Connect to the VM through SSH using a sudo priveledged user
+   Configure automatic upgrades - [Periodic Updates](https://wiki.debian.org/PeriodicUpdates)
    ```
    # Configure automatic upgrades
    cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/52unattended-upgrades-local
