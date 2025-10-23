@@ -23,8 +23,6 @@ services:
     container_name: tdarr
     image: ghcr.io/haveagitgat/tdarr:latest
     restart: unless-stopped
-    group_add:
-      - '<group render>'
     network_mode: bridge
     ports:
       - 8265:8265 # webUI port
@@ -61,8 +59,6 @@ services:
     container_name: tdarr-node
     image: ghcr.io/haveagitgat/tdarr_node:latest
     restart: unless-stopped
-    group_add:
-      - '<group render>'
     network_mode: service:tdarr
     environment:
       - TZ=Europe/London
