@@ -37,3 +37,9 @@
 1. 
 ## Enrollment & Invitations _[source](https://www.youtube.com/watch?v=mGOTpRfulfQ)_
 ## Password Recovery _[source](https://www.youtube.com/watch?v=NKJkYz0BIlA)_
+
+# Follow up
+ - https://integrations.goauthentik.io/networking/pangolin/
+ - https://integrations.goauthentik.io/chat-communication-collaboration/nextcloud/
+ - https://integrations.goauthentik.io/media/jellyfin/
+ - https://integrations.goauthentik.io/miscellaneous/home-assistant/
