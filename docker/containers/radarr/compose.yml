@@ -10,11 +10,6 @@ volumes:
   movies_en-radarr.etc:
   movies_anime-radarr.etc:
   movies_de-radarr.etc:
-  downloads:
-    driver_opts:
-      type: "nfs"
-      o: "addr=10.0.20.200,soft,nfsvers=4"
-      device: ":/Downloads"
   media:
     driver_opts:
       type: "nfs"
@@ -41,10 +36,8 @@ services:
       - media-management
     ports:
       - 7878:7878
-#      - 127.0.0.1:7878:7878
     volumes:
       - ${MOVIES_EN_ID}-radarr.etc:/radarr/etc
-      - downloads:/downloads
       - media:/media
     environment:
       - TZ=${TZ}
@@ -63,10 +56,8 @@ services:
       - media-management
     ports:
       - 7879:7879
-#      - 127.0.0.1:7879:7879
     volumes:
       - ${MOVIES_ANIME_ID}-radarr.etc:/radarr/etc
-      - downloads:/downloads
       - media:/media
     environment:
       - TZ=${TZ}
@@ -86,10 +77,8 @@ services:
       - media-management
     ports:
       - 7880:7880
-#      - 127.0.0.1:7880:7880
     volumes:
       - ${MOVIES_DE_ID}-radarr.etc:/radarr/etc
-      - downloads:/downloads
       - media:/media
     environment:
       - TZ=${TZ}
