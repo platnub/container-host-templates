@@ -59,7 +59,7 @@
    ```
    getent group render | cut -d: -f3
    ```
-2. QSV and VA-API codecs? Idk lol
+2. Run these commands in the Jellyfin terminal through Komodo: QSV and VA-API codecs? Idk lol
    ```
    /usr/lib/jellyfin-ffmpeg/vainfo
    ```
