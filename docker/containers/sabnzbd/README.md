@@ -51,4 +51,4 @@
              - Script: `replace_for.py`
              - Folder/Path: `series_de`
 6. Navigate to "Special" in the main menu bar at the top
-     - Modify 'host_whitelist' to include `,sabnzdb`
+     - Modify 'host_whitelist' to include `sabnzdb`
