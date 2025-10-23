@@ -68,4 +68,4 @@
    /usr/lib/jellyfin-ffmpeg/ffmpeg -v verbose -init_hw_device vaapi=va -init_hw_device opencl@va
    ```
 3. Enable transcoding in Jellyfin settings
-4. Enabled/disable [supported and unsupported codecs](https://www.intel.com/content/www/us/en/docs/onevpl/developer-reference-media-intel-hardware/1-1/overview.html) in the transcoding settings
+4. Enabled/disable [supported and unsupported codecs for hardware decoding](https://www.intel.com/content/www/us/en/docs/onevpl/developer-reference-media-intel-hardware/1-1/overview.html) in the transcoding settings
