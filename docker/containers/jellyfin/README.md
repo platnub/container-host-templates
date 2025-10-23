@@ -2,8 +2,10 @@
  - [NFS Shares setup](https://github.com/platnub/container-host-templates/blob/main/virtual-machines/open-media-vault/README.md)
 
 # Useful links
- - [Jellyfin SSO Plugin](https://github.com/9p4/jellyfin-plugin-sso/)
  - [Collection of Plugins & Themes](https://github.com/awesome-jellyfin/awesome-jellyfin)
+## Plugins
+ - [Jellyfin SSO Plugin](https://github.com/9p4/jellyfin-plugin-sso/)
+ - [Intro Skipper](https://github.com/intro-skipper/intro-skipper)
 ## Themes
  - [Finity](https://github.com/prism2001/finity)
  - [Ultrachromic](https://github.com/CTalvio/Ultrachromic)
