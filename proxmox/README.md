@@ -1,8 +1,11 @@
-# Disk Management
-## Parted
+# Tools
+## Parted - Drive management
 ```
 parted
 ```
+
+# Manuals
+
 ## Passthrough drives to VM _[source](https://pve.proxmox.com/wiki/Passthrough_Physical_Disk_to_Virtual_Machine_(VM))_
 ```
 find /dev/disk/by-id/ -type l|xargs -I{} ls -l {}|grep -v -E '[0-9]$' |sort -k11|cut -d' ' -f9,10,11,12
@@ -10,7 +13,7 @@ find /dev/disk/by-id/ -type l|xargs -I{} ls -l {}|grep -v -E '[0-9]$' |sort -k11
 ```
 qm set <vm> -scsi0 /dev/disk/by-id/...
 ```
-# Manuals
+
 ## iGPU Passthrough Intel CPU _[source](https://3os.org/infrastructure/proxmox/gpu-passthrough/igpu-passthrough-to-vm/#proxmox-configuration-for-igpu-full-passthrough)_
 
 ‼️ Proxmox lose GPU capabilities
