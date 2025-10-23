@@ -3,7 +3,7 @@
 1. Create stack in Komodo using [compose.yml](https://github.com/platnub/container-host-templates/blob/main/docker/containers/sabnzbd/compose.yml) and [.env](https://github.com/platnub/container-host-templates/blob/main/docker/containers/sabnzbd/.env)
 2. Run the following through the Komodo terminal
    ```
-   mkdir /downloads/sabnzbd && cd /downloads/sabnzbd && mkdir complete && mkdir incomplete && cd complete && mkdir movies_en && mkdir movies_anime && mkdir movies_de && mkdir series_en && mkdir series_anime && mkdir series_de
+   mkdir /media/downloads/sabnzbd/complete -p && mkdir /media/downloads/sabnzbd/incomplete && cd /media/downloads/sabnzbd/complete && mkdir movies_en && mkdir movies_anime && mkdir movies_de && mkdir series_en && mkdir series_anime && mkdir series_de
    ```
 3. Run this command on the Docker host
      - Import the scripts from the [TRaSH Guides](https://trash-guides.info/Downloaders/SABnzbd/scripts/)
@@ -14,8 +14,8 @@
 5. Configure SABNzbd following the [TRaSH guide](https://trash-guides.info/Downloaders/SABnzbd/Basic-Setup/)
      - Not configuring Tuning will let SABnzbd use ALL the download speed
      - Configure folders
-         - `/downloads/sabnzbd/incomplete`
-         - `/downloads/sabnzbd/complete`
+         - `/media/downloads/sabnzbd/incomplete`
+         - `/media/downloads/sabnzbd/complete`
      - Configure categories...
      - Switches
          - Pre-queue script: Clean.py
