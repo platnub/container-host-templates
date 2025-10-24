@@ -1,16 +1,23 @@
+> [!WARNING]
+> Currently a [fatal issue](https://github.com/jellyfin/jellyfin/issues/15027) with versions 10.11+
+
 # Requirements
  - [NFS Shares setup](https://github.com/platnub/container-host-templates/blob/main/virtual-machines/open-media-vault/README.md)
 
 # Useful links
  - [Collection of Plugins & Themes](https://github.com/awesome-jellyfin/awesome-jellyfin)
+
 ## Plugins
  - [Jellyfin SSO Plugin](https://github.com/9p4/jellyfin-plugin-sso/)
  - [Intro Skipper](https://github.com/intro-skipper/intro-skipper)
+
 ## Themes
  - [Finity](https://github.com/prism2001/finity)
  - [Ultrachromic](https://github.com/CTalvio/Ultrachromic)
  - [Zesty](https://forum.jellyfin.org/t-%F0%9F%8D%8B%EF%B8%8F-zestytheme)
+
 # Manuals
+
 ## SSO Setup using [Jellyfin Plugin SSO](https://github.com/9p4/jellyfin-plugin-sso/)
 1. [Install Jellyfin Plugin SSO](https://github.com/9p4/jellyfin-plugin-sso#installing)
 2. Restart Jellyfin
