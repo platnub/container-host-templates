@@ -49,8 +49,8 @@
   - [Kapowarr - Comics and managa organization and management]
   - [Jackett - Indexer proxy]
   - [SABnzbd - Usenet download client](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sabnzbd)
-  - [qBittorrent - Torrent download client]
-    - Includes [Gluetun - VPN]
+  - [qBittorrent - Torrent download client](https://github.com/platnub/container-host-templates/tree/main/docker/containers/qbittorrent)
+    - Includes Gluetun - VPN
   - [Unpackerr - Unpack compressed torrent downloads]
   - [Cleanuparr - Download cleaner for torrents]
 - <ins>**Gaming**</ins>
