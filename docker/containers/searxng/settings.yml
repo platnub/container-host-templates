@@ -6,6 +6,7 @@ search:
   # formats: [html, csv, json, rss]
   formats:
     - html
+    - json
 ui:
   infinite_scroll: true
   theme_args:
