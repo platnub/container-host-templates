@@ -3,6 +3,9 @@ use_default_settings: true
 search:
   autocomplete: "google"
   favicon_resolver: "google"
+  # formats: [html, csv, json, rss]
+  formats:
+    - html
 ui:
   infinite_scroll: true
   theme_args:
