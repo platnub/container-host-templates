@@ -1,4 +1,13 @@
 # Manuals
+## Pangolin Resource configuration
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `openwebui`
+    - Port: `8080`
+- Authentication
+  - Use Platform SSO: Disabled
+
 ## Installation
 1. Create stack in Komodo using [compose.yml](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/openwebui/compose.yml) and [.env](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/openwebui/.env)
 2. Deploy the stack using Komodo
