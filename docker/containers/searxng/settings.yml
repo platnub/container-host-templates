@@ -89,12 +89,12 @@ engines:
 # Science
   - name: astrophysics data system
     # read https://docs.searxng.org/dev/engines/online/astrophysics_data_system.html
-    api_key: "<ADS_API_KEY>"
+    api_key: "<ADS_API_KEY>" # Required
     # Change to enable engine
     inactive: true
   - name: core.ac.uk
     # read https://docs.searxng.org/dev/engines/online/core.html
-    api_key: "" # Required
+    api_key: "<CORE_API_KEY>" # Required
     # Change to enable engine
     inactive: true
   - name: openalex
