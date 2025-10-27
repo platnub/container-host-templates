@@ -1,5 +1,5 @@
 # see https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
-use_default_settings: true  
+use_default_settings: true
 search:
   autocomplete: "google"
   favicon_resolver: "google"
