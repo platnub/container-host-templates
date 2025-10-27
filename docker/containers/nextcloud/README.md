@@ -46,6 +46,7 @@
    ```
    php occ config:system:set trusted_proxies 2 --value="<LOCAL_IP>"
    ```
+6. Restart the Nextcloud containers through the AIO management panel
 
 ## SSO Setup using (preinstalled) [OpenID COnnect user backend](https://apps.nextcloud.com/apps/user_oidc) plugin
 1. Follow the instructions from [Authentik - Nextcloud integration](https://integrations.goauthentik.io/chat-communication-collaboration/nextcloud)
