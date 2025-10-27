@@ -18,7 +18,7 @@
 # Configure VM
 - [Docker engine & Komodo mangement](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
 
-# Install containers
+# Containers
 ## Docker
 - <ins>**Core**</ins>
   - [Socket Proxy - Proxy access to docker socket](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
