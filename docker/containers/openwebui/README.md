@@ -8,7 +8,10 @@
   - Use Platform SSO: Disabled
 
 # Extra
- - [Google provider - OpenWebUI Pipeline](https://github.com/open-webui/pipelines/blob/main/examples/pipelines/providers/google_manifold_pipeline.py)
+## Providers
+ - OpenAI base URL: `https://api.openai.com/v1`
+ - Google base URL: `https://generativelanguage.googleapis.com/v1beta/openai`
+ - Mistral base URL: `https://api.mistral.ai/v1/chat/completions`
 
 # Manuals
 ## Pangolin Resource configuration
