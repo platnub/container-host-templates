@@ -95,7 +95,7 @@
             4. Discovery endpoint: `https://authentik.example.com/application/o/nextcloud/.well-known/openid-configuration`
             5. Scope: `email profile nextcloud openid`
             6. Attribute mapping
-                1. User ID: `preferred_username`
+                1. User ID: `sub`
                 2. Groups: `groups`
                 3. Display name: `name`
                 4. Email: `email`
