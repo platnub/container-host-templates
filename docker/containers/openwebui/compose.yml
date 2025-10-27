@@ -12,7 +12,7 @@ services:
   openwebui:
     container_name: openwebui
     image: ghcr.io/open-webui/open-webui:main
-    restart: always
+    restart: unless-stopped
     user: ${PUID}:${PGID}
     networks:
       - openwebui
