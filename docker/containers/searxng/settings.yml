@@ -15,7 +15,90 @@ outgoing:
       - socks5h://tor:9050
   using_tor_proxy: true
 engines:
+# Reverese image search - https://docs.searxng.org/dev/engines/online_url_search/tineye.html
+  - name: tineye
+    disabled: false
+# General
   - name: bing
-    engine: bing
-    shortcut: bi
+    disabled: false
+  - name: annas archive
+    disabled: false
+  - name: crowdview
+    disabled: false
+  - name: encyclosearch
+    disabled: false
+  - name: goodreads
+    disabled: false
+  - name: hackernews
+    disabled: false
+  - name: huggingface
+    disabled: false
+  - name: huggingface datasets
+    disabled: false
+  - name: imdb
+    disabled: false
+  - name: openlibrary
+    disabled: false
+  - name: presearch
+    disabled: false
+  - name: qwant
+    disabled: false
+  - name: reddit
+    disabled: false
+  - name: rottentomatoes
+    disabled: false
+  - name: tmdb
+    disabled: false
+  - name: yandex
+    disabled: false
+  - name: yahoo
+    disabled: false
+  - name: mojeek
+    disabled: false
+# Images
+  - name: adobe stock
+    disabled: false
+  - name: duckduckgo images
+    disabled: false
+  - name: imgur
+    disabled: false
+  - name: presearch images
+    disabled: false
+  - name: qwant images
+    disabled: false
+  - name: yandex images
+    disabled: false
+  - name: mojeek images
+    disabled: false
+# Videos
+  - name: adobe stock video
+    disabled: false
+  - name: odysee
+    disabled: false
+# News
+  - name: duckduckgo news
+    disabled: false
+  - name: presearch news
+    disabled: false
+  - name: qwant news
+    disabled: false
+  - name: yahoo news
+    disabled: false
+  - name: mojeek news
+    disabled: false
+# Science
+  - name: astrophysics data system
+    # read https://docs.searxng.org/dev/engines/online/astrophysics_data_system.html
+    api_key: "<ADS_API_KEY>"
+    # Change to enable engine
+    inactive: true
+  - name: core.ac.uk
+    # read https://docs.searxng.org/dev/engines/online/core.html
+    api_key: "" # Required
+    # Change to enable engine
+    inactive: true
+  - name: openalex
+    disabled: false
+# Other
+  - name: openmeteo
     disabled: false
