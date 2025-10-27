@@ -33,6 +33,7 @@
   - [Homepage - Service dashboard]
   - [Nextcloud - Cloud storage](https://github.com/platnub/container-host-templates/tree/main/docker/containers/nextcloud)
     - Integrated with Collabora - Cloud office suite
+  - [Paperless NGX - Document management system]
   - [Vaultwarden - Password manager](https://github.com/platnub/titan-server/tree/main/docker/containers/vaultwarden)
 - <ins>**Media**</ins>
   - [Jellyfin - Netflix-like media streaming](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyfin)
