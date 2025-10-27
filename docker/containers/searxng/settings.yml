@@ -1,0 +1,11 @@
+# see https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
+use_default_settings: true  
+search:
+  autocomplete: "google"
+  favicon_resolver: "google"
+outgoing:
+  request_timeout: 10.0
+  proxies:
+  all://:
+    - socks5h://tor:9050
+  using_tor_proxy: true
