@@ -61,6 +61,6 @@
 - <ins>**Automation & AI**</ins>
   - [Archon - AI coding command center]
   - [Flowise - AI agent builder]
-  - [n8n - Automation workflow platform]
+  - [n8n - Automation workflow platform](https://github.com/platnub/container-host-templates/tree/main/docker/containers/n8n)
   - [OpenWebUI - AI agent dashboard]
   - [SearXNG - Metasearch engine]
