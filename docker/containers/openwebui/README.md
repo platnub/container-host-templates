@@ -1,3 +1,15 @@
+# Pangolin Resource configuration
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `openwebui`
+    - Port: `8080`
+- Authentication
+  - Use Platform SSO: Disabled
+
+# Extra
+ - [Google provider - OpenWebUI Pipeline](https://github.com/open-webui/pipelines/blob/main/examples/pipelines/providers/google_manifold_pipeline.py)
+
 # Manuals
 ## Pangolin Resource configuration
 - Proxy
