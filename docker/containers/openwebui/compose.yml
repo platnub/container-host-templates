@@ -13,14 +13,13 @@ services:
     container_name: openwebui
     image: ghcr.io/open-webui/open-webui:main
     restart: unless-stopped
-    user: ${PUID}:${PGID}
     networks:
       - openwebui
     volumes:
       - openwebui:/app/backend/data
     environment:
-      - TZ=${TZ}
       - WEBUI_URL=${WEBUI_URL}
+      - HOST=${HOST}
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
       - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
       - OAUTH_PROVIDER_NAME=${OAUTH_PROVIDER_NAME}
@@ -30,3 +29,6 @@ services:
       - ENABLE_SIGNUP=${ENABLE_SIGNUP}
       - ENABLE_LOGIN_FORM=${ENABLE_LOGIN_FORM}
       - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=${OAUTH_MERGE_ACCOUNTS_BY_EMAIL}
+      - DEFAULT_USER_ROLE=${DEFAULT_USER_ROLE}
+      - WEB_SEARCH_ENGINE=${WEB_SEARCH_ENGINE}
+      - SEARXNG_QUERY_URL=${SEARXNG_QUERY_URL}
