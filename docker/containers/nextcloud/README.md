@@ -42,6 +42,10 @@
     7. Disable port 8080 in the Docker configuration and destroy & deploy the containers
 4. Open the terminal of container 'nextcloud-aio-nextcloud' using Komodo
     1. Run `php occ maintenance:repair --include-expensive`
+5. 'Administrator settings > Overview' will show the reverse proxy IP being throttled. Copy this IP and run this command through the terminal of the 'nextcloud-aio-nextcloud' container and replace <LOCAL_IP>
+   ```
+   php occ config:system:set trusted_proxies 2 --value="<LOCAL_IP>"
+   ```
 
 ## SSO Setup using (preinstalled) [OpenID COnnect user backend](https://apps.nextcloud.com/apps/user_oidc) plugin
 1. Follow the instructions from [Authentik - Nextcloud integration](https://integrations.goauthentik.io/chat-communication-collaboration/nextcloud)
