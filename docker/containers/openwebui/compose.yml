@@ -1,0 +1,25 @@
+########################### NETWORKS
+networks:
+  openwebui:
+    external: true
+
+########################### VOLUMES
+volumes:
+  openwebui:
+
+########################### SERVICES
+services:
+  openwebui:
+    container_name: openwebui
+    image: ghcr.io/open-webui/open-webui:main
+    restart: always
+    user: ${PUID}:${PGID}
+    networks:
+      - openwebui
+    volumes:
+      - open-webui:/app/backend/data
+    environment:
+      - TZ=${TZ}
+      - WEBUI_URL=${WEBUI_URL}
+      - ENABLE_SIGNUP=${ENABLE_SIGNUP}
+      - ENABLE_OAUTH_SIGNUP=${ENABLE_OAUTH_SIGNUP}
