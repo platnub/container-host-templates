@@ -10,6 +10,7 @@
 ########################### NETWORKS
 networks:
   komodo:
+    name: komodo
 
 ########################### VOLUMES
 volumes:
