@@ -28,6 +28,7 @@
 - <ins>**Authentication**</ins>
   - [Authentik - Single sign on](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
 - <ins>**Information**</ins>
+  - [Actual - Finance]
   - [Grocy - Recipe and food stock dashboard]
   - [Homepage - Service dashboard]
   - [Nextcloud - Cloud storage](https://github.com/platnub/container-host-templates/tree/main/docker/containers/nextcloud)
