@@ -3,6 +3,8 @@ use_default_settings: true
 search:
   autocomplete: "google"
   favicon_resolver: "google"
+ui:
+  infinite_scroll: true
 outgoing:
   request_timeout: 10.0
   proxies:
