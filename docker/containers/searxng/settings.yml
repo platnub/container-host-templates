@@ -5,6 +5,9 @@ search:
   favicon_resolver: "google"
 ui:
   infinite_scroll: true
+  theme_args:
+    # style of simple theme: auto, light, dark, black
+    simple_style: black
 outgoing:
   request_timeout: 10.0
   proxies:
