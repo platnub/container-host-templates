@@ -14,3 +14,8 @@ outgoing:
     all://:
       - socks5h://tor:9050
   using_tor_proxy: true
+engines:
+  - name: bing
+    engine: bing
+    shortcut: bi
+    disabled: false
