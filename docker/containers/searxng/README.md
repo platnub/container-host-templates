@@ -11,4 +11,4 @@ docker volume create searxng_searxng.etc && cd /var/lib/docker/volumes/searxng_s
 
 ## Extra Search Engine options
  - [Astrophysics Data System (ADS) - API key](https://ui.adsabs.harvard.edu/help/api/) _[searxng](https://docs.searxng.org/dev/engines/online/astrophysics_data_system.html)_
- - [Core AC UK](https://core.ac.uk/services/api) _[searxng](https://docs.searxng.org/dev/engines/online/core.html_)
+ - [Core AC UK](https://core.ac.uk/services/api) _[searxng](https://docs.searxng.org/dev/engines/online/core.html)_
