@@ -25,7 +25,7 @@
     5. `nano /etc/fstab`
     6. Edit NFS_HOST and add this line to '/etc/fstap'
        ```
-       <NFS_HOST>:/Nextcloud    /nfs/nextcloud_data   nfs auto,nofail,noatime,noolock,intr,tcp,actimeo=1800 0 0
+       <NFS_HOST>:/Nextcloud /nfs/nextcloud_data nfs auto,nofail,noatime,noolock,intr,tcp,actimeo=1800 0 0
        ```
 2. Deploy Nextcloud in Komodo using the [compose.yml](https://github.com/platnub/container-host-templates/blob/main/docker/containers/nextcloud/compose.yml) and [.env](https://github.com/platnub/container-host-templates/blob/main/docker/containers/nextcloud/.env) files.
     1. Enable port 8080 in the Docker configuration
