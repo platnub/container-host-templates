@@ -11,6 +11,9 @@ read -p "Enter the Komodo core passkey: " passkey
 # Configure user user
 groupadd -g 1000 user
 useradd -r user -u 1000 -g 1000
+# Configure bkup user
+groupadd -g 1001 bkup
+useradd -r bkup -u 1001 -g 1001
 # Configure komodo user
 groupadd -g 1337 komodo
 useradd --create-home komodo -u 1337 -g 1337
