@@ -9,9 +9,15 @@
 
 # Extra
 ## Providers
- - OpenAI base URL: `https://api.openai.com/v1`
- - Google base URL: `https://generativelanguage.googleapis.com/v1beta/openai`
- - Mistral base URL: `https://api.mistral.ai/v1/chat/completions`
+ - OpenAI
+     - Base URL: `https://api.openai.com/v1`
+     - [Models](https://platform.openai.com/docs/models)
+ - Google
+     - Base URL: `https://generativelanguage.googleapis.com/v1beta/openai`
+     - [Models](https://ai.google.dev/gemini-api/docs/models)
+ - Mistral
+     - Base URL: `https://api.mistral.ai/v1/chat/completions`
+     - [Models](https://docs.mistral.ai/getting-started/models)
 
 # Manuals
 ## Pangolin Resource configuration
