@@ -8,7 +8,7 @@
 2. Following the instructions from the [Supabase docs](https://supabase.com/docs/guides/self-hosting/docker#securing-your-services), generate the keys:
     1. Go to the [Supabase docs - Securing your services](https://supabase.com/docs/guides/self-hosting/docker#securing-your-services) and save the generated JWT
     2. Generate a 'POSTGRES_PASSWORD', 'PG_META_CRYPTO_KEY', 'SECRKET_KEY_BASE' and a 'PG_META_CRYPTO_KEY' using `openssl rand -base64 48` in a terminal
-    3. Generate a 'VAULT_ENC_KEY' using `openssl rand -base64 32` in a terminal
+    3. Generate a 'VAULT_ENC_KEY' using `openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c32; echo` in a terminal
     4. Create a 'POOLER_TENANT_ID', optionally using [randomwordgenerator.com](https://randomwordgenerator.com/). Example, 3 words: `finger-long-access`
     5. Configure
          - SITE_URL: https://supabase.example.com
