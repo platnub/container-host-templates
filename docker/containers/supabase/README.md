@@ -2,7 +2,9 @@
 
 ## Installation
 > [!IMPORTANT]
-> The [compose.yml](https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml) and [.env](https://github.com/supabase/supabase/blob/master/docker/.env.example) are based off of the Supabase Github examples and can change at any time.
+> 1. The [compose.yml](https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml) and [.env](https://github.com/supabase/supabase/blob/master/docker/.env.example) are based off of the Supabase Github examples and can change at any time.
+> 2. [Temporary fix]() by disabling Analytics container
+> 3. [Temporary fix]([https://github.com/orgs/supabase/discussions/36109](https://github.com/orgs/supabase/discussions/26362)) is to manually create the volume files
 
 1. Create the stack in Komodo using the [compose.yml](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/supabase/compose.yml) and [.env](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/supabase/.env) files.
 2. Following the instructions from the [Supabase docs](https://supabase.com/docs/guides/self-hosting/docker#securing-your-services), generate the keys:
