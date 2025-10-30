@@ -4,7 +4,7 @@
 > [!IMPORTANT]
 > 1. The [compose.yml](https://github.com/supabase/supabase/blob/master/docker/docker-compose.yml) and [.env](https://github.com/supabase/supabase/blob/master/docker/.env.example) are based off of the Supabase Github examples and can change at any time.
 > 2. [Temporary fix](https://github.com/supabase/supabase/issues/39933) by changing the Analytics container logflare container image to [1.15.3](https://github.com/Logflare/logflare/releases/tag/v1.15.3). Something seems to change processor related in [1.15.4](https://github.com/Logflare/logflare/releases/tag/v1.15.4)
-> 3. [Temporary fix](https://github.com/orgs/supabase/discussions/36109](https://github.com/orgs/supabase/discussions/26362) is to manually create the volume files
+> 3. [Temporary fix](https://github.com/orgs/supabase/discussions/26362) is to manually create the volume files
 > 4. Added network `default` and `supabase` to the Kong container and close port 8000 and 8443
 
 1. Create the stack in Komodo using the [compose.yml](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/supabase/compose.yml) and [.env](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/supabase/.env) files.
