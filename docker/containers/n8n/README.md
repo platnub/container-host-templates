@@ -3,6 +3,9 @@
 - [NCNodes- Community built nodes for n8n](https://ncnodes.com)
     - [discord-trigger](https://ncnodes.com/package/n8n-nodes-discord-trigger)
 
+## Information
+- [Get workflow static data](https://docs.n8n.io/code/cookbook/builtin/get-workflow-static-data/)
+
 # Manuals
 ## Pangolin Resource configuration
 - Proxy
