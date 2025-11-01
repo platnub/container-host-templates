@@ -1,0 +1,32 @@
+########################### NETWORKS
+networks:
+  grocy:
+    external: true
+
+########################### VOLUMES
+volumes:
+  config:
+
+########################### LOCKDOWN
+x-lockdown: &lockdown
+  read_only: true
+  security_opt:
+    - "no-new-privileges=true"
+
+########################### SERVICES
+services:
+  grocy:
+    container_name: grocy
+    image: lscr.io/linuxserver/grocy:latest
+    restart: unless-stopped
+    <<: *lockdown
+    user: ${PUID}:${PGID}
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Etc/UTC
+    volumes:
+      - config:/config
+    ports:
+      - 9283:80
+    restart: unless-stopped
