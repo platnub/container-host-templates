@@ -1,3 +1,8 @@
+# Useful information
+## Discord packages
+- [NCNodes- Community built nodes for n8n](https://ncnodes.com)
+    - [discord-trigger](https://ncnodes.com/package/n8n-nodes-discord-trigger)
+
 # Manuals
 ## Pangolin Resource configuration
 - Proxy
