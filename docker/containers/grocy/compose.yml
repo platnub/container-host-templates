@@ -31,4 +31,3 @@ services:
       - config:/config
     ports:
       - 9283:80
-    restart: unless-stopped
