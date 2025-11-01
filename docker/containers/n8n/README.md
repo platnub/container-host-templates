@@ -1,5 +1,7 @@
 # Useful information
-## Discord packages
+## Grocy Extensions
+- [Grocy OAuth2 Middleware - Github](https://github.com/bboehmke/grocy-oauth)
+### Community nodes
 - [NCNodes- Community built nodes for n8n](https://ncnodes.com)
     - [discord-trigger](https://ncnodes.com/package/n8n-nodes-discord-trigger)
 
