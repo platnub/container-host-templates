@@ -1,0 +1,1 @@
+Default credentials: admin/admin
