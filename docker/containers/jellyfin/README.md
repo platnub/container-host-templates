@@ -26,7 +26,7 @@
      - Name: Jellyfin
      - Slug: jellyfin
      - UI settings
-       - https://jellyfin.example.com
+       - Launch URL `https://jellyfin.example.com`
    - Provider settings
      - Authorization flow: '...implicit-consent'
      - Client type: Confidential
