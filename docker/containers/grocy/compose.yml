@@ -21,10 +21,12 @@ services:
     restart: unless-stopped
     <<: *lockdown
     user: ${PUID}:${PGID}
+    networks:
+      - grocy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - TZ=Etc/UTC
+      - TZ=${TZ}
     volumes:
       - config:/config
     ports:
