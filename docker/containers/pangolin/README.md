@@ -196,17 +196,18 @@
 
 ℹ️ Continue using instructions from [HHF Technology Forum](https://forum.hhf.technology/t/crowdsec-manager-for-pangolin-user-guide/579)
 
-‼️ Use the following options when the script starts
- - [Recommended] Option 10: Enroll with CrowdSec console (Login in to the [CrowdSec console](https://app.crowdsec.net/) and get the string from the "Connect with console" command at the bottom
- - [Recommended] Option 11: Set up custom scenarios
- - [Recommended] Option 12: Set up captcha protections (Get an API key from [Cloudflare Turnstile](https://dash.cloudflare.com/). Make it "Non-interactive")
-
 10. ```
     cd /opt/docker/pangolin-core/appdata
     curl -o setup_crowdsec_manager.sh https://gist.githubusercontent.com/hhftechnology/aadadf48ac906fc38cfd0d7088980475/raw/0a384d518e74c9963a51fcfb60d5ef5bccf9f645/setup_crowdsec_manager.sh
     chmod +x setup_crowdsec_manager.sh
     ./setup_crowdsec_manager.sh
     ```
+ - Option 7:
+   - **Recommended** Option 01: Whitelist current public IP (Whitelist in both Crowdsec and Traefik)
+   - **Recommended** Option 02: Whitelist a specific IP (Add any home addresses. Whitelist in both Crowdsec and Traefik)
+ - **Recommended** Option 10: Enroll with CrowdSec console (Login in to the [CrowdSec console](https://app.crowdsec.net/) and get the string from the "Connect with console" command at the bottom
+ - **Recommended** Option 11: Set up custom scenarios
+ - **Recommended** Option 12: Set up captcha protections (Get an API key from [Cloudflare Turnstile](https://dash.cloudflare.com/). Make it "Non-interactive")
 
 11. Destroy the stack in Komodo
 
