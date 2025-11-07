@@ -26,4 +26,5 @@
 ## Configure qBittorrent
 1. Configure a new admin password through the web interface (Make sure to change the qBittorrent credentials in .env)
    'Options > WebUI > Authentication'
-2. Change 'Options > Downloads > Saving Management > Default Save Path' to `/media/downloads/qbittorrent/complete` and 'Keep incomplete torrents in' to `/media/downloads/qbittorrent/incomplete`
+2. Change 'Options > Downloads > Saving Management > Default Save Path' to `/media/downloads/qbittorrent/complete`
+   and 'Keep incomplete torrents in' to `/media/downloads/qbittorrent/incomplete`
