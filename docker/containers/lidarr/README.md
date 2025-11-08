@@ -10,11 +10,17 @@
        ```
        mkdir -p downloads/slskd/incomplete && mkdir -p downloads/slskd/complete && chown -R 1000:1000 downloads/slskd && chmod -R 770 downloads/slskd
        ```
-4. Deploy the stack
-5. Make sure that qBittorrent is connected using the VPN connection. Check the logs for the external IP or:
-    1. Enable 'View > Log'
-    2. Top right 'Execution Log'
-    3. Check for 'Detected external IP'
+4. Soulseek doesn't use accounts. Use a random username and password which are likely unused by others. Fill them in for the SLSKD_SLSK_USERNAME and SLSKD_SLSK_PASSWORD
+5. Deploy the stack
 ## Configuration
-1. Install plguin `https://github.com/allquiet-hub/Lidarr.Plugin.Slskd`
-2. Generate secret using `openssl rand -hex 32` in a terminal
+1. Create a login for the WebUI
+2. Install plguin `https://github.com/TypNull/Tubifarry/tree/develop`
+3. Destroy and deploy the stack again in Komodo
+4. Add the following Indexers
+    - Slskd
+    - URL: `http://gluetun:5030`
+    - API Key: _any_
+5. Add the following Download Clients
+    - Skskd
+    - URL: `http://gluetun:5030`
+    - API Key: _any_
