@@ -8,7 +8,7 @@
 3. Create the media folders in the OMV media share `cd /srv/dev-disk-by-uuid-.../media`
      - A placeholder is necessary otherwise Slskd will not recognize an empty media folder.
        ```
-       mkdir -p downloads/slskd/incomplete && mkdir -p downloads/slskd/complete
+       mkdir -p downloads/slskd/incomplete && mkdir -p downloads/slskd/complete && chown -R 1000:1000 downloads/slskd && chmod -R 770 downloads/slskd
        ```
 4. Deploy the stack
 5. Make sure that qBittorrent is connected using the VPN connection. Check the logs for the external IP or:
