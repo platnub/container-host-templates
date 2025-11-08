@@ -12,3 +12,4 @@
     3. Check for 'Detected external IP'
 ## Configuration
 1. Install plguin `https://github.com/allquiet-hub/Lidarr.Plugin.Slskd`
+2. Generate secret using `openssl rand -hex 32` in a terminal
