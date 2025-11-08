@@ -26,9 +26,7 @@
 ## Configure qBittorrent
 1. Configure a new admin password through the web interface (Make sure to change the qBittorrent credentials in .env)<br>
    'Options > WebUI > Authentication'
-2. Change 'Options > Downloads > Saving Management > Default Save Path' to `/media/downloads/qbittorrent/complete`<br>
-   and 'Keep incomplete torrents in' to `/media/downloads/qbittorrent/incomplete`
-3. Configure qBittorrent following the [TRaSH guide](https://trash-guides.info/Downloaders/qBittorrent/Basic-Setup/)
+2. Configure qBittorrent following the [TRaSH guide](https://trash-guides.info/Downloaders/qBittorrent/Basic-Setup/)
     - 'Options > Downloads'
         - Torrent content layout: 'Original'
         - Delete .torrent files afterwards: ✔️ Enabled
