@@ -28,3 +28,40 @@
    'Options > WebUI > Authentication'
 2. Change 'Options > Downloads > Saving Management > Default Save Path' to `/media/downloads/qbittorrent/complete`<br>
    and 'Keep incomplete torrents in' to `/media/downloads/qbittorrent/incomplete`
+3. Configure qBittorrent following the [TRaSH guide](https://trash-guides.info/Downloaders/qBittorrent/Basic-Setup/)
+    - 'Options > Downloads'
+        - Torrent content layout: 'Original'
+        - Delete .torrent files afterwards: ✔️ Enabled
+        - Pre-allocate disk space for all files: ✔️ Enabled (When not using unRaid)
+        - Default Torrent Management Mode: 'Automatic'
+        - When Torrent Category changed: 'Relocate torrent'
+        - When Default Save Path changed: 'Relocate affected torrents'
+        - When Category Save Path changed: 'Relocate affected torrents'
+        - Default Save Path: `/media/downloads/qbittorrent/complete`
+        - Keep incomplete torrents in: ✔️ Enabled `/media/downloads/qbittorrent/incomplete`
+    - 'Options > Connection'
+        - Peer connection protocol: 'TCP'
+        - Use UPnP / NAT-PMP port forwarding from my router: ❌ Disabled
+        - Connection Limits: _Modify to connectivity setup_
+    - 'Options > Speed'
+        - Global Rate Limits: _Modify to connectivity setup_
+        - Alternative Rate Limits: _Modify to connectivity setup_
+        - Schedule the use of alternative rate limits: _Modify to preference_
+        - Apply rate limit to µTP protocol: ✔️ Enabled
+        - Apply rate limit to transport overhead: ❌ Disabled
+        - Apply rate limit to peers on LAN: ✔️ Enabled
+    - 'Options > BitTorrent'
+        - Enable DHT (decentralized network) to find more peers: ✔️ Enabled
+        - Enable Peer Exchange (PeX) to find more peers: ✔️ Enabled
+        - Enable Local Peer Discovery to find more peers: ✔️ Enabled
+        - Encryption mode: 'Allow encryption'
+        - Enable anonymous mode: ❌ Disabled
+        - Torrent Queueing: ✔️ Enabled
+            - _[Suggestion]_ Maximum active downloads: 10
+            - _[Suggestion]_ Maximum active uploads: 25
+            - _[Suggestion]_ Maximum active torrents: 25
+        - Do not count slow torrents in these limits: ✔️ Enabled
+            - [Recommeded] Keep defaults
+        - Automatically append trackers from URL to new downloads: ❌ Disabled
+    - 'Options > WebUI > Security'
+        - Enable clickjacking protection: ❌ Disabled
