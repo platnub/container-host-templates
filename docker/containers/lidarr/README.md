@@ -5,8 +5,13 @@
     - SERVER_REGIONS
     - OPENVPN_USER
     - OPENVPN_PASSWORD
-3. Deploy the stack
-7. Make sure that qBittorrent is connected using the VPN connection. Check the logs for the external IP or:
+3. Create the media folders in the OMV media share `cd /srv/dev-disk-by-uuid-.../media`
+     - A placeholder is necessary otherwise Slskd will not recognize an empty media folder.
+       ```
+       mkdir -p downloads/slskd/incomplete && mkdir -p downloads/slskd/complete
+       ```
+4. Deploy the stack
+5. Make sure that qBittorrent is connected using the VPN connection. Check the logs for the external IP or:
     1. Enable 'View > Log'
     2. Top right 'Execution Log'
     3. Check for 'Detected external IP'
