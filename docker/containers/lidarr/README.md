@@ -18,8 +18,12 @@
 3. Destroy and deploy the stack again in Komodo
 4. Add the following Indexers
     - Slskd
-    - URL: `http://gluetun:5030`
-    - API Key: _any_
+        - URL: `http://gluetun:5030`
+        - API Key: _any_
+        - Indexer Priority: `10`
+    - YouTube
+        - Cookie Path: ``
+        - Indexer Priority: `20`
 5. Add the following Download Clients
     - Skskd
     - URL: `http://gluetun:5030`
