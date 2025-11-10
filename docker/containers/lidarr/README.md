@@ -38,7 +38,7 @@
         - Use LRCLIB Lyric Provider: ✔️ Enable
         - Save Synced Lyrics: ✔️ Enable
         - ReEncode: 'AAC'
-        - FFmpeg Path: `/ffmpeg`
+        - FFmpeg Path: `/config/plugins/TypNull/Tubifarry`
         - Max Download Speed: _Configure for connection_
         - Tags: `youtube`
 6. 'Settings > Media Management'
