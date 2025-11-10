@@ -38,7 +38,7 @@
         - Use LRCLIB Lyric Provider: ✔️ Enable
         - Save Synced Lyrics: ✔️ Enable
         - ReEncode: 'AAC'
-        - FFmpeg Path: `/usr/bin/ffmpeg`
+        - FFmpeg Path: `/ffmpeg`
         - Tags: `youtube`
 6. 'Settings > Media Management'
     - Root Folder: `/media/music`
