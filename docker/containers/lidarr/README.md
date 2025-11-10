@@ -25,7 +25,9 @@
     - Private Torrent rackers
         - Indexer Priority: `20`
     - YouTube
+        - Cookie Path: `/cookies.txt`
         - Indexer Priority: `30`
+        - Download Client: 'YouTube'
 5. Add the following Download Clients
     - Skskd
         - URL: `http://gluetun:5030`
