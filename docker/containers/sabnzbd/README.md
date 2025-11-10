@@ -52,3 +52,6 @@
          - series_de
              - Script: `replace_for.py`
              - Folder/Path: `series_de`
+         - music
+             - Script: `replace_for.py`
+             - Folder/Path: `music`
