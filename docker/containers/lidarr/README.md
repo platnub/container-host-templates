@@ -21,9 +21,11 @@
         - URL: `http://gluetun:5030`
         - API Key: _any_
         - Indexer Priority: `10`
+    - Private Torrent rackers
+        - Indexer Priority: `20`
     - YouTube
         - Cookie Path: ``
-        - Indexer Priority: `20`
+        - Indexer Priority: `30`
 5. Add the following Download Clients
     - Skskd
     - URL: `http://gluetun:5030`
