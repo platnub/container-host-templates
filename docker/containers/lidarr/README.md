@@ -41,7 +41,6 @@
         - ReEncode: 'AAC'
         - FFmpeg Path: `/config/plugins/TypNull/Tubifarry`
         - Max Download Speed: _Configure for connection_
-        - Tags: `youtube`
 6. 'Settings > Media Management'
     - Root Folder: `/media/music`
     - Profile: 'Any'
