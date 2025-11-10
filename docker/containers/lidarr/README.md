@@ -34,7 +34,7 @@
     - YouTube
         - Run command on OMV media share host and cd to media share `mkdir -p downloads/youtube && chown 1000:1000 -R downloads`
         - Download Path: `/media/downloads/youtube`
-        - Cookie Path: # Using the [Firefox extension - Cookies](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/) or [Chrome extension - Cookies](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc), export the cookies.txt file for Current Site. Put the file in '/opt/docker/lidarr/appdata/cookies.txt'. Use this command for permissions `chown 1000:1000 cookies.txt & chmod 770 cookies.txt`
+        - Cookie Path: Using the [Firefox extension - Cookies](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/) or [Chrome extension - Cookies](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc), export the cookies.txt file for Current Site. Put the file in '/opt/docker/lidarr/appdata/cookies.txt'. Use this command for permissions `chown 1000:1000 cookies.txt & chmod 770 cookies.txt`
         - ReEncode: 'AAC'
         - FFmpeg Path: `/usr/bin/ffmpeg`
         - Tags: `youtube`
