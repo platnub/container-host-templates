@@ -22,8 +22,10 @@
         - URL: `http://gluetun:5030`
         - API Key: _any_
         - Indexer Priority: `10`
-    - Private Torrent rackers
+    - Usenet
         - Indexer Priority: `20`
+    - Private Torrent trackers
+        - Indexer Priority: `21`
     - YouTube
         - Cookie Path: `/cookies.txt`
         - Indexer Priority: `30`
