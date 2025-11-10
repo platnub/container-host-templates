@@ -35,6 +35,8 @@
         - Run command on OMV media share host and cd to media share `mkdir -p downloads/youtube && chown 1000:1000 -R downloads`
         - Download Path: `/media/downloads/youtube`
         - Cookie Path: `/cookies.txt`
+        - Use LRCLIB Lyric Provider: ✔️ Enable
+        - Save Synced Lyrics: ✔️ Enable
         - ReEncode: 'AAC'
         - FFmpeg Path: `/usr/bin/ffmpeg`
         - Tags: `youtube`
