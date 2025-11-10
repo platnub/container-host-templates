@@ -12,8 +12,8 @@
        ```
 4. Soulseek doesn't use accounts. Use a random username and password which are likely unused by others. Fill them in for the SLSKD_SLSK_USERNAME and SLSKD_SLSK_PASSWORD
 5. Run the following command on the host as root `apt-get install ffmpeg -y`
-    - 
-6. Deploy the stack
+6. If using YouTube download client use the [Firefox extension - Cookies](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/) or [Chrome extension - Cookies](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc), export the cookies.txt file for Current Site. Put the file in '/opt/docker/lidarr/appdata/cookies.txt'. Use this command for the appdata folder permissions `chown komodo:komodo  /opt/docker/lidarr/appdata & chown 1000:1000 /opt/docker/lidarr/appdata/cookies.txt & chmod 770 -R /opt/docker/lidarr/appdata`
+7. Deploy the stack
 ## Configuration
 1. Create a login for the WebUI
 2. Install plguin `https://github.com/TypNull/Tubifarry/tree/develop`
@@ -34,7 +34,7 @@
     - YouTube
         - Run command on OMV media share host and cd to media share `mkdir -p downloads/youtube && chown 1000:1000 -R downloads`
         - Download Path: `/media/downloads/youtube`
-        - Cookie Path: Using the [Firefox extension - Cookies](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/) or [Chrome extension - Cookies](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc), export the cookies.txt file for Current Site. Put the file in '/opt/docker/lidarr/appdata/cookies.txt'. Use this command for the appdata folder permissions `chown komodo:komodo  /opt/docker/lidarr/appdata & chown 1000:1000 /opt/docker/lidarr/appdata/cookies.txt & chmod 770 -R /opt/docker/lidarr/appdata`
+        - Cookie Path: `/cookies.txt`
         - ReEncode: 'AAC'
         - FFmpeg Path: `/usr/bin/ffmpeg`
         - Tags: `youtube`
