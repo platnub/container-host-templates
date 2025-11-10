@@ -3,7 +3,7 @@
 1. Create stack in Komodo using [compose.yml](https://github.com/platnub/container-host-templates/blob/main/docker/containers/sabnzbd/compose.yml) and [.env](https://github.com/platnub/container-host-templates/blob/main/docker/containers/sabnzbd/.env)
 2. Run the following through the Komodo terminal
    ```
-   mkdir /media/downloads/sabnzbd/complete -p && mkdir /media/downloads/sabnzbd/incomplete && cd /media/downloads/sabnzbd/complete && mkdir movies_en && mkdir movies_anime && mkdir movies_de && mkdir series_en && mkdir series_anime && mkdir series_de
+   mkdir /media/downloads/sabnzbd/complete -p && mkdir /media/downloads/sabnzbd/incomplete && cd /media/downloads/sabnzbd/complete && mkdir movies_en && mkdir movies_anime && mkdir movies_de && mkdir series_en && mkdir series_anime && mkdir series_de && mkdir music
    ```
 3. Run this command on the Docker host
      - Import the scripts from the [TRaSH Guides](https://trash-guides.info/Downloaders/SABnzbd/scripts/)
