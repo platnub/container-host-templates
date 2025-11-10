@@ -11,7 +11,8 @@
        mkdir -p downloads/slskd/incomplete && mkdir -p downloads/slskd/complete && chown -R 1000:1000 downloads/slskd && chmod -R 770 downloads/slskd
        ```
 4. Soulseek doesn't use accounts. Use a random username and password which are likely unused by others. Fill them in for the SLSKD_SLSK_USERNAME and SLSKD_SLSK_PASSWORD
-5. Deploy the stack
+5. Run the following command on the host as root `apt-get install ffmpeg -y`
+6. Deploy the stack
 ## Configuration
 1. Create a login for the WebUI
 2. Install plguin `https://github.com/TypNull/Tubifarry/tree/develop`
