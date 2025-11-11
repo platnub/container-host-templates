@@ -2,6 +2,7 @@
 networks:
   media-management:
     external: true
+  jackett:
 
 ########################### VOLUMES
 volumes:
@@ -32,6 +33,7 @@ services:
       - /run:exec
     networks:
       - media-management
+      - jackett
     ports:
       - 9117:9117
     volumes:
@@ -47,7 +49,8 @@ services:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     restart: unless-stopped
-    network_mode: service:jackett
+    networks:
+      - jackett
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_FILE=${LOG_FILE:-none}
