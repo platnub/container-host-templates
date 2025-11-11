@@ -10,6 +10,7 @@
 ## Plugins
  - [Jellyfin SSO Plugin](https://github.com/9p4/jellyfin-plugin-sso/)
  - [Intro Skipper](https://github.com/intro-skipper/intro-skipper)
+ - [BetterMix](https://github.com/StergiosBinopoulos/jellyfin-plugin-bettermix)
 
 ## Themes
  - [Finity](https://github.com/prism2001/finity)
