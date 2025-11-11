@@ -12,11 +12,11 @@ radarr:
 
     include:
       - template: radarr-quality-definition-movie
-      - template: radarr-quality-profile-hd-bluray-web
-      - template: radarr-custom-formats-hd-bluray-web
+      - template: radarr-quality-profile-remux-web-1080p
+      - template: radarr-custom-formats-remux-web-1080p
 
     quality_profiles:
-      - name: HD Bluray + WEB
+      - name: Remux + WEB 1080p
         reset_unmatched_scores:
           except:
             - 'Language: Original + English'
@@ -31,12 +31,12 @@ radarr:
           # Uncomment the next six lines to allow x265 HD releases with HDR/DV
           # - dc98083864ea246d05a42df0d05f81cc # x265 (HD)
         # assign_scores_to:
-          # - name: HD Bluray + WEB
+          # - name: Remux + WEB 1080p
             # score: 0
       - trash_ids:
           - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (no HDR/DV)
         assign_scores_to:
-          - name: HD Bluray + WEB
+          - name: Remux + WEB 1080p
 
       # Movie Versions - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#movie-versions
       - trash_ids:
@@ -48,7 +48,7 @@ radarr:
           - e9001909a4c88013a359d0b9920d7bea # Theatrical Cut
           - 957d0f44b592285f26449575e8b1167e # Special Edition
         assign_scores_to:
-          - name: HD Bluray + WEB
+          - name: Remux + WEB 1080p
 
       # Miscellaneous - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#miscellaneous
       - trash_ids:
@@ -60,7 +60,7 @@ radarr:
           - 0d91270a7255a1e388fa85e959f359d8 # FreeLeech
           - 4b900e171accbfb172729b63323ea8ca # Multi (Option to detect multiple subs?)
         assign_scores_to:
-          - name: HD Bluray + WEB
+          - name: Remux + WEB 1080p
 
       # HQ Release Groups - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#hq-release-groups
       - trash_ids:
@@ -68,7 +68,7 @@ radarr:
           - c20c8647f2746a1f4c4262b0fbbeeeae # HD Bluray Tier 02
           - 5608c71bcebba0a5e666223bae8c9227 # HD Bluray Tier 03
         assign_scores_to:
-          - name: HD Bluray + WEB
+          - name: Remux + WEB 1080p
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -87,11 +87,11 @@ radarr:
       - template: radarr-quality-definition-anime
       - template: radarr-quality-profile-anime
       - template: radarr-custom-formats-anime
-      - template: radarr-quality-profile-hd-bluray-web
-      - template: radarr-custom-formats-hd-bluray-web
+      - template: radarr-quality-profile-remux-web-1080p
+      - template: radarr-custom-formats-remux-web-1080p
 
     quality_profiles:
-      - name: HD Bluray + WEB
+      - name: Remux + WEB 1080p
         reset_unmatched_scores:
           except:
             - 'Language: Original + English'
@@ -151,12 +151,12 @@ radarr:
           # Uncomment the next six lines to allow x265 HD releases with HDR/DV
           # - dc98083864ea246d05a42df0d05f81cc # x265 (HD)
         # assign_scores_to:
-          # - name: HD Bluray + WEB
+          # - name: Remux + WEB 1080p
             # score: 0
       - trash_ids:
           - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (no HDR/DV)
         assign_scores_to:
-          - name: HD Bluray + WEB
+          - name: Remux + WEB 1080p
 
       # Movie Versions - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#movie-versions
       - trash_ids:
@@ -168,7 +168,7 @@ radarr:
           - e9001909a4c88013a359d0b9920d7bea # Theatrical Cut
           - 957d0f44b592285f26449575e8b1167e # Special Edition
         assign_scores_to:
-          - name: HD Bluray + WEB
+          - name: Remux + WEB 1080p
 
       # Miscellaneous - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#miscellaneous
       - trash_ids:
@@ -180,7 +180,7 @@ radarr:
           - 0d91270a7255a1e388fa85e959f359d8 # FreeLeech
           - 4b900e171accbfb172729b63323ea8ca # Multi (Option to detect multiple subs?)
         assign_scores_to:
-          - name: HD Bluray + WEB
+          - name: Remux + WEB 1080p
 
       # HQ Release Groups - https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/#hq-release-groups
       - trash_ids:
@@ -188,7 +188,7 @@ radarr:
           - c20c8647f2746a1f4c4262b0fbbeeeae # HD Bluray Tier 02
           - 5608c71bcebba0a5e666223bae8c9227 # HD Bluray Tier 03
         assign_scores_to:
-          - name: HD Bluray + WEB
+          - name: Remux + WEB 1080p
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
