@@ -7,7 +7,7 @@
     3. FlareSolverr Base URL: `http://flaresolverr-kapowarr:8191`
 3. On the OMV host in the media share, run this command to create the required folders:
    ```
-   mkdir comics && chown 1000:1000 comics && chmod 770 comics && mkdir -p downloads/kapowarr/temp && chown 1000:1000 -r downloads && chmod -r 770 downloads
+   mkdir comics && chown 1000:1000 comics && chmod 770 comics && mkdir -p downloads/kapowarr/temp && chown 1000:1000 -R downloads && chmod -R 770 downloads
    ```
 5. Go to 'Settings > Media Management'
     1. Add a Root Folder
