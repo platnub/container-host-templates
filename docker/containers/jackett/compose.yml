@@ -47,7 +47,7 @@ services:
   flaresolverr:
     # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
+    container_name: flaresolverr-jackett
     restart: unless-stopped
     networks:
       - jackett
