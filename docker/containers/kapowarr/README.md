@@ -10,5 +10,10 @@
    mkdir comics && chown 1000:1000 comics && chmod 770 comics && mkdir -p downloads/kapowarr/temp && chown 1000:1000 -R downloads && chmod -R 770 downloads
    ```
 5. Go to 'Settings > Media Management'
-    1. Add a Root Folder
+    - Add a Root Folder
         - Path: `/media/comics`
+6. Go to 'Settings > Download'
+    - Direct Download Temporary Folder: `/media/downloads/kapowarr/temp`
+7. Go to 'Settings > Download Clients'
+    - Add the qBittorrent client
+        - Base URL: `http://gluetun:8080`
