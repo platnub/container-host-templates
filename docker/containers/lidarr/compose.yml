@@ -48,7 +48,8 @@ services:
     image: slskd/slskd
     container_name: slskd
     restart: unless-stopped
-    network_mode: service:gluetun
+    networks:
+      - gluetun
     user: ${PUID}:${PGID}
     volumes:
       - slskd_app:/app
