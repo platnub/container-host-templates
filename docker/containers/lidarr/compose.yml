@@ -1,0 +1,99 @@
+########################### NETWORKS
+networks:
+  media-management:
+    external: true
+  lidarr:
+    external: true
+  gluetun:
+
+########################### VOLUMES
+volumes:
+  lidarr_config:
+  slskd_app:
+  gluetun:
+  downloads:
+  media:
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.0.20.200,soft,nfsvers=4"
+      device: ":/Media"
+
+########################### LOCKDOWN
+x-lockdown: &lockdown
+  # prevents write access to the image itself
+  read_only: true
+  # prevents any process within the container to gain more privileges
+  security_opt:
+    - "no-new-privileges=true"
+
+########################### SERVICES
+services:
+  lidarr:
+    image: ghcr.io/linuxserver-labs/prarr:lidarr-plugins
+    container_name: lidarr
+    restart: unless-stopped
+    networks:
+      - lidarr
+      - media-management
+    volumes:
+      - lidarr_config:/config
+      - media:/media
+      - ./appdata/cookies.txt:/cookies.txt:ro
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+
+  slskd:
+    image: slskd/slskd
+    container_name: slskd
+    restart: unless-stopped
+    network_mode: service:gluetun
+    user: ${PUID}:${PGID}
+    volumes:
+      - slskd_app:/app
+      - media:/media
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=${SLSKD_REMOTE_CONFIGURATION}
+      - SLSKD_HEADLESS:${SLSKD_HEADLESS}
+      - SLSKD_NO_AUTH=${SLSKD_NO_AUTH}
+      - SLSKD_SLSK_USERNAME=${SLSKD_SLSK_USERNAME}
+      - SLSKD_SLSK_PASSWORD=${SLSKD_SLSK_PASSWORD}
+      - SLSKD_FILE_PERMISSION_MODE=${SLSKD_FILE_PERMISSION_MODE}
+      - SLSKD_DOWNLOADS_DIR=${SLSKD_DOWNLOADS_DIR}
+      - SLSKD_INCOMPLETE_DIR=${SLSKD_INCOMPLETE_DIR}
+    depends_on:
+      gluetun:
+        condition: service_healthy
+
+  gluetun:
+    image: qmcgaw/gluetun:v3.40
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    networks:
+      - gluetun
+      - media-management
+    ports:
+      - 8002:8000/tcp  # GT Control Server
+#      - 5030:5030      # Slskd
+#      - 5031:5031      # Slskd
+      - 50300:50300    # Slskd
+    volumes:
+      - gluetun:/gluetun
+    environment:
+      - TZ=${TZ}
+      - UPDATER_PERIOD=24h
+### OpenVPN Settings
+      - VPN_SERVICE_PROVIDER=${VPN_PROVIDER}
+      - SERVER_REGIONS=${SERVER_REGIONS}
+      - SERVER_HOSTNAMES=${SERVER_HOSTNAMES}
+      - VPN_PORT_FORWARDING_PROVIDER=${VPN_PROVIDER}
+      - VPN_PORT_FORWARDING_STATUS_FILE=/gluetun/forwarded_port
+      - OPENVPN_USER=${OPENVPN_USER}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+      - LOG_LEVEL=debug
