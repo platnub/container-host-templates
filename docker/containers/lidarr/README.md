@@ -74,5 +74,6 @@
         - Compilation: ✔️ Enable
         - Official: ✔️ Enable
     5. 'Settings > Metadata'
-        - Tag Audio Files with Metadata: 'Never'
+        - Tag Audio Files with Metadata: 'For new downloads only'
+        - Embed Cover Art In Audio Files: ✔️ Enable
         - Scrub Existing Tags: ❌ Disabled
