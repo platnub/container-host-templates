@@ -10,7 +10,7 @@
 # Manuals
 ## Installing
 1. Create stack in Komodo using [compose.yml](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/sonarr/compose.yml) and [.env](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/sonarr/.env)
-2. Edit .env and generate a unique secret for each Sonarr instance using `openssl rand -hex 32`
+2. Edit .env and generate a unique secret for each Sonarr instance using `openssl rand -hex 16`
 3. Deploy the stack using Komodo
 4. Create the media folders in the terminal through Komodo
      - A placeholder is necessary otherwise Sonarr will not recognize an empty media folder.
