@@ -4,6 +4,7 @@
    ```
    mkdir books && chown 1000:1000 books && chmod 770 books && mkdir audiobooks && chown 1000:1000 audiobooks && chmod 770 audiobooks
    ```
+2. Edit .env and generate a secret using `openssl rand -hex 16`
 ## Configuration
 1. Create authentication credentials
     1. Authentication Method: 'Forms (Login Page)'
