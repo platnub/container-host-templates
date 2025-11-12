@@ -14,4 +14,5 @@
 3. Go to 'Settings > Media Management'
    - Add Root Folder
        - Path: `/media/books`
-       - 
+   - Rename Books: ✔️ Enabled
+5. Add indexers and download clients
