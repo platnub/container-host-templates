@@ -1,7 +1,5 @@
 ########################### NETWORKS
 networks:
-  pangolin:
-    external: true
   media-management:
     external: true
 
@@ -10,11 +8,6 @@ volumes:
   series_en-sonarr.etc:
   series_anime-sonarr.etc:
   series_de-sonarr.etc:
-  downloads:
-    driver_opts:
-      type: "nfs"
-      o: "addr=10.0.20.200,soft,nfsvers=4"
-      device: ":/Downloads"
   media:
     driver_opts:
       type: "nfs"
@@ -39,12 +32,10 @@ services:
     user: ${PUID}:${PGID}
     networks:
       - media-management
-    ports:
+#    ports:
 #      - 8989:8989
-      - 127.0.0.1:8989:8989
     volumes:
       - ${SERIES_EN_ID}-sonarr.etc:/sonarr/etc
-      - downloads:/downloads
       - media:/media
     environment:
       - TZ=${TZ}
@@ -61,12 +52,10 @@ services:
     user: ${PUID}:${PGID}
     networks:
       - media-management
-    ports:
+#    ports:
 #      - 8990:8990
-      - 127.0.0.1:8990:8990
     volumes:
       - ${SERIES_ANIME_ID}-sonarr.etc:/sonarr/etc
-      - downloads:/downloads
       - media:/media
     environment:
       - TZ=${TZ}
@@ -84,18 +73,36 @@ services:
     user: ${PUID}:${PGID}
     networks:
       - media-management
-    ports:
+#    ports:
 #      - 8991:8991
-      - 127.0.0.1:8991:8991
     volumes:
       - ${SERIES_DE_ID}-sonarr.etc:/sonarr/etc
-      - downloads:/downloads
       - media:/media
     environment:
       - TZ=${TZ}
       - SONARR__APP__INSTANCENAME=${SERIES_DE_ID}
       - SONARR__AUTH__APIKEY=${SERIES_DE__AUTH__APIKEY}
       - SONARR__SERVER__PORT=8991
+
+  unpackerr_sonarr:
+    image: golift/unpackerr
+    container_name: unpackerr_sonarr
+    volumes:
+      - media:/media
+    restart: unless-stopped
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    environment:
+      - TZ=${TZ}
+      - UN_LOG_FILE=/media/downloads/qbittorrent/unpackerr_sonarr.log
+      - UN_FOLDER_0_PATH=/media/downloads/qbittorrent/complete
+      - UN_SONARR_0_URL=http://${SERIES_EN_ID}-sonarr:8989
+      - UN_SONARR_0_API_KEY=${SERIES_EN__AUTH__APIKEY}
+      - UN_SONARR_1_URL=http://${SERIES_ANIME_ID}-sonarr:8990
+      - UN_SONARR_1_API_KEY=${SERIES_ANIME__AUTH__APIKEY}
+      - UN_SONARR_2_URL=http://${SERIES_DE_ID}-sonarr:8991
+      - UN_SONARR_2_API_KEY=${SERIES_DE__AUTH__APIKEY}
 
 
 #    deploy:
