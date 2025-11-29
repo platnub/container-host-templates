@@ -1,7 +1,5 @@
 ########################### NETWORKS
 networks:
-  pangolin:
-    external: true
   media-management:
     external: true
 
@@ -10,6 +8,7 @@ volumes:
   movies_en-radarr.etc:
   movies_anime-radarr.etc:
   movies_de-radarr.etc:
+  scripts:
   media:
     driver_opts:
       type: "nfs"
@@ -34,10 +33,11 @@ services:
     user: ${PUID}:${PGID}
     networks:
       - media-management
-    ports:
-      - 7878:7878
+#    ports:
+#      - 7878:7878
     volumes:
       - ${MOVIES_EN_ID}-radarr.etc:/radarr/etc
+      - scripts:/scripts
       - media:/media
     environment:
       - TZ=${TZ}
@@ -54,10 +54,11 @@ services:
     user: ${PUID}:${PGID}
     networks:
       - media-management
-    ports:
-      - 7879:7879
+#    ports:
+#      - 7879:7879
     volumes:
       - ${MOVIES_ANIME_ID}-radarr.etc:/radarr/etc
+      - scripts:/scripts
       - media:/media
     environment:
       - TZ=${TZ}
@@ -75,16 +76,37 @@ services:
     user: ${PUID}:${PGID}
     networks:
       - media-management
-    ports:
-      - 7880:7880
+#    ports:
+#      - 7880:7880
     volumes:
       - ${MOVIES_DE_ID}-radarr.etc:/radarr/etc
+      - scripts:/scripts
       - media:/media
     environment:
       - TZ=${TZ}
       - RADARR__APP__INSTANCENAME=${MOVIES_DE_ID}
       - RADARR__AUTH__APIKEY=${MOVIES_DE__AUTH__APIKEY}
       - RADARR__SERVER__PORT=7880
+
+  unpackerr_radarr:
+    image: golift/unpackerr
+    container_name: unpackerr_radarr
+    volumes:
+      - media:/media
+    restart: unless-stopped
+    user: ${PUID}:${PGID}
+    networks:
+      - media-management
+    environment:
+      - TZ=${TZ}
+      - UN_LOG_FILE=/media/downloads/qbittorrent/unpackerr_radarr.log
+      - UN_FOLDER_0_PATH=/media/downloads/qbittorrent/complete
+      - UN_RADARR_0_URL=http://${MOVIES_EN_ID}-radarr:7878
+      - UN_RADARR_0_API_KEY=${MOVIES_EN__AUTH__APIKEY}
+      - UN_RADARR_1_URL=http://${MOVIES_ANIME_ID}-radarr:7879
+      - UN_RADARR_1_API_KEY=${MOVIES_ANIME__AUTH__APIKEY}
+      - UN_RADARR_2_URL=http://${MOVIES_DE_ID}-radarr:7880
+      - UN_RADARR_2_API_KEY=${MOVIES_DE__AUTH__APIKEY}
 
 
 #    deploy:
