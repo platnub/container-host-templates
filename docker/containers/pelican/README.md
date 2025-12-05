@@ -5,14 +5,19 @@
 # Manuals
 ## Install
 1. Compose and .env called pelican-panel
-     - Make sure to modify the subnet correctly!
-2. Connect to the host using SSH with sudo access and create the Caddyfile
+     - Make sure to modify the local LAN subnet correctly!
+2. Connect to the host using SSH with sudo access and create the Caddyfile.
    ```
    curl "https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/pelican/Caddyfile" --create-dirs -o /opt/docker/pelican-panel/appdata/Caddyfile
    ```
 3. Deploy the container
 4. Go to '/opt/docker/pelican-panel', use `docker compose logs panel | grep 'Generated app key:'` and **save the key**!!
-5. Navigate to the instance '1.2.3.4/installer' and finish the setup
+5. Inspect the container in Komodo and look for the 'pelican' network and option IPAddress. Replace <DOCKER_SUBNET> in the Caddyfile with the subnet of that IP followed by /16. For example: '172.19.0.3' -> `172.19.0.0/16`
+   ```
+   nano /opt/docker/pelican-panel/appdata/Caddyfile
+   ```
+6. Redeploy the container.
+7. Navigate to the instance '1.2.3.4/installer' and finish the setup
      - Create admin username same as the Authentik admin username
 
 ## Install and connect a node
