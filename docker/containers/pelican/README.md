@@ -53,6 +53,7 @@
     2. Edit the config file
        ```
        sed -i 's|    IPv6: true|    IPv6: false|g' /etc/pelican/config.yml
+       sed -i 's|    is_internal: false|    is_internal: true|g' /etc/pelican/config.yml
        ```
     3. Edit the same config file and modify `remote` to the public URL of the PANEL!!
        ```
@@ -98,3 +99,14 @@
 1. When creating/editing the node go to tab 'Advanced Settings'
    1. Modify the 'SFTP Port' to the appropriate port
    2. Change 'SFTP Alias' to the base URL of the node without subdomain `example.com`
+
+## Connecting a Pangolin tunnel to a game server
+
+1. After a server has been started the pelican_nw will be created. Give the Pangolin Newt this network
+   ```
+     pelican_nw:
+       name: pelican_nw
+       external: true
+   ```
+2. Create a network allocation for the ports of the server using the pelican_nw subnet IP (172.18.0.1)
+3. ink the Pangolin tunnel to the server using its UUID as the hostname
