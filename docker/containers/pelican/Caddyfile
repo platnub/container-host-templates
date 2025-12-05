@@ -1,7 +1,7 @@
 {
     admin off
     servers {
-        trusted_proxies static {PANGOLIN_SUBNET}
+        trusted_proxies static 172.30.0.0/16
     }
 }
 
