@@ -16,7 +16,7 @@
 3. Deploy the container
 4. Go to '/opt/docker/pelican-panel', use `docker compose logs panel | grep 'Generated app key:'` and **save the key**!!
 5. Redeploy the container.
-6. Navigate to the instance 'https://pelican.example.com/installer' and finish the setup
+6. Navigate to the instance '1.2.3.4/installer' and finish the setup
      - Create admin username same as the Authentik admin username
 
 ## Install and connect a node
