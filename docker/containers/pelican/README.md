@@ -6,9 +6,14 @@
 ## Install
 1. Compose and .env called pelican-panel
      - Make sure to modify the subnet correctly!
-2. Deploy the container
-3. Go to '/opt/docker/pelican-panel', use `docker compose logs panel | grep 'Generated app key:'` and **save the key**!!
-4. Navigate to the instance '1.2.3.4/installer' and finish the setup
+2. Connect to the host using SSH with sudo access and create the Caddyfile
+   ```
+   curl "https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/pelican/Caddyfile" --create-dirs -o /opt/docker/pelican-panel/appdata/Caddyfile
+   nano /opt/docker/pelican-panel/appdata/Caddyfile
+   ```
+3. Deploy the container
+4. Go to '/opt/docker/pelican-panel', use `docker compose logs panel | grep 'Generated app key:'` and **save the key**!!
+5. Navigate to the instance '1.2.3.4/installer' and finish the setup
      - Create admin username same as the Authentik admin username
 
 ## Install and connect a node
