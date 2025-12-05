@@ -9,6 +9,8 @@
 2. Connect to the host using SSH with sudo access and create the Caddyfile.
    ```
    curl "https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/pelican/Caddyfile" --create-dirs -o /opt/docker/pelican-panel/appdata/Caddyfile
+   chown komodo:komodo -R /opt/docker/pelican-panel/appdata
+   chmod 700 -R /opt/docker/pelican-panel/appdata
    ```
 3. Deploy the container
 4. Go to '/opt/docker/pelican-panel', use `docker compose logs panel | grep 'Generated app key:'` and **save the key**!!
