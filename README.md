@@ -29,7 +29,7 @@
   - [Authentik - Single sign on](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
 - <ins>**Information**</ins>
   - [Actual - Finance]
-  - [Grocy - Recipe and food stock dashboard]
+  - [Grocy - Recipe and food stock dashboard](https://github.com/platnub/container-host-templates/tree/main/docker/containers/grocy)
   - [Homepage - Service dashboard]
   - [Nextcloud - Cloud storage](https://github.com/platnub/container-host-templates/tree/main/docker/containers/nextcloud)
     - Integrated with Collabora - Cloud office suite
@@ -42,25 +42,26 @@
     - Uses [Tdarr-one-flow](https://github.com/samssausages/Tdarr-One-Flow)
   - [Recyclarr - TRaSH guide sync](https://github.com/platnub/container-host-templates/tree/main/docker/containers/recyclarr)
   - [Radarr - Movie organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/radarr)
+    - Unpackerr - Unpack compressed torrent downloads
   - [Sonarr - Series organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sonarr)
+    - Unpackerr - Unpack compressed torrent downloads
   - [Bazarr - Subtitle management]
-  - [Lidarr - Music organization and management]
-    - Includes plugin [Soulseek - Music download client]
-  - [Readarr - Book organization and management]
+  - [Lidarr - Music organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/lidarr)
+    - Includes Soulseek - Music downloader
+  - [Bookshelf - Book organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/bookshelf)
     - [rreading-glasses - Book metadata server]
   - [Kapowarr - Comics and managa organization and management]
-  - [Jackett - Indexer proxy]
+  - [Jackett - Indexer proxy](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jackett)
   - [SABnzbd - Usenet download client](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sabnzbd)
   - [qBittorrent - Torrent download client](https://github.com/platnub/container-host-templates/tree/main/docker/containers/qbittorrent)
     - Includes Gluetun - VPN
-  - [Unpackerr - Unpack compressed torrent downloads]
   - [Cleanuparr - Download cleaner for torrents]
 - <ins>**Gaming**</ins>
   - [Pelican Panel - Management Panel for game servers](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
-    - [Pelican Node - Game server hosting node]
+    - Pelican Node - Game server hosting node
 - <ins>**Automation & AI**</ins>
   - [Archon - AI coding command center]
   - [Flowise - AI agent builder]
   - [n8n - Automation workflow platform](https://github.com/platnub/container-host-templates/tree/main/docker/containers/n8n)
-  - [OpenWebUI - AI agent dashboard]
-  - [SearXNG - Metasearch engine]
+  - [OpenWebUI - AI agent dashboard](https://github.com/platnub/container-host-templates/tree/main/docker/containers/openwebui)
+  - [SearXNG - Metasearch engine](https://github.com/platnub/container-host-templates/tree/main/docker/containers/searxng)
