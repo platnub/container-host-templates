@@ -49,7 +49,6 @@
   - [Lidarr - Music organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/lidarr)
     - Includes Soulseek - Music downloader
   - [Bookshelf - Book organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/bookshelf)
-    - [rreading-glasses - Book metadata server]
   - [Kapowarr - Comics and managa organization and management]
   - [Jackett - Indexer proxy](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jackett)
   - [SABnzbd - Usenet download client](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sabnzbd)
