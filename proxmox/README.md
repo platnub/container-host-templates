@@ -14,9 +14,18 @@ find /dev/disk/by-id/ -type l|xargs -I{} ls -l {}|grep -v -E '[0-9]$' |sort -k11
 qm set <vm> -scsi0 /dev/disk/by-id/...
 ```
 
+## VM Crash
+
+Sometimes a VM crashed with error:
+```
+trying to acquire lock...
+TASK ERROR: can't lock file '/var/lock/qemu-server/lock-90010.conf' - got timeout
+```
+To fix this, restart the service pve-cluster
+
 ## iGPU Passthrough Intel CPU _[source](https://3os.org/infrastructure/proxmox/gpu-passthrough/igpu-passthrough-to-vm/#proxmox-configuration-for-igpu-full-passthrough)_
 
-‼️ Proxmox lose GPU capabilities
+‼️ Proxmox loses GPU capabilities
 
 1. SSH into Proxmox # https://pve.proxmox.com/wiki/PCI_Passthrough#GPU_passthrough
 2.  ```
