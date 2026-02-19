@@ -1,3 +1,5 @@
+# Information
+- [Jellyseerr OIDC branch to seerr migration](https://voidauth.app/#/OIDC-Guides?id=-jellyseerr)
 # Manuals
 ## Jellyseerr Setup
 
