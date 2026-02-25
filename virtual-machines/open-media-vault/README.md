@@ -2,6 +2,8 @@
  - [OMV Extras - Plugin repository](https://wiki.omv-extras.org/)
 
 # Manuals
+## Resizing boot disk
+https://forum.proxmox.com/threads/how-to-effectively-increase-omv-system-disk-space-in-proxmox-how-to.117339/
 ## NFS shares for Docker containers
 1. Install Plugin "Multiple Device"
 2. Create RAID volume
