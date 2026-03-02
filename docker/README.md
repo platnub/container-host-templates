@@ -53,6 +53,10 @@
    RandomizedDelaySec=30m
    ```
 
+# Add SSH key for user
+
+   ```bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/virtual-machines/docker/ssh.sh)"```
+
 # Update Komodo Periphery
 ```
 cd /home/komodo
