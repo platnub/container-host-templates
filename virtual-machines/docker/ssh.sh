@@ -7,7 +7,7 @@ fi
 
 echo "Starting SSH key setup..."
 ssh-keygen -t rsa
-cat ~/.ssh/rd_rsa
+cat ~/.ssh/id_rsa
 read -p "Copy the FULL private key, import into Bitwarden, then press ENTER to continue..."
 read -r -p "Paste your public key (single line): " PUBKEY
 touch ~/.ssh/authorized_keys
