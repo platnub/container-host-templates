@@ -10,16 +10,15 @@ read -p "Enter the Komodo core passkey: " passkey
 
 # Configure user user
 groupadd -g 1000 user
-useradd -r user -u 1000 -g 1000
+adduser --gecos GECOS --disabled-password --system --uid 1000 --gid 1000 user
 # Configure bkup user
 groupadd -g 1001 bkup
-useradd -r bkup -u 1001 -g 1001
+adduser --gecos GECOS --disabled-password --system --uid 1001 --gid 1001 bkup
 # Configure komodo user
 groupadd -g 1337 komodo
-useradd --create-home komodo -u 1337 -g 1337
+adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337
 echo "-----------------------------------------------------------------------------"
-echo "Setting password for komodo user..."
-passwd komodo
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/virtual-machines/docker/ssh.sh)" -- komodo
 
 # Configure timezone
 dpkg-reconfigure tzdata
