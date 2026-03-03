@@ -3,7 +3,7 @@ read -p "Enter the SSH port you want to use (default is 22): " ssh_port
 ssh_port=${ssh_port:-22}
 
 # Ask for allowed IPs
-read -p "Enter the allowed IPs for Komodo (comma separated, e.g., \"1.2.3.0/24\",\"1.2.3.4\"): " allowed_ips
+read -p "Enter the allowed IPs for Komodo (comma separated, example: \"1.2.3.0/24\",\"1.2.3.4\"): " allowed_ips
 
 # Ask for passkey
 read -p "Enter the Komodo core passkey: " passkey
