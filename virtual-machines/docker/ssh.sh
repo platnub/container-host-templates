@@ -6,6 +6,15 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 echo "Starting SSH key setup..."
+
+DIR="~/.ssh"
+
+if [ ! -d "$DIR" ]; then
+    echo "Creating SSH directory."
+    mkdir -p "$DIR"
+fi
+
+
 ssh-keygen -t rsa
 cat ~/.ssh/id_rsa
 read -p "Copy the FULL private key, import into Bitwarden, then press ENTER to continue..."
