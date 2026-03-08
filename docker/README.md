@@ -14,7 +14,7 @@
    sudo su
    ```
    ```
-   sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/setup.sh)"
+   bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/setup.sh)"
    ```
 3. Connect to the VM through SSH using the komodo user
    ```
