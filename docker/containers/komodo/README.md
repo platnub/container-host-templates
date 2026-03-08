@@ -88,3 +88,6 @@ docker compose up -d
    ```
    apt update -y && apt upgrade -y && su - komodo -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/install-cli.py | python3 - --user'
    ```
+2. Create credentials on the Komodo core.
+   - Service account can interact with containers using basic permissions
+   - Execute permission can deploy and destroy containers
