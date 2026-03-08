@@ -1,8 +1,12 @@
-# Default Settings
-- SSH port 22
-- Sudo userusername = hostname
+
 
 # Install
+
+> [!NOTE]
+> - SSH port 22
+> - Sudo userusername = hostname
+
+## Docker
 
 1. Run this from Proxmox node shell
    ```
@@ -10,7 +14,6 @@
    ```
    1. ...option 1
 
-
-# Post-install
+### Post-install
 
  - Docker configuration [here](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
