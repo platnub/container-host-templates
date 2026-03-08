@@ -49,6 +49,7 @@ Server that will store the backups and make backups to offsite locations
    - Passphrase: _generate a 64 character key using only letters and numbers.
    - Encryption: enable
    - Skip init: disable
+5. Repo keyfile can be downloaded here
 
 ## Create Remote repository for offsite backups
 
@@ -78,7 +79,13 @@ Hosts that run containers that need to backup data to a central server
    ```
    sudo mkdir -p /var/log/borg
    sudo nano /usr/local/bin/<container>.sh
-   sudo chmod u+x /usr/local/bin/backup.sh
+   sudo chmod u+x /usr/local/bin/<container>.sh
    ```
 2. Fill in the '[borgbackup_template.sh](borgbackup_template.sh)' and paste it into the file.
    - BACKUP_PATH is the full path of the remote folder on the remote machine (Shared folder in OMV)
+3. Save the repo keyfile under '/root/.config/borg/keys'
+4. Create a run schedule using CRON
+   ```
+   sudo crontab -e
+   ```
+   - Append (example!!) `0 0 * * * /usr/local/bin/<container>.sh > /dev/null 2>&1`
