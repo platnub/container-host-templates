@@ -4,7 +4,10 @@
 
 ## Recommended
 
-- Run daily at 00:30 `30 0 * * *`
+- Run daily at 00:30
+```
+30 0 * * * /usr/local/bin/authentik.sh > /dev/null 2>&1
+```
 
 ## Pre-run script
 ```
