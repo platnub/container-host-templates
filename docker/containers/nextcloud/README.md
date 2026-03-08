@@ -15,7 +15,7 @@
 
 ## Installation
 1. Setup NFS share
-    1. Connect to dmz-information host using SHH
+    1. Connect to dmz-information host using SSH
     2. ```
        apt update
        apt install nfs-common
