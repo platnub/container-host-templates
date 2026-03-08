@@ -1,6 +1,6 @@
 # Default Settings
 - SSH port 22
-- Sudo user - Hostname is username
+- Sudo userusername = hostname
 
 # Install
 
@@ -8,7 +8,7 @@
     ```
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/titan-server/refs/heads/main/virtual-machines/docker.sh)"
     ```
-   1. ...option1
+   1. ...option 1
 
 
 # Post-install
