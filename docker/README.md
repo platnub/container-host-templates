@@ -6,9 +6,6 @@
 
 # Host configuration script
 
-> [!CAUTION]
-> Allowed IPs **MUST** be surrounded by quotes: "1.1.1.1","2.2.2.2"
-
 1. Connect to the VM through SSH port 22 using sudo user
 2. ```
    sudo su
@@ -16,6 +13,12 @@
    ```
    bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/setup.sh)"
    ```
+   1. Random SSH port between 10000 - 65535 by default. Can be modified
+   2. Set Komodo allowed IP's
+
+      > [!CAUTION]
+      > Allowed IPs **MUST** be surrounded by quotes: "1.1.1.1","2.2.2.2"
+
 3. Connect to the VM through SSH using the komodo user
    ```
    # Install Periphery
