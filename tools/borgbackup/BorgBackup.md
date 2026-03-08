@@ -73,7 +73,7 @@ Hosts that run containers that need to backup data to a central server
 > [!NOTE]
 > __Requirements:__
 > - Repository on a central server
-> - SSH private key for 'bkup' user saved as '/home/<hostname>/.ssh/bkup'
+> - SSH private key for 'bkup' user saved as '/home/<hostname>/.ssh/bkup' using 'chmod 600'
 
 1. Create a new script file. Make sure to name the script after the container.
    ```
