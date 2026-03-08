@@ -14,4 +14,4 @@
 
 ### Post-install
 
- - Docker configuration [here](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
+ - [Docker configuration](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
