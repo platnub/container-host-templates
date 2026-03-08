@@ -21,7 +21,7 @@
 
 - [Install a Debian Docker container host VM in Proxmox](https://github.com/platnub/titan-server/tree/main/virtual-machines)
 - [Setup Docker engine & Komodo mangement](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
-- [Configure BorgBackups of each container](https://github.com/platnub/container-host-templates/blob/main/docker/tools/BorgBackup.md)
+- [Configure BorgBackups of each container](https://github.com/platnub/container-host-templates/blob/main/docker/tools/borgbackup/BorgBackup.md)
 
 # Containers
 Install containers
