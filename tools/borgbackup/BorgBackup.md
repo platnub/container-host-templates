@@ -1,7 +1,7 @@
 OMV Server Manuals
-- [Installing BorgBackup](#Installing_BorgBackup)
-- [Create Local repository for container backups](#Create_Local_repository_for_container_backups)
-- [Create Remote repository for offsite backups](#Create_Remote_repository_for_offsite_backups)
+- [Installing BorgBackup](#Installing-BorgBackup)
+- [Create Local repository for container backups](#Create-Local-repository-for-container-backups)
+- [Create Remote repository for offsite backups](#Create-Remote-repository-for-offsite-backups)
 
 # OMV Server Manuals
 Server that will store the backups and make backups to offsite locations
