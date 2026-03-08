@@ -15,11 +15,11 @@ docker exec -d authentik-postgresql-1 pg_dumpall --username=authentik -f /var/li
 ```
 borg create -v --stats \
     $REPOSITORY::authentik_'{now:%Y-%m-%d_%H:%M}' \
-    --pattern=+/var/lib/docker/volumes/authentik_database/_data/bkup_postgresql.out \
-    --pattern=+/var/lib/docker/volumes/authentik_data/_data \
-    --pattern=+/var/lib/docker/volumes/authentik_certs/_data \
-    --pattern=+/var/lib/docker/volumes/authentik_custom-templates/_data \
-    --pattern=+/var/lib/docker/volumes/authentik_blueprints/_data \
+    /var/lib/docker/volumes/authentik_database/_data/bkup_postgresql.out \
+    /var/lib/docker/volumes/authentik_data/_data \
+    /var/lib/docker/volumes/authentik_certs/_data \
+    /var/lib/docker/volumes/authentik_custom-templates/_data \
+    /var/lib/docker/volumes/authentik_blueprints/_data
 ```
 
 ## Post-run script
