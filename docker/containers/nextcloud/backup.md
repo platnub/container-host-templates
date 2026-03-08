@@ -7,11 +7,14 @@
 
 - Run daily at 00:30 `30 0 * * *`
 
+> [!WARNING]
+> UNFINISHED!
+
 ## Create
 ```
 borg create -v --stats \
-    $REPOSITORY::vaultwarden_'{now:%Y-%m-%d_%H:%M}' \
-    /var/lib/docker/volumes/vaultwarden_data/_data \
+    $REPOSITORY::nextcloud_'{now:%Y-%m-%d_%H:%M}' \
+    /var/lib/docker/volumes/nextcloud_data/_data \
     --exclude /var/lib/docker/volumes/vaultwarden_data/_data/sends \
     --exclude /var/lib/docker/volumes/vaultwarden_data/_data/tmp
 ```
