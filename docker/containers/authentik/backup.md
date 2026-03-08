@@ -1,4 +1,4 @@
-[Authentik backup and restore guide]([https://github.com/dani-garcia/vaultwarden/wiki/Backing-up-your-vault](https://docs.goauthentik.io/sys-mgmt/ops/backup-restore/))
+[Authentik backup and restore guide](https://docs.goauthentik.io/sys-mgmt/ops/backup-restore/)
 
 # Borgbackup parameters
 
