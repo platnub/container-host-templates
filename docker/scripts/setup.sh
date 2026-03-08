@@ -1,6 +1,41 @@
+#!/usr/bin/env bash
+
 # Ask for SSH port
-read -p "Enter the SSH port you want to use (default is 22): " ssh_port
-ssh_port=${ssh_port:-22}
+
+# Generate a random port in 10000-65535
+generate_port() {
+  shuf -i 10000-65535 -n 1
+}
+
+while true; do
+  default_port=$(generate_port)
+  read -p "Enter the SSH port you want to use (press Enter for default ${default_port}, or type 'r' to regenerate): " ssh_port
+
+  # If user asked for a new random port, loop and prompt again
+  if [[ "$ssh_port" == "r" ]]; then
+    continue
+  fi
+
+  # Use default if empty
+  if [[ -z "$ssh_port" ]]; then
+    ssh_port=$default_port
+    break
+  fi
+
+  # Validate numeric
+  if ! [[ "$ssh_port" =~ ^[0-9]+$ ]]; then
+    echo "Invalid port: not a number. Please enter a numeric port between 1024 and 65535, or 'r' to regenerate."
+    continue
+  fi
+
+  # Validate range 1024-65535
+  if (( ssh_port < 1024 || ssh_port > 65535 )); then
+    echo "Invalid port: must be between 1024 and 65535."
+    continue
+  fi
+  break
+done
+echo "Using SSH port: $ssh_port"
 
 # Ask for Komodo allowed IPs
 read -p "Enter the allowed IPs for Komodo (comma separated, example: \"1.2.3.0/24\",\"1.2.3.4\"): " allowed_ips
