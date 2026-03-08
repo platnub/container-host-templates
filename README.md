@@ -27,7 +27,7 @@
   - [Socket Proxy - Proxy access to docker socket](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
   - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
     - [Pangolin Newt - Pangolin VPN tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
-    - Includes CrowdSec - Crowd powered security
+    - Includes [CrowdSec](https://www.crowdsec.net/) - Crowd powered security
 - <ins>**Authentication**</ins>
   - [Authentik - Single sign on](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
 - <ins>**Information**</ins>
