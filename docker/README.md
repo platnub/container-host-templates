@@ -1,14 +1,13 @@
 
 > [!IMPORTANT]
-> The Pangolin and Komodo host don't use this script
+> Do not use if creating [Pangolin host](https://github.com/platnub/titan-server/blob/main/docker/containers/pangolin) or [Komodo host](https://github.com/platnub/container-host-templates/tree/main/docker/containers/komodo)
 
 ---
 
 # Host configuration script
 
-‼️ Do not run if creating [Pangolin host](https://github.com/platnub/titan-server/blob/main/docker/containers/pangolin) or [Komodo host](https://github.com/platnub/container-host-templates/tree/main/docker/containers/komodo)
-
-‼️ Allowed IPs **MUST** be surrounded by quotes: "1.1.1.1","2.2.2.2"
+> [!CAUTION]
+> Allowed IPs **MUST** be surrounded by quotes: "1.1.1.1","2.2.2.2"
 
 1. Connect to the VM through SSH port 22 using sudo user
 2. ```
