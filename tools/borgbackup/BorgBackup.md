@@ -29,7 +29,7 @@ Server that will store the backups and make backups to offsite locations
 ## Create Local repository for container backups
 
 1. Navigate to 'Storage > Shared Folders'
-2. Create a shared folder called `bk_<container name>`
+2. Create a shared folder called `bkup_<container name>`
    - Use permission 'Administrator: read/write, Users: no access, Others: no access'
 3. Edit the folder ACL
    - Replace: enable
@@ -45,7 +45,7 @@ Server that will store the backups and make backups to offsite locations
 4. Navigate to 'Services > BorgBackup > Repos' and create a new repository
    - Name: `<container name>`
    - Type: 'Local'
-   - Shared folder: 'bk_<container name>'
+   - Shared folder: 'bkup_<container name>'
    - Passphrase: _generate a 64 character key using only letters and numbers.
    - Encryption: enable
    - Skip init: disable
