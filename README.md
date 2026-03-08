@@ -8,6 +8,8 @@
   - Automatic reboot if upgrade requires it at 2:30
 - Komodo Docker container management backend
 - Containers running as unprivledged as possible
+- Full backups of containers using [BorgBackup](https://www.borgbackup.org/)
+  - Optimized to only backup necessary folders and files instead of entire VM's
 - Pangolin reverse proxy frontend
   - Geoblocking
   - CrowdSec + CrowdSec Firewall Bouncer
@@ -15,13 +17,15 @@
 - Fully automated media request, download, compression and management system
 - Game server hosting using Pelican
 
-# Install a VM
-- [Docker](https://github.com/platnub/titan-server/tree/main/virtual-machines)
+# Get started
 
-# Configure VM
-- [Docker engine & Komodo mangement](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
+- [Install a Debian Docker container host VM in Proxmox](https://github.com/platnub/titan-server/tree/main/virtual-machines)
+- [Setup Docker engine & Komodo mangement](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
+- [Configure BorgBackups of each container](https://github.com/platnub/container-host-templates/blob/main/docker/tools/BorgBackup.md)
 
 # Containers
+Install containers
+
 ## Docker
 - <ins>**Core**</ins>
   - [Socket Proxy - Proxy access to docker socket](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
