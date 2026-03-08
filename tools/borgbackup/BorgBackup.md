@@ -1,5 +1,7 @@
 OMV Server Manuals
 - [Installing BorgBackup](#Installing_BorgBackup)
+- [Create Local repository for container backups](#Create_Local_repository_for_container_backups)
+- [Create Remote repository for offsite backups](#Create_Remote_repository_for_offsite_backups)
 
 # OMV Server Manuals
 Server that will store the backups and make backups to offsite locations
@@ -20,7 +22,7 @@ Server that will store the backups and make backups to offsite locations
    bkup;1001;;;;;_ssh,bkup;1
    ```
 
-#### Create Local repository for container backups
+## Create Local repository for container backups
 
 1. Navigate to 'Storage > Shared Folders'
 2. Create a shared folder called `bk_<container name>`
@@ -44,7 +46,7 @@ Server that will store the backups and make backups to offsite locations
    - Encryption: enable
    - Skip init: disable
 
-#### Create Remote repository for offsite backups
+## Create Remote repository for offsite backups
 
 1. ...
 
