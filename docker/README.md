@@ -1,7 +1,6 @@
-# ‼️ Requirements for **EVERY** docker container
- 1. Configuration script below
-     - The only 2 exceptions are Pangolin host and Komodo host
- 2. A healthy mindset
+
+> [!IMPORTANT]
+> The Pangolin and Komodo host don't use this script
 
 ---
 
