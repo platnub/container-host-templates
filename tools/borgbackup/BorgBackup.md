@@ -84,7 +84,7 @@ Hosts that run containers that need to backup data to a central server
 2. Fill in the '[borgbackup_template.sh](borgbackup_template.sh)' and paste it into the file.
    - BACKUP_PATH is the full path of the remote folder on the remote machine (Shared folder in OMV)
 3. Save the repo keyfile under '/root/.config/borg/keys'
-4. Create a run schedule using CRON
+4. Create a run schedule using CRON. Install CRON if necessary `apt update -y && apt upgrade -y && apt install cron -y`
    ```
    sudo crontab -e
    ```
