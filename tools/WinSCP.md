@@ -1,5 +1,5 @@
-**Source:** [https://winscp.net/](https://winscp.net/)
-**Name:** WinSCP
+**Source:** [https://winscp.net/](https://winscp.net/)\
+**Name:** WinSCP\
 **Description:** SSH & SFTP client to connect to servers
 
 # Settings
