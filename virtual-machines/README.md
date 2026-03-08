@@ -3,6 +3,7 @@
 ## Docker
 
 > [!NOTE]
+> - Default port 22
 > - Root user disabled
 > - Sudo user username = hostname
 
@@ -10,7 +11,7 @@
    ```
    bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/titan-server/refs/heads/main/proxmox/scripts/docker.sh)"
    ```
-   1. Random SSH port between 10000 - 65535 by default. Can be modified
+   1. ...option 1
 
 ### Post-install
 
