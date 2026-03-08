@@ -79,7 +79,7 @@ Hosts that run containers that need to backup data to a central server
    ```
    sudo mkdir -p /var/log/borg
    sudo nano /usr/local/bin/<container>.sh
-   sudo chmod u+x /usr/local/bin/<container>.sh
+   sudo chmod 700 /usr/local/bin/<container>.sh
    ```
 2. Fill in the '[borgbackup_template.sh](borgbackup_template.sh)' and paste it into the file.
    - BACKUP_PATH is the full path of the remote folder on the remote machine (Shared folder in OMV)
