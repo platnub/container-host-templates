@@ -1,4 +1,4 @@
-[Authentik backup and restore guide](https://docs.goauthentik.io/sys-mgmt/ops/backup-restore/)
+[Jellyfin backup and restore guide](https://jellyfin.org/docs/general/administration/backup-and-restore/)
 
 # Borgbackup parameters
 
