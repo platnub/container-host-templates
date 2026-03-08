@@ -16,9 +16,9 @@
 ## Pre-run script
 ```
 su - komodo -c 'export KOMODO_CLI_HOST='http://0.0.0.0:9120' && \
-   export KOMODO_CLI_KEY='' && \
-   export KOMODO_CLI_SECRET=''  && \
-   km deploy -y destroy-stack jellyfin'
+    export KOMODO_CLI_KEY='' && \
+    export KOMODO_CLI_SECRET=''  && \
+    km deploy -y destroy-stack jellyfin'
 ```
 
 ## Create
