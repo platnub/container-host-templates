@@ -1,6 +1,3 @@
-> [!WARNING]
-> Currently a [fatal issue](https://github.com/jellyfin/jellyfin/issues/15027) with versions 10.11+
-
 # Requirements
  - [NFS Shares setup](https://github.com/platnub/container-host-templates/blob/main/virtual-machines/open-media-vault/README.md)
 
