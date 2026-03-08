@@ -32,4 +32,4 @@ Hosts that run containers that need to backup data to a central server
    sudo mkdir -p /var/log/borg
    sudo nano /usr/local/bin/<container>.sh
    ```
-2. Fill in the '[borgbackup_template.sh]()' and paste it into the file.
+2. Fill in the '[borgbackup_template.sh](borgbackup_template.sh)' and paste it into the file.
