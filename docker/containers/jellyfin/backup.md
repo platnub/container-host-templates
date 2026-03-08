@@ -4,7 +4,7 @@
 
 > [!WARNING]
 > Requires [Komodo CLI](https://komo.do/docs/ecosystem/cli)
->    - [Setup]()
+>    - [Setup](https://github.com/platnub/container-host-templates/blob/main/docker/containers/komodo/README.md#installing-komodo-cli-on-a-priphery-client)
 
 ## Recommended
 
@@ -15,7 +15,10 @@
 
 ## Pre-run script
 ```
-su - komodo -c 'km deploy destroy-stack jellyfin'
+su - komodo -c 'export KOMODO_CLI_HOST='http://0.0.0.0:9120' && \
+   export KOMODO_CLI_KEY='' && \
+   export KOMODO_CLI_SECRET=''  && \
+   km deploy -y destroy-stack jellyfin'
 ```
 
 ## Create
