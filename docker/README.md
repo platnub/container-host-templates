@@ -1,6 +1,6 @@
 
 > [!IMPORTANT]
-> Requirement: [Komodo host](https://github.com/platnub/container-host-templates/tree/main/docker/containers/komodo) 
+> Requirement\: [Komodo host](https://github.com/platnub/container-host-templates/tree/main/docker/containers/komodo)
 > Do not use if creating [Pangolin host](https://github.com/platnub/titan-server/blob/main/docker/containers/pangolin) or [Komodo host](https://github.com/platnub/container-host-templates/tree/main/docker/containers/komodo)
 
 ---
