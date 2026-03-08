@@ -5,7 +5,7 @@
 
 ## Recommended
 
-- Run daily `0 0 * * *`
+- Run daily at 00:30 `30 0 * * *`
 
 ## Create
 ```
