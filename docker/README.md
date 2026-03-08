@@ -15,8 +15,8 @@
    ```
    1. Random SSH port between 10000 - 65535 by default. Can be modified
    2. Set Komodo allowed IP's
-> [!CAUTION]
-> Allowed IPs **MUST** be surrounded by quotes: "1.1.1.1","2.2.2.2"
+   > [!CAUTION]
+   > Allowed IPs **MUST** be surrounded by quotes: "1.1.1.1","2.2.2.2"
    3. Set Komodo passkey
 
 3. Connect to the VM through SSH using the komodo user
