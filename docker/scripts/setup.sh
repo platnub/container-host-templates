@@ -46,9 +46,6 @@ read -p "Enter the Komodo core passkey: " passkey
 # Configure user user
 groupadd -g 1000 user
 adduser --gecos GECOS --disabled-password --system --uid 1000 --gid 1000 user
-# Configure bkup user
-groupadd -g 1001 bkup
-adduser --gecos GECOS --disabled-password --system --uid 1001 --gid 1001 bkup
 # Configure komodo user
 groupadd -g 1337 komodo
 adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337
