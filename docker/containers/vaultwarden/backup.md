@@ -4,7 +4,11 @@
 
 ## Recommended
 
-- Run every 15 minutes `*/15 * * * *`
+- Run every 15 minutes
+```
+*/15 * * * * /usr/local/bin/vaultwarden.sh > /dev/null 2>&1
+```
+
 
 ## Create
 ```
