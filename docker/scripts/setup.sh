@@ -43,18 +43,6 @@ read -p "Enter the allowed IPs for Komodo (comma separated, example: \"1.2.3.0/2
 # Ask for Komodo passkey
 read -p "Enter the Komodo core passkey: " passkey
 
-# Configure user user
-groupadd -g 1000 user
-adduser --gecos GECOS --disabled-password --system --uid 1000 --gid 1000 user
-# Configure komodo user
-groupadd -g 1337 komodo
-adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337
-echo "-----------------------------------------------------------------------------"
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- komodo
-
-# Configure timezone
-dpkg-reconfigure tzdata
-
 # Install SSH and UFW
 apt-get update -y && apt-get upgrade -y
 apt-get install ssh -y
@@ -74,6 +62,18 @@ ufw default allow outgoing
 ufw allow $ssh_port/tcp
 ufw allow 8120/tcp
 ufw --force enable
+
+# Configure user user
+groupadd -g 1000 user
+adduser --gecos GECOS --disabled-password --system --uid 1000 --gid 1000 user
+# Configure komodo user
+groupadd -g 1337 komodo
+adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337
+echo "-----------------------------------------------------------------------------"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- komodo
+
+# Configure timezone
+dpkg-reconfigure tzdata
 
 # Install and configure Docker
 apt-get install ca-certificates curl
