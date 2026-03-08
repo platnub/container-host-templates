@@ -15,7 +15,7 @@
 
 ## Extra variables
 
-> [!WARNING]
+> [!INFO]
 > Can be pasted anywhere before the backup starts.
 
 KOMODO_CLI_HOST='http://0.0.0.0:9120'
