@@ -4,7 +4,7 @@
 
 ## Recommended
 
-- Run hourly `0 * * * *`
+- Run every 15 minutes `*/15 * * * *`
 
 ## Create
 ```
