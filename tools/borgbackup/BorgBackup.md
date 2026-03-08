@@ -1,5 +1,5 @@
 OMV Server Manuals
-- [Installing BorgBackup](BorgBackup.md#Installing BorgBackup)
+- [Installing BorgBackup](/tools/borgbackup/BorgBackup.md#Installing BorgBackup)
 
 # OMV Server Manuals
 Server that will store the backups and make backups to offsite locations
