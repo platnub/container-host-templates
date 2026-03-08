@@ -37,7 +37,7 @@
         2. Collabora
         3. Imaginary
         4. Nextcloud Talk
-        5. _Save Settings_
+         - _Save Settings_
     6. Download and start containers
 4. Open the terminal of container 'nextcloud-aio-nextcloud' using Komodo
     1. Run `php occ maintenance:repair --include-expensive`
