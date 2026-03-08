@@ -34,5 +34,8 @@ borg create -v --stats \
 
 ## Post-run script
 ```
-rm -rf /var/lib/docker/volumes/authentik_database/_data/bkup_postgresql.out
+su - komodo -c 'export KOMODO_CLI_HOST='http://0.0.0.0:9120' && \
+    export KOMODO_CLI_KEY='' && \
+    export KOMODO_CLI_SECRET=''  && \
+    km deploy -y stack jellyfin'
 ```
