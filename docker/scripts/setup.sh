@@ -2,10 +2,10 @@
 read -p "Enter the SSH port you want to use (default is 22): " ssh_port
 ssh_port=${ssh_port:-22}
 
-# Ask for allowed IPs
+# Ask for Komodo allowed IPs
 read -p "Enter the allowed IPs for Komodo (comma separated, example: \"1.2.3.0/24\",\"1.2.3.4\"): " allowed_ips
 
-# Ask for passkey
+# Ask for Komodo passkey
 read -p "Enter the Komodo core passkey: " passkey
 
 # Configure user user
@@ -18,7 +18,7 @@ adduser --gecos GECOS --disabled-password --system --uid 1001 --gid 1001 bkup
 groupadd -g 1337 komodo
 adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337
 echo "-----------------------------------------------------------------------------"
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/virtual-machines/docker/ssh.sh)" -- komodo
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- komodo
 
 # Configure timezone
 dpkg-reconfigure tzdata
@@ -42,6 +42,7 @@ ufw default allow outgoing
 ufw allow $ssh_port/tcp
 ufw allow 8120/tcp
 ufw --force enable
+
 # Install and configure Docker
 apt-get install ca-certificates curl
 install -m 0755 -d /etc/apt/keyrings
@@ -53,11 +54,13 @@ echo \
   tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt update -y
 apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
 # Create folders
 mkdir /opt/docker
 chown komodo:komodo /opt/docker
 chmod 700 /opt/docker
 usermod -aG docker komodo
+
 
 # Download and create config file
 mkdir -p /home/komodo/.config/komodo && cd /home/komodo/.config/komodo && curl -o ./periphery.config.toml https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml
