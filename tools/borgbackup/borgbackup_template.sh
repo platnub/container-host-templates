@@ -32,8 +32,9 @@ echo "Transfer files ..."
 borg create -v --stats \
     $REPOSITORY::example_'{now:%Y-%m-%d_%H:%M}' \
     /var/lib/docker/volumes/example/_data \
-    --exclude /var/lib/docker/volumes/example/_data/exclude \
-    --pattern=+/var/lib/docker/volumes/example2/_data/include
+    /var/lib/docker/volumes/example2/_data \
+    --exclude /var/lib/docker/volumes/example/_data/exclude
+    --exclude /var/lib/docker/volumes/example2/_data/exclude
 
 echo "###### Backup ended: $(date) ######"
 
