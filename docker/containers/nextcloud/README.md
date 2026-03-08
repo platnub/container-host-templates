@@ -48,7 +48,7 @@
 6. Restart the Nextcloud containers through the AIO management panel
 7. Disable port 8080 in the Docker configuration and destroy & deploy the nextcloud container through Komodo
 
-## SSO Setup using (preinstalled) [OpenID COnnect user backend](https://apps.nextcloud.com/apps/user_oidc) plugin
+## SSO Setup using (preinstalled) [OpenID Connect user backend](https://apps.nextcloud.com/apps/user_oidc) plugin
 1. Follow the instructions from [Authentik - Nextcloud integration](https://integrations.goauthentik.io/chat-communication-collaboration/nextcloud)
     1. Login to Authentik as administrator and open 'Admin interface'
         1. Create Property mapping under 'Customization > Property mappings'
