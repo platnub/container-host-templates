@@ -1,12 +1,15 @@
-OMV Server Manuals
-- [Installing BorgBackup](#Installing-BorgBackup)
+**OMV Server Manuals**
+- [Installing BorgBackup OMV](#Installing-BorgBackup-OMV)
 - [Create Local repository for container backups](#Create-Local-repository-for-container-backups)
 - [Create Remote repository for offsite backups](#Create-Remote-repository-for-offsite-backups)
+- **Container Host Manuals**
+- [Installing BorgBackup Debian](#Installing-BorgBackup-Debian)
+- [Configuring BorgBackup](#Configuring-BorgBackup)
 
 # OMV Server Manuals
 Server that will store the backups and make backups to offsite locations
 
-## Installing BorgBackup
+## Installing BorgBackup OMV
 
 1. Connect to OMV using SSH and install [OMV-Extras](https://wiki.omv-extras.org/doku.php?id=misc_docs:omv_extras)
    ```
@@ -56,7 +59,7 @@ Hosts that run containers that need to backup data to a central server
 > [!NOTE]
 > These manuals are written for Debian
 
-## Installing BorgBackup
+## Installing BorgBackup Debian
 
 1. Install BorgBackup
    ```
