@@ -82,3 +82,9 @@ docker compose up -d
 4. ```
    docker compose up -d
    ```
+# Installing komodo-cli on a priphery client
+
+1. Install komodo-cli
+   ```
+   apt update -y && apt upgrade -y && su - komodo -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/install-cli.py | python3 - --user'
+   ```
