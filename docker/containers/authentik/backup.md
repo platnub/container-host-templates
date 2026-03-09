@@ -11,7 +11,7 @@
 
 ## Pre-run script
 ```
-docker exec -d authentik-postgresql-1 pg_dumpall --username=authentik -f /var/lib/postgresql/data/bkup_postgresql.out --exclude-database=template*
+docker exec authentik-postgresql-1 pg_dumpall --username=authentik -f /var/lib/postgresql/data/bkup_postgresql.out --exclude-database=template*
 ```
 
 ## Create
