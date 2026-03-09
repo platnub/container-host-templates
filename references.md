@@ -7,10 +7,10 @@
   - Media - NFS share
     - dmz-media
       - Jellyfin
-      - Jellyseerr
+      - Seerr
       - Radarr
       - Sonarr
 - komodo-core | Komodo core server that hosts the management of all Komodo periphery clients
   - Backup scripts
     - Jellyfin
-    - Jellyseerr
+    - Seerr
