@@ -8,9 +8,9 @@
 
 ## Recommended
 
-- Run daily at 00:45
+- Run daily at 00:30
 ```
-45 0 * * * /usr/local/bin/jellyfin.sh > /dev/null 2>&1
+30 0 * * * /usr/local/bin/jellyfin.sh > /dev/null 2>&1
 ```
 
 ## Extra variables
