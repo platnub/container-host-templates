@@ -33,7 +33,9 @@ su - komodo -c "export KOMODO_CLI_HOST='${KOMODO_CLI_HOST}' && \
 borg create -v --stats \
     $REPOSITORY::seerr_'{now:%Y-%m-%d_%H:%M}' \
     /var/lib/docker/volumes/jellyseerr_en-config/_data/db/db.sqlite3 \
-    /var/lib/docker/volumes/jellyseerr_en-config/_data/settings.json
+    /var/lib/docker/volumes/jellyseerr_en-config/_data/settings.json \
+    /var/lib/docker/volumes/jellyseerr_de-config/_data/db/db.sqlite3 \
+    /var/lib/docker/volumes/jellyseerr_de-config/_data/settings.json
 ```
 
 ## Post-run script
