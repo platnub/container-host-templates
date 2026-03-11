@@ -10,7 +10,7 @@
 
 - Run daily at 00:50
 ```
-30 0 * * * /usr/local/bin/radarr.sh > /dev/null 2>&1
+50 0 * * * /usr/local/bin/radarr.sh > /dev/null 2>&1
 ```
 
 ## Extra variables
@@ -35,11 +35,13 @@ su - komodo -c "export KOMODO_CLI_HOST='${KOMODO_CLI_HOST}' && \
 ## Create
 ```
 borg create -v --stats \
-    $REPOSITORY::jellyfin_'{now:%Y-%m-%d_%H:%M}' \
+    $REPOSITORY::radarr_'{now:%Y-%m-%d_%H:%M}' \
     /var/lib/docker/volumes/movies_en-radarr.etc/_data \
+    /var/lib/docker/volumes/movies_anime-radarr.etc/_data \
     /var/lib/docker/volumes/movies_de-radarr.etc/_data \
-    /var/lib/docker/volumes/movies_en-radarr.etc/_data \
-    --exclude /var/lib/docker/volumes/movies_*-radarr.etc/_data/Backups/scheduled
+    --exclude '/var/lib/docker/volumes/movies_*-radarr.etc/_data/Backups' \
+    --exclude '/var/lib/docker/volumes/movies_*-radarr.etc/_data/logs' \
+    --exclude '/var/lib/docker/volumes/movies_*-radarr.etc/_data/MediaCover'
 ```
 
 ## Post-run script
