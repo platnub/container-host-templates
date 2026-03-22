@@ -1,3 +1,13 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **Vaultwarden**
+>    - limits:
+>       - cpus: '2.00'
+>       - memory: 1.5G
+>    - reservations:
+>       - cpus: '0.50'
+>       - memory: 500M
+
 # Pangolin Resource configuration
 - Proxy
   - Target
