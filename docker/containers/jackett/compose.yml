@@ -43,6 +43,14 @@ services:
       - TZ=${TZ}
       - AUTO_UPDATE=true #optional
       - RUN_OPTS= #optional
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 750M
+        reservations:
+          cpus: '0.10'
+          memory: 500M
 
   flaresolverr:
     # DockerHub mirror flaresolverr/flaresolverr:latest
@@ -59,3 +67,11 @@ services:
       - TZ=${TZ}
     volumes:
       - /var/lib/flaresolver:/config
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 400M
+        reservations:
+          cpus: '0.10'
+          memory: 200M
