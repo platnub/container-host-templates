@@ -25,3 +25,11 @@ services:
       - config:/config
     environment:
       - TZ=${TZ}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 100M
+        reservations:
+          cpus: '0.05'
+          memory: 10M
