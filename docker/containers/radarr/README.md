@@ -4,6 +4,23 @@
 > - [SABnzbd](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sabnzbd)
 > - qBittorrent
 
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **Radarr** (each)
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 500M
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 100M
+> - **Unpackerr**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 200M
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 20M
+
 # Links
  - [Servarr Environment Variables](https://wiki.servarr.com/useful-tools#using-environment-variables-for-config)
 
