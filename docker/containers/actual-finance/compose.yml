@@ -5,6 +5,7 @@ networks:
 ########################### VOLUMES
 volumes:
   actual_server_<name>:
+    name: actual_server_<name>
 
 ########################### LOCKDOWN
 x-lockdown: &lockdown
