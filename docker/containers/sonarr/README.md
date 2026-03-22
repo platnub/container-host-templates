@@ -1,8 +1,8 @@
 > [!IMPORTANT]  
 > **Requirements**:
-> - Jellyfin
-> - [SABnzbd](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sabnzbd)
-> - qBittorrent
+> - [Jellyfin](../jellyfin)
+> - [SABnzbd](../sabnzbd)
+> - [qBittorrent](../qbittorrent)
 
 > [!NOTE]
 > **Resource Requirements** [READ](https://github.com/platnub/container-host-templates/blob/main/README.md#resource-requirements):
