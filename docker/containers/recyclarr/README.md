@@ -1,3 +1,13 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **Recyclarr**
+>    - limits:
+>       - cpus: '0.20'
+>       - memory: 100M
+>    - reservations:
+>       - cpus: '0.05'
+>       - memory: 10M
+
 # Links
  - [Recyclarr Pre-Built Configuration Files](https://recyclarr.dev/wiki/guide-configs)
  - [Recyclarr templates](https://github.com/recyclarr/config-templates)
