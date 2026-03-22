@@ -1,3 +1,20 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **Jackett**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 750M
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 500M
+> - **Flaresolverr**
+>    - limits:
+>       - cpus: '0.20'
+>       - memory: 400M
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 200M
+
 # Torrent Indexers
 ## Private
 - [IPTorrents](https://iptorrents.com)
