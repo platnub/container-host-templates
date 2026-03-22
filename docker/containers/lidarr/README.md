@@ -16,10 +16,10 @@
 >       - memory: 150M
 > - **Gluetun**
 >    - limits:
->       - cpus: '0.05'
+>       - cpus: '0.50'
 >       - memory: 150M
 >    - reservations:
->       - cpus: '0.01'
+>       - cpus: '0.10'
 >       - memory: 50M
 
 # Manuals
