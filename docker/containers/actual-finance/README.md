@@ -11,4 +11,5 @@
 # Manuals
 ## Installation
 1. For each induvidual instance, add an extra volume and replace <name> with a unique identifier.
+   - Also make sure to give each instance a unique port
 2. Deploy and the stack in Komodo using the [compose.yml](compose.yml) and [.env](.env)
