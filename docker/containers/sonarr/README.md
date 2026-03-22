@@ -5,7 +5,7 @@
 > - [qBittorrent](../qbittorrent)
 
 > [!NOTE]
-> **Resource Requirements** [READ](../../README.md#resource-requirements):
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
 > - **Sonarr (each)**
 >    - limits:
 >       - cpus: '0.50'
