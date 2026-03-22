@@ -33,6 +33,14 @@ services:
     environment:
       - TZ=${TZ}
       - JELLYFIN_PublishedServerUrl=${JELLYFIN_PUBLISHEDSERVERURL}
+    deploy:
+      resources:
+        limits:
+          cpus: '4.00'
+          memory: 8G
+        reservations:
+          cpus: '1.00'
+          memory: 6G
 
 # GPU setup
     devices:
