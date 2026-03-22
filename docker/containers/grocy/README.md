@@ -1,3 +1,13 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **Vaultwarden**
+>    - limits:
+>       - cpus: '1.00'
+>       - memory: 1G
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 50M
+
 # Useful Information
 ## Default credentials
 `admin/admin`
