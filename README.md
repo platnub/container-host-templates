@@ -75,4 +75,4 @@ Install containers
 
 # Resource Requirements
 
-Resource requirements are based mostly on testing. Many docker containers don't explicitly list the resource requirements. Some containers may require more testing.
+Resource requirements are based mostly on testing. Many docker containers don't explicitly list the resource requirements. Some containers may require more testing. Everything is functional with the current documented settings.
