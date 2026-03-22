@@ -1,6 +1,16 @@
 # Requirements
  - [NFS Shares setup](https://github.com/platnub/container-host-templates/blob/main/virtual-machines/open-media-vault/README.md)
 
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **Jellyfin**
+>    - limits:
+>       - cpus: '4.00'
+>       - memory: 8G
+>    - reservations:
+>       - cpus: '1.00'
+>       - memory: 6G
+
 # Useful links
  - [Collection of Plugins & Themes](https://github.com/awesome-jellyfin/awesome-jellyfin)
 
