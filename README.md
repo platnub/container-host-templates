@@ -71,3 +71,8 @@ Install containers
   - [n8n - Automation workflow platform](https://github.com/platnub/container-host-templates/tree/main/docker/containers/n8n)
   - [OpenWebUI - AI agent dashboard](https://github.com/platnub/container-host-templates/tree/main/docker/containers/openwebui)
   - [SearXNG - Metasearch engine](https://github.com/platnub/container-host-templates/tree/main/docker/containers/searxng)
+
+
+# Resource Requirements
+
+Resource requirements are based mostly on testing. Many docker containers don't explicitly list the resource requirements. Some containers may require more testing.
