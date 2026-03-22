@@ -5,7 +5,7 @@
 > - [qBittorrent](../qbittorrent)
 
 > [!NOTE]
-> **Resource Requirements** [READ](https://github.com/platnub/container-host-templates/blob/main/README.md#resource-requirements):
+> **Resource Requirements** [READ](../../README.md#resource-requirements):
 > - **Sonarr (each)**
 >    - limits:
 >       - cpus: '0.50'
