@@ -31,3 +31,11 @@ services:
       - config:/config
     ports:
       - 9283:80
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1G
+        reservations:
+          cpus: '0.10'
+          memory: 50M
