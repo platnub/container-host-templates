@@ -6,13 +6,13 @@
 
 > [!NOTE]
 > **<ins>Resource Requirements</ins>** [READ](https://github.com/platnub/container-host-templates/blob/main/README.md#resource-requirements)\
-> **Sonarr (each)**
-> - limits:
->    - cpus: '0.50'
->    - memory: 1G
-> - reservations:
->    - cpus: '0.10'
->    - memory: 250M
+> - **Sonarr (each)**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 1G
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 250M
 > 
 > **Unpackerr**
 > - limits:
