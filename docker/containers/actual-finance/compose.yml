@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     user: ${PUID}:${PGID}
     networks:
-      - actual_finance
+      - actual-finance
     environment:
       # Uncomment any of the lines below to set configuration options.
       - ACTUAL_HOSTNAME="actual_server_<name>"
