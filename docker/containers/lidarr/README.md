@@ -1,3 +1,27 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **Lidarr**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 1G
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 250M
+> - **Slskd**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 500M
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 150M
+> - **Gluetun**
+>    - limits:
+>       - cpus: '0.05'
+>       - memory: 150M
+>    - reservations:
+>       - cpus: '0.01'
+>       - memory: 50M
+
 # Manuals
 ## Installation
 1. Create stack in Komodo using compose.yml and .env
