@@ -6,7 +6,7 @@
  - VOLUMES
     1. Whatever
  - SERVICES
-    1. name
+    1. container_name
     2. image
     3. restart
     4. privileged
