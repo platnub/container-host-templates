@@ -7,20 +7,12 @@ networks:
 volumes:
   config:
 
-########################### LOCKDOWN
-x-lockdown: &lockdown
-  read_only: true
-  security_opt:
-    - "no-new-privileges=true"
-
 ########################### SERVICES
 services:
   grocy:
     container_name: grocy
     image: lscr.io/linuxserver/grocy:latest
     restart: unless-stopped
-    <<: *lockdown
-    user: ${PUID}:${PGID}
     networks:
       - grocy
     environment:
