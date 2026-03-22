@@ -1,3 +1,27 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **qBittorrent**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 500M
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 100M
+> - **Gluetun**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 150M
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 50M
+> - **qBittorrent Port Manager**
+>    - limits:
+>       - cpus: '0.05'
+>       - memory: 50M
+>    - reservations:
+>       - cpus: '0.01'
+>       - memory: 10M
+
 # Manuals
 ## Installation
 
