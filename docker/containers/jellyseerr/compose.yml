@@ -48,6 +48,14 @@ services:
     depends_on:
       chown:
         condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+        reservations:
+          cpus: '0.20'
+          memory: 250M
 
   jellyseerr-de:
     container_name: jellyseerr-de
@@ -74,3 +82,11 @@ services:
     depends_on:
       chown:
         condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+        reservations:
+          cpus: '0.20'
+          memory: 250M
