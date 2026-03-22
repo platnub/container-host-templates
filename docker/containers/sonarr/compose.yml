@@ -41,6 +41,14 @@ services:
       - TZ=${TZ}
       - SONARR__APP__INSTANCENAME=${SERIES_EN_ID}
       - SONARR__AUTH__APIKEY=${SERIES_EN__AUTH__APIKEY}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1G
+        reservations:
+          cpus: '0.10'
+          memory: 250M
 
   series_anime-sonarr:
     container_name: ${SERIES_ANIME_ID}-sonarr
@@ -62,6 +70,14 @@ services:
       - SONARR__APP__INSTANCENAME=${SERIES_ANIME_ID}
       - SONARR__AUTH__APIKEY=${SERIES_ANIME__AUTH__APIKEY}
       - SONARR__SERVER__PORT=8990
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1G
+        reservations:
+          cpus: '0.10'
+          memory: 250M
 
   series_de-sonarr:
     container_name: ${SERIES_DE_ID}-sonarr
@@ -83,6 +99,14 @@ services:
       - SONARR__APP__INSTANCENAME=${SERIES_DE_ID}
       - SONARR__AUTH__APIKEY=${SERIES_DE__AUTH__APIKEY}
       - SONARR__SERVER__PORT=8991
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1G
+        reservations:
+          cpus: '0.10'
+          memory: 250M
 
   unpackerr_sonarr:
     image: golift/unpackerr
