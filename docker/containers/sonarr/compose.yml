@@ -127,6 +127,14 @@ services:
       - UN_SONARR_1_API_KEY=${SERIES_ANIME__AUTH__APIKEY}
       - UN_SONARR_2_URL=http://${SERIES_DE_ID}-sonarr:8991
       - UN_SONARR_2_API_KEY=${SERIES_DE__AUTH__APIKEY}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 200M
+        reservations:
+          cpus: '0.10'
+          memory: 20M
 
 
 #    deploy:
