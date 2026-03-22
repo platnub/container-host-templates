@@ -15,7 +15,7 @@ x-lockdown: &lockdown
 ########################### SERVICES
 services:
   actual_server_<name>:
-    name: actual_server_<name>
+    container_name: actual_server_<name>
     image: docker.io/actualbudget/actual-server:latest
     restart: unless-stopped
     user: ${PUID}:${PGID}
