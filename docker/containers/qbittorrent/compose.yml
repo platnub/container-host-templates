@@ -41,6 +41,14 @@ services:
     depends_on:
       gluetun:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+        reservations:
+          cpus: '0.10'
+          memory: 100M
   
   gluetun:
     image: qmcgaw/gluetun:v3.40
@@ -75,6 +83,14 @@ services:
       - OPENVPN_USER=${OPENVPN_USER}
       - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - LOG_LEVEL=debug
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 150M
+        reservations:
+          cpus: '0.10'
+          memory: 50M
 
   gluetun-qbittorrent-port-manager:
     image: snoringdragon/gluetun-qbittorrent-port-manager:latest
@@ -93,3 +109,11 @@ services:
     depends_on:
       gluetun:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: 50M
+        reservations:
+          cpus: '0.01'
+          memory: 10M
