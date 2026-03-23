@@ -28,10 +28,11 @@ Server that will store the backups and make backups to offsite locations
 
 ## Create Local repository for container backups
 
-1. Navigate to 'Storage > Shared Folders'
-2. Create a shared folder called `bkup_<container name>`
+1. Login to OpenMediaVault
+2. Navigate to 'Storage > Shared Folders'
+3. Create a shared folder called `bkup_<container name>`
    - Use permission 'Administrator: read/write, Users: no access, Others: no access'
-3. Edit the folder ACL
+4. Edit the folder ACL
    - Replace: enable
    - Recursive: enable
    - Owner: 'bkup [1001]'
@@ -42,14 +43,14 @@ Server that will store the backups and make backups to offsite locations
    - File access control lists:
       - bkup (User): Read/Write
       - bkup (Group): Read/Write
-4. Navigate to 'Services > BorgBackup > Repos' and create a new repository
+5. Navigate to 'Services > BorgBackup > Repos' and create a new repository
    - Name: `<container name>`
    - Type: 'Local'
    - Shared folder: 'bkup_<container name>'
    - Passphrase: _generate a 64 character key using only letters and numbers.
    - Encryption: enable
    - Skip init: disable
-5. Repo keyfile can be downloaded here
+6. Repo keyfile can be downloaded here
 
 ## Create Remote repository for offsite backups
 
