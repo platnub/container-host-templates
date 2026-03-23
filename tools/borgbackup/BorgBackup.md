@@ -86,6 +86,12 @@ Hosts that run containers that need to backup data to a central server
    - BACKUP_PATH is the full path of the remote folder on the remote machine (Shared folder in OMV)
 3. Save the repo keyfile under '/root/.config/borg/keys'
    - Edit permissions `chmod 400 /root/.config/borg/keys/...`
+   - If .config folder is missing
+     ```
+     sudo mkdir -p /root/.config/borg/keys && \
+     sudo mkdir -p /root/.config/borg/security && \
+     chmod 700 /root/.config -R
+     ```
 5. Create a run schedule using CRON. Install CRON if necessary `apt update -y && apt upgrade -y && apt install cron -y`
    ```
    sudo crontab -e
