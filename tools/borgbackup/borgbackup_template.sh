@@ -30,7 +30,7 @@ echo "###### Backup started: $(date) ######"
 # Run backup
 echo "Transfer files ..."
 borg create -v --stats \
-    $REPOSITORY::example_'{now:%Y-%m-%d_%H:%M}' \
+    $REPOSITORY::<container>_'{now:%Y-%m-%d_%H:%M}' \
     /var/lib/docker/volumes/example/_data \
     /var/lib/docker/volumes/example2/_data \
     --exclude /var/lib/docker/volumes/example/_data/exclude
