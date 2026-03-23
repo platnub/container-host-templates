@@ -25,6 +25,14 @@ services:
       options:
         max-size: "1m"
         max-file: "1"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 2G
+        reservations:
+          cpus: '0.10'
+          memory: 1G
 
   searxng:
     container_name: searxng
@@ -42,3 +50,11 @@ services:
       options:
         max-size: "1m"
         max-file: "1"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1G
+        reservations:
+          cpus: '0.10'
+          memory: 250M
