@@ -66,7 +66,7 @@ Hosts that run containers that need to backup data to a central server
 
 1. Install BorgBackup
    ```
-   apt update && apt upgrade && apt install borgbackup -y
+   apt update -y && apt upgrade -y && apt install borgbackup -y
    ```
 
 ## Configuring BorgBackup
