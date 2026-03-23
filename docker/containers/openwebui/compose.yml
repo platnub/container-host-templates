@@ -32,3 +32,11 @@ services:
       - DEFAULT_USER_ROLE=${DEFAULT_USER_ROLE}
       - WEB_SEARCH_ENGINE=${WEB_SEARCH_ENGINE}
       - SEARXNG_QUERY_URL=${SEARXNG_QUERY_URL}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 2G
+        reservations:
+          cpus: '0.10'
+          memory: 1G
