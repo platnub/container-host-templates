@@ -4,9 +4,9 @@
 
 ## Recommended
 
-- Run daily at 00:30
+- Run daily at 00:45
 ```
-30 0 * * * /usr/local/bin/openwebui.sh > /dev/null 2>&1
+45 0 * * * /usr/local/bin/openwebui.sh > /dev/null 2>&1
 ```
 
 ## Create
