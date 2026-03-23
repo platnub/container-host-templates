@@ -19,59 +19,59 @@
 
 # Get started
 
-- [Install a Debian Docker container host VM in Proxmox](https://github.com/platnub/titan-server/tree/main/virtual-machines)
-- [Setup Docker engine & Komodo mangement](https://github.com/platnub/container-host-templates/blob/main/docker/README.md)
-- [Configure BorgBackups of each container](https://github.com/platnub/container-host-templates/blob/main/tools/borgbackup/BorgBackup.md)
+- [Install a Debian Docker container host VM in Proxmox](/virtual-machines)
+- [Setup Docker engine & Komodo mangement](/docker/README.md)
+- [Configure BorgBackups of each container](/tools/borgbackup/BorgBackup.md)
 
 # Containers
 Install containers
 
 ## Docker
 - <ins>**Core**</ins>
-  - [Socket Proxy - Proxy access to docker socket](https://github.com/platnub/titan-server/tree/main/docker/containers/socket-proxy)
-  - [Pangolin - Reverse proxy host](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin)
-    - [Pangolin Newt - Pangolin VPN tunnel](https://github.com/platnub/titan-server/tree/main/docker/containers/pangolin/newt)
+  - [Socket Proxy - Proxy access to docker socket](/docker/containers/socket-proxy)
+  - [Pangolin - Reverse proxy host](/docker/containers/pangolin)
+    - [Pangolin Newt - Pangolin VPN tunnel](/docker/containers/pangolin/newt)
     - Includes [CrowdSec](https://www.crowdsec.net/) - Crowd powered security
 - <ins>**Authentication**</ins>
-  - [Authentik - Single sign on](https://github.com/platnub/titan-server/tree/main/docker/containers/authentik)
+  - [Authentik - Single sign on](/docker/containers/authentik)
 - <ins>**Information**</ins>
   - [Actual - Finance]
-  - [Grocy - Recipe and food stock dashboard](https://github.com/platnub/container-host-templates/tree/main/docker/containers/grocy)
+  - [Grocy - Recipe and food stock dashboard](/docker/containers/grocy)
   - [Homepage - Service dashboard]
-  - [Nextcloud - Cloud storage](https://github.com/platnub/container-host-templates/tree/main/docker/containers/nextcloud)
+  - [Nextcloud - Cloud storage](/docker/containers/nextcloud)
     - Integrated with Collabora - Cloud office suite
   - [Paperless NGX - Document management system]
-  - [Vaultwarden - Password manager](https://github.com/platnub/titan-server/tree/main/docker/containers/vaultwarden)
+  - [Vaultwarden - Password manager](/docker/containers/vaultwarden)
 - <ins>**Media**</ins>
-  - [Jellyfin - Netflix-like media streaming](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyfin)
-  - [Jellyseerr - Media requests](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jellyseerr)
-  - [Tdarr - Media transcoding automation](https://github.com/platnub/container-host-templates/tree/main/docker/containers/tdarr)
+  - [Jellyfin - Netflix-like media streaming](/docker/containers/jellyfin)
+  - [Jellyseerr - Media requests](/docker/containers/jellyseerr)
+  - [Tdarr - Media transcoding automation](/docker/containers/tdarr)
     - Uses [Tdarr-one-flow](https://github.com/samssausages/Tdarr-One-Flow)
-  - [Recyclarr - TRaSH guide sync](https://github.com/platnub/container-host-templates/tree/main/docker/containers/recyclarr)
-  - [Radarr - Movie organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/radarr)
+  - [Recyclarr - TRaSH guide sync](/docker/containers/recyclarr)
+  - [Radarr - Movie organization and management](/docker/containers/radarr)
     - Unpackerr - Unpack compressed torrent downloads
-  - [Sonarr - Series organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sonarr)
+  - [Sonarr - Series organization and management](/docker/containers/sonarr)
     - Unpackerr - Unpack compressed torrent downloads
   - [Bazarr - Subtitle management]
   - [Lidarr - Music organization and management](/docker/containers/lidarr)
     - Includes Soulseek - Music downloader
     - [Beets - Metadata]()
-  - [Bookshelf - Book organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/bookshelf)
+  - [Bookshelf - Book organization and management](/docker/containers/bookshelf)
   - [Kapowarr - Comics and managa organization and management]
-  - [Jackett - Indexer proxy](https://github.com/platnub/container-host-templates/tree/main/docker/containers/jackett)
-  - [SABnzbd - Usenet download client](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sabnzbd)
-  - [qBittorrent - Torrent download client](https://github.com/platnub/container-host-templates/tree/main/docker/containers/qbittorrent)
+  - [Jackett - Indexer proxy](/docker/containers/jackett)
+  - [SABnzbd - Usenet download client](/docker/containers/sabnzbd)
+  - [qBittorrent - Torrent download client](/docker/containers/qbittorrent)
     - Includes Gluetun - VPN
   - [Cleanuparr - Download cleaner for torrents]
 - <ins>**Gaming**</ins>
-  - [Pelican Panel - Management Panel for game servers](https://github.com/platnub/container-host-templates/tree/main/docker/containers/pelican)
+  - [Pelican Panel - Management Panel for game servers](/docker/containers/pelican)
     - Pelican Node - Game server hosting node
 - <ins>**Automation & AI**</ins>
   - [Archon - AI coding command center]
   - [Flowise - AI agent builder]
-  - [n8n - Automation workflow platform](https://github.com/platnub/container-host-templates/tree/main/docker/containers/n8n)
-  - [OpenWebUI - AI agent dashboard](https://github.com/platnub/container-host-templates/tree/main/docker/containers/openwebui)
-  - [SearXNG - Metasearch engine](https://github.com/platnub/container-host-templates/tree/main/docker/containers/searxng)
+  - [n8n - Automation workflow platform](/docker/containers/n8n)
+  - [OpenWebUI - AI agent dashboard](/docker/containers/openwebui)
+  - [SearXNG - Metasearch engine](/docker/containers/searxng)
 
 
 # Resource Requirements
