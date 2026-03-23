@@ -1,3 +1,20 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **SearXNG**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 1G
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 250M
+> - **Redis**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 2G
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 1G
+
 # Manuals
 ## Installation
 1. Create stack in Komodo using [compose.yml](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/searxng/compose.yml) and [.env](https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/searxng/.env)
