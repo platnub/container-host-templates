@@ -78,8 +78,8 @@ Hosts that run containers that need to backup data to a central server
 
 1. Create a new script file. Make sure to name the script after the container.
    ```
-   sudo mkdir -p /var/log/borg
-   sudo nano /usr/local/bin/<container>.sh
+   sudo mkdir -p /var/log/borg \
+   sudo nano /usr/local/bin/<container>.sh \
    sudo chmod 700 /usr/local/bin/<container>.sh
    ```
 2. Fill in the '[borgbackup_template.sh](borgbackup_template.sh)' and paste it into the file.
