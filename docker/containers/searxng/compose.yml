@@ -11,6 +11,23 @@ volumes:
 
 ########################### SERVICES
 services:
+  tor:
+    container_name: tor
+    image: osminogin/tor-simple
+    restart: always
+    networks:
+       - tor
+    volumes:
+      - tor-data:/var/lib/tor
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 250M
+        reservations:
+          cpus: '0.10'
+          memory: 50M
+
   redis:
     container_name: redis
     image: docker.io/valkey/valkey:8-alpine
