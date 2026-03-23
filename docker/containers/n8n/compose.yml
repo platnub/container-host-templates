@@ -49,5 +49,5 @@ services:
           cpus: '2.00'
           memory: 4G
         reservations:
-          cpus: '1.0'
+          cpus: '1.00'
           memory: 1G
