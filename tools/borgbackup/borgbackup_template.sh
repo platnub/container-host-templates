@@ -7,7 +7,7 @@ export BORG_RSH="ssh -i /home/$USERNAME/.ssh/bkup"
 ## Borg passphrase
 export BORG_PASSPHRASE=''
 
-LOG='/var/log/borg/backup.log'
+LOG='/var/log/borg/backup_<container>.log'
 
 # Set backup location
 BACKUP_USER='<user>'
