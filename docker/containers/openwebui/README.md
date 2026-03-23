@@ -1,3 +1,13 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **OpenWebUI**
+>    - limits:
+>       - cpus: '0.50'
+>       - memory: 2G
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 1G
+
 # Pangolin Resource configuration
 - Proxy
   - Target
