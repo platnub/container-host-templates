@@ -53,7 +53,7 @@ Install containers
   - [Sonarr - Series organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/sonarr)
     - Unpackerr - Unpack compressed torrent downloads
   - [Bazarr - Subtitle management]
-  - [Lidarr - Music organization and management](/containers/lidarr)
+  - [Lidarr - Music organization and management](/docker/containers/lidarr)
     - Includes Soulseek - Music downloader
     - [Beets - Metadata]()
   - [Bookshelf - Book organization and management](https://github.com/platnub/container-host-templates/tree/main/docker/containers/bookshelf)
