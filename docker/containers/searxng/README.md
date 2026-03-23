@@ -14,6 +14,13 @@
 >    - reservations:
 >       - cpus: '0.10'
 >       - memory: 1G
+> - **Tor**
+>    - limits:
+>       - cpus: '0.20'
+>       - memory: 250M
+>    - reservations:
+>       - cpus: '0.10'
+>       - memory: 50M
 
 # Manuals
 ## Installation
