@@ -58,6 +58,8 @@
 
 # Add SSH key for user
 
+Suffix `-- <username>` to change targeted user
+
    ```
    bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)"
    ```
