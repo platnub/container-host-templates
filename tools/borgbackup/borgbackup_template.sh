@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Specify the path to the key
-USERNAME="$(hostname)"  
+USERNAME="$(hostname)"
 export BORG_RSH="ssh -i /home/$USERNAME/.ssh/bkup"
 
 ## Borg passphrase
