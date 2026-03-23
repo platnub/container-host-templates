@@ -43,3 +43,11 @@ services:
       - N8N_SMTP_USER=${N8N_SMTP_USER}
       - N8N_SMTP_PASS=${N8N_SMTP_PASS}
       - N8N_SMTP_SENDER=${N8N_SMTP_SENDER}
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
