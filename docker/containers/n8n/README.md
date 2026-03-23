@@ -1,3 +1,13 @@
+> [!NOTE]
+> **Resource Requirements** [READ](../../../README.md#resource-requirements):
+> - **OpenWebUI**
+>    - limits:
+>       - cpus: '2.00'
+>       - memory: 4G
+>    - reservations:
+>       - cpus: '1.00'
+>       - memory: 1G
+
 # Useful information
 ## Community nodes
 - [NCNodes- Community built nodes for n8n](https://ncnodes.com)
