@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Setup SSH key for sudo user
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- "$(hostname -s)"
+
 # Ask for SSH port
 
 # Generate a random port in 10000-65535
@@ -76,8 +79,6 @@ adduser --gecos GECOS --disabled-password --system --uid 1001 --gid 1001 bkup
 # Configure komodo user
 groupadd -g 1337 komodo
 adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo
-echo "-----------------------------------------------------------------------------"
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- komodo
 
 # Configure timezone
 dpkg-reconfigure tzdata
