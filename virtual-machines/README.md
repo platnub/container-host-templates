@@ -3,6 +3,7 @@
 ## Docker
 
 > [!NOTE]
+> Tested with Proxmox 8.x.x - 9.1.x
 > - Default port 22
 > - Root user disabled
 > - Sudo user username = hostname
