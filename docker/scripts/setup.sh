@@ -53,7 +53,9 @@ apt-get install wget -y
 # Change SSH port, disable IPv6, Setup UFW firewall
 sed -i "s/\#Port 22/Port $ssh_port /" /etc/ssh/sshd_config
 sed -i "s/\#MaxAuthTries 6/MaxAuthTries 20 /" /etc/ssh/sshd_config
-sed -i "s/\#MaxSessions 10/MaxSessions 2 /" /etc/ssh/sshd_config
+sed -i "s/\#PasswordAuthentication yes/PasswordAuthentication no /" /etc/ssh/sshd_config
+sed -i "s/\UsePAM yes/UsePAM no /" /etc/ssh/sshd_config
+echo "ChallengeResponseAuthentication no" /etc/ssh/sshd_config
 systemctl daemon-reload
 systemctl restart sshd
 echo -e "\n# Disabling the IPv6\nnet.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.conf > /dev/null
@@ -73,7 +75,7 @@ groupadd -g 1001 bkup
 adduser --gecos GECOS --disabled-password --system --uid 1001 --gid 1001 bkup
 # Configure komodo user
 groupadd -g 1337 komodo
-adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337
+adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo
 echo "-----------------------------------------------------------------------------"
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- komodo
 
