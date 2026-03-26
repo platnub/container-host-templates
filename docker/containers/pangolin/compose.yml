@@ -95,10 +95,11 @@ services:
       - traefik.enable=false
     healthcheck:
       interval: 10s
-      retries: 15
+      retries: 3
       test:
         - CMD
         - cscli
         - capi
         - status
-      timeout: 10s
+      timeout: 5s
+      start_period: 30s
