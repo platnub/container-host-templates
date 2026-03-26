@@ -55,7 +55,7 @@
    OnCalendar=01:45
    RandomizedDelaySec=30m
    ```
-7. Disable sudo verification. Type `sudo visudo`.
+7. Disable sudo verification. Type `sudo visudo`.<br>
    Change '%sudo   ALL=(ALL:ALL) ALL' to `%sudo   ALL=(ALL:ALL) NOPASSWD: ALL`
 
 # Add SSH key for user
