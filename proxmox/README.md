@@ -15,12 +15,14 @@ parted
 # Manuals
 
 ## Passthrough drives to VM _[source](https://pve.proxmox.com/wiki/Passthrough_Physical_Disk_to_Virtual_Machine_(VM))_
-```
-find /dev/disk/by-id/ -type l|xargs -I{} ls -l {}|grep -v -E '[0-9]$' |sort -k11|cut -d' ' -f9,10,11,12
-```
-```
-qm set <vm> -scsi0 /dev/disk/by-id/...
-```
+1. List all connected drives
+   ```
+   find /dev/disk/by-id/ -type l|xargs -I{} ls -l {}|grep -v -E '[0-9]$' |sort -k11|cut -d' ' -f9,10,11,12
+   ```
+2. Connect each drive to a VM using the ID
+   ```
+   qm set <vm> -scsi0 /dev/disk/by-id/...
+   ```
 
 ## VM Crash
 
