@@ -61,9 +61,10 @@ To fix this, restart the service pve-cluster
     GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt pcie_acs_override=downstream,multifunction initcall_blacklist=sysfb_init video=simplefb:off video=vesafb:off video=efifb:off video=vesa:off disable_vga=1 vfio_iommu_type1.allow_unsafe_interrupts=1 kvm.ignore_msrs=1 modprobe.blacklist=radeon,nouveau,nvidia,nvidiafb,nvidia-gpu,snd_hda_intel,snd_hda_codec_hdmi,i915"
     ```
 5. Run `update-grub`
-6.  ```
-    nano /etc/modules
-    ```
+6. Add modules on boot
+   ```
+   nano /etc/modules
+   ```
 7. Append this to the end of the file
     ```
     # Modules required for PCI passthrough
