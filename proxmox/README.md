@@ -60,7 +60,7 @@ Example: GPU drivers
    apt update && apt upgrade -y && apt install fwupd
    ```
 2. Follow [instructions from Github](https://github.com/fwupd/fwupd?tab=readme-ov-file#basic-usage-flow-command-line)
-3. 
+
    If you have a device with firmware supported by fwupd, this is how you can check for updates and apply them using fwupd's command line tools.
    
    `fwupdmgr get-devices`
