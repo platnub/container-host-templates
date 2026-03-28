@@ -77,7 +77,7 @@ To fix this, restart the service pve-cluster
 9. Reboot Proxmox
 10. Run `dmesg | grep -e DMAR -e IOMMU` and you should see `DMAR: IOMMU enabled`
 11. It's now possible to add the iGPU to the VM
-   <img width="921" height="236" alt="image" src="https://github.com/user-attachments/assets/096b208b-f95c-4e0e-9db1-685909cc55c1" />
+    <img width="921" height="236" alt="image" src="https://github.com/user-attachments/assets/096b208b-f95c-4e0e-9db1-685909cc55c1" />
 
 ## Update device firmware
 
