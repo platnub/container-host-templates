@@ -54,7 +54,7 @@ To fix this, restart the service pve-cluster
 
 ## Update device firmware
 
-Example: GPU drivers
+Example: CPU, GPU drivers
 
 1. ```
    apt update && apt upgrade -y && apt install fwupd
