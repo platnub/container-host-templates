@@ -1,3 +1,6 @@
+- [Tools](#tools)
+   - [Parted - Drive management](#parted---drive-management)
+
 # Tools
 ## Parted - Drive management
 ```
