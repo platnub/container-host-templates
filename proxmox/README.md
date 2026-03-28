@@ -52,9 +52,10 @@ To fix this, restart the service pve-cluster
    echo "blacklist i915" >> /etc/modprobe.d/blacklist.conf
    ```
    Reboot
-3.  ```
-    nano /etc/default/grub
-    ```
+3. Edit grub
+   ```
+   nano /etc/default/grub
+   ```
 4. Edit `GRUB_CMDLINE_LINUX_DEFAULT="quiet"` to
     ```
     GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt pcie_acs_override=downstream,multifunction initcall_blacklist=sysfb_init video=simplefb:off video=vesafb:off video=efifb:off video=vesa:off disable_vga=1 vfio_iommu_type1.allow_unsafe_interrupts=1 kvm.ignore_msrs=1 modprobe.blacklist=radeon,nouveau,nvidia,nvidiafb,nvidia-gpu,snd_hda_intel,snd_hda_codec_hdmi,i915"
