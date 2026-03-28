@@ -8,9 +8,16 @@
 
 # Tools
 ## Parted - Drive management
-```
-parted
-```
+- Enter parted
+   ```
+   parted
+   ```
+- List all the devices
+  ```
+  print devices
+  # More cluttered but can view size
+  print all
+  ```
 
 # Manuals
 
