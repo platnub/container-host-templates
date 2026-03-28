@@ -35,19 +35,34 @@ To fix this, restart the service pve-cluster
 
 ‼️ Proxmox loses GPU capabilities
 
-1. SSH into Proxmox # https://pve.proxmox.com/wiki/PCI_Passthrough#GPU_passthrough
-2.  ```
+1. SSH into Proxmox
+2. Blacklist GPU drivers _[Proxmox Wiki](https://pve.proxmox.com/wiki/PCI_Passthrough#GPU_passthrough)_
+   ```
+   # AMD GPUs
+   echo "blacklist amdgpu" >> /etc/modprobe.d/blacklist.conf
+   echo "blacklist radeon" >> /etc/modprobe.d/blacklist.conf
+   ```
+   ```
+   # NVIDIA GPUs
+   echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf 
+   echo "blacklist nvidia*" >> /etc/modprobe.d/blacklist.conf
+   ```
+   ```
+   # Intel GPUs
+   echo "blacklist i915" >> /etc/modprobe.d/blacklist.conf
+   ```
+3.  ```
     nano /etc/default/grub
     ```
-3. Edit `GRUB_CMDLINE_LINUX_DEFAULT="quiet"` to
+4. Edit `GRUB_CMDLINE_LINUX_DEFAULT="quiet"` to
     ```
     GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt pcie_acs_override=downstream,multifunction initcall_blacklist=sysfb_init video=simplefb:off video=vesafb:off video=efifb:off video=vesa:off disable_vga=1 vfio_iommu_type1.allow_unsafe_interrupts=1 kvm.ignore_msrs=1 modprobe.blacklist=radeon,nouveau,nvidia,nvidiafb,nvidia-gpu,snd_hda_intel,snd_hda_codec_hdmi,i915"
     ```
-4. Run `update-grub`
-5.  ```
+5. Run `update-grub`
+6.  ```
     nano /etc/modules
     ```
-6. Append this to the end of the file
+7. Append this to the end of the file
     ```
     # Modules required for PCI passthrough
     vfio
@@ -55,10 +70,10 @@ To fix this, restart the service pve-cluster
     vfio_pci
     vfio_virqfd
     ```
-7. Run `update-initramfs -u -k all`
-8. Reboot Proxmox
-9. Run `dmesg | grep -e DMAR -e IOMMU` and you should see `DMAR: IOMMU enabled`
-10. <img width="921" height="236" alt="image" src="https://github.com/user-attachments/assets/096b208b-f95c-4e0e-9db1-685909cc55c1" />
+8. Run `update-initramfs -u -k all`
+9. Reboot Proxmox
+10. Run `dmesg | grep -e DMAR -e IOMMU` and you should see `DMAR: IOMMU enabled`
+11. <img width="921" height="236" alt="image" src="https://github.com/user-attachments/assets/096b208b-f95c-4e0e-9db1-685909cc55c1" />
 
 ## Update device firmware
 
