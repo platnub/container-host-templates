@@ -1,5 +1,10 @@
 - [Tools](#tools)
    - [Parted - Drive management](#parted---drive-management)
+- [Manuals](#manuals)
+   - [Passthrough drives to VM](#passthrough-drives-to-vm)
+   - [VM Crash](#vm-crash)
+   - [iGPU Passthrough Intel CPU](igpu-passthrough-intel-cpu)
+   - [Update device firmware](update-device-firmware)
 
 # Tools
 ## Parted - Drive management
