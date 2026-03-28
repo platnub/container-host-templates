@@ -51,6 +51,7 @@ To fix this, restart the service pve-cluster
    # Intel GPUs
    echo "blacklist i915" >> /etc/modprobe.d/blacklist.conf
    ```
+   Reboot
 3.  ```
     nano /etc/default/grub
     ```
