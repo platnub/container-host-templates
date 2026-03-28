@@ -52,3 +52,22 @@ To fix this, restart the service pve-cluster
 9. Run `dmesg | grep -e DMAR -e IOMMU` and you should see `DMAR: IOMMU enabled`
 10. <img width="921" height="236" alt="image" src="https://github.com/user-attachments/assets/096b208b-f95c-4e0e-9db1-685909cc55c1" />
 
+## Update device firmware
+
+Example: GPU drivers
+
+1. ```
+   apt update && apt upgrade -y && apt install fwupd
+   ```
+2. Follow [instructions from Github](https://github.com/fwupd/fwupd?tab=readme-ov-file#basic-usage-flow-command-line)
+   If you have a device with firmware supported by fwupd, this is how you can check for updates and apply them using fwupd's command line tools.
+   `fwupdmgr get-devices`
+   This will display all devices detected by fwupd.
+   `fwupdmgr refresh`
+   This will download the latest metadata from LVFS.
+   `fwupdmgr get-updates`
+   If updates are available for any devices on the system, they'll be displayed.
+   `fwupdmgr update`
+   This will download and apply all updates for your system.
+      Updates that can be applied live will be done immediately.
+      Updates that run at boot-up will be staged for the next reboot.
