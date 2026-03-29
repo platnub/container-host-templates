@@ -142,3 +142,10 @@ Example: CPU, GPU drivers
       ```
 - Updates that can be applied live will be done immediately.
 - Updates that run at boot-up will be staged for the next reboot.
+
+## Troubleshoot GPU issues
+
+- Check display devices
+  ```
+  lspci -nnk | grep -A3 -E "VGA|Display"
+  ```
