@@ -40,6 +40,10 @@ TASK ERROR: can't lock file '/var/lock/qemu-server/lock-90010.conf' - got timeou
 ```
 To fix this, restart the service pve-cluster
 
+## Enable iGPU with dedicated graphics card
+
+1. Go into BIOS and enable 'iGPU Multi-Monitor'
+
 ## iGPU Passthrough Intel CPU _[source](https://3os.org/infrastructure/proxmox/gpu-passthrough/igpu-passthrough-to-vm/#proxmox-configuration-for-igpu-full-passthrough)_
 
 ‼️ Proxmox loses GPU capabilities
