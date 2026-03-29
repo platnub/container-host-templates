@@ -107,9 +107,9 @@ To fix this, restart the service pve-cluster
 9. Reboot Proxmox
 10. Run `dmesg | grep -e DMAR -e IOMMU` and you should see `DMAR: IOMMU enabled`
 11. Using SSH on the VM, check the GPU using [intel-gpu-tools](#intel-gpu-tools)
-   ```
-   intel_gpu_top
-   ```
+    ```
+    intel_gpu_top
+    ```
 12. It's now possible to add the iGPU to the VM. Enable 'PCI-Express'
     <img width="921" height="236" alt="image" src="https://github.com/user-attachments/assets/096b208b-f95c-4e0e-9db1-685909cc55c1" />
 
