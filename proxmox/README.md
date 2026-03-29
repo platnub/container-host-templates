@@ -123,21 +123,22 @@ Example: CPU, GPU drivers
 2. Follow [instructions from Github](https://github.com/fwupd/fwupd?tab=readme-ov-file#basic-usage-flow-command-line)
 
    If you have a device with firmware supported by fwupd, this is how you can check for updates and apply them using fwupd's command line tools.
-   
-   `fwupdmgr get-devices`
-   
-   This will display all devices detected by fwupd.
-   
-   `fwupdmgr refresh`
-   
-   This will download the latest metadata from LVFS.
-   
-   `fwupdmgr get-updates`
-   
-   If updates are available for any devices on the system, they'll be displayed.
-   
-   `fwupdmgr update`
-   
-   This will download and apply all updates for your system.
-   - Updates that can be applied live will be done immediately.
-   - Updates that run at boot-up will be staged for the next reboot.
+
+   - Display all devices detected by fwupd.
+      ```
+      fwupdmgr get-devices
+      ```
+   - Download the latest metadata from LVFS.
+      ```
+      fwupdmgr refresh
+      ```
+   - Display if updates are available for any devices on the system.
+      ```
+      fwupdmgr get-updates
+      ```
+   - Download and apply all updates for your system.
+      ```
+      fwupdmgr update
+      ```
+- Updates that can be applied live will be done immediately.
+- Updates that run at boot-up will be staged for the next reboot.
