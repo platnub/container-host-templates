@@ -153,3 +153,7 @@ Example: CPU, GPU drivers
   ```
   dmesg | grep -i i915
   ```
+- Search logs for i915
+  ```
+  journalctl -b | grep i915
+  ```
