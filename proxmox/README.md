@@ -118,7 +118,7 @@ To fix this, restart the service pve-cluster
 Example: CPU, GPU drivers
 
 1. ```
-   apt update && apt upgrade -y && apt install fwupd
+   apt update && apt upgrade -y && apt install -y fwupd
    ```
 2. Follow [instructions from Github](https://github.com/fwupd/fwupd?tab=readme-ov-file#basic-usage-flow-command-line)
 
