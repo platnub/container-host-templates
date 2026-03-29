@@ -489,7 +489,15 @@ arch_check
 pve_check
 
 if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Docker VM" --yesno "This will create a New Docker VM. Proceed?" 10 58; then
-  :
+  # Sudo password
+  if SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Enter sudo password for the Docker VM" 8 58 --title "SUDO PASSWORD" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$SUDO_PASSWORD" ]; then
+      msg_error "Sudo password cannot be empty."
+      exit-script
+    fi
+  else
+    exit-script
+  fi
 else
   header_info && echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
 fi
@@ -655,6 +663,14 @@ ExecStart=-/sbin/agetty --autologin root --noclear %I \$TERM
 EOF' >/dev/null 2>&1 || true
 fi
 msg_ok "Finalized image"
+
+# Create Docker user and lock root user
+msg_info "Creating Docker user and locking root user"
+virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password ${HN}" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "adduser ${HN} sudo" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --password ${HN}:password:${SUDO_PASSWORD} >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
+msg_ok "${HN} Docker user created and root user locked"
 
 # Create first-boot Docker install script (fallback if virt-customize failed)
 if [ "$DOCKER_PREINSTALLED" = "no" ]; then
