@@ -1,5 +1,6 @@
 - [Tools](#tools)
    - [Parted - Drive management](#parted---drive-management)
+   - [intel-gpu-tools](#intel-gpu-tools)
 - [Manuals](#manuals)
    - [Passthrough drives to VM](#passthrough-drives-to-vm-source)
    - [VM Crash](#vm-crash)
@@ -8,6 +9,7 @@
    - [Update device firmware](#update-device-firmware)
 
 # Tools
+
 ## Parted - Drive management
 - Enter parted
    ```
@@ -18,6 +20,19 @@
   print devices
   # More cluttered but can view size
   print all
+  ```
+
+## intel-gpu-tools
+
+Intel GPU testing
+
+- Install intel-gpu-tools
+  ```
+  apt update && apt upgrade -y && apt install -y intel-gpu-tools
+  ```
+- Check GPU status
+  ```
+  intel_gpu_top
   ```
 
 # Manuals
@@ -91,7 +106,11 @@ To fix this, restart the service pve-cluster
 8. Run `update-initramfs -u -k all`
 9. Reboot Proxmox
 10. Run `dmesg | grep -e DMAR -e IOMMU` and you should see `DMAR: IOMMU enabled`
-11. It's now possible to add the iGPU to the VM. Enable 'PCI-Express'
+11. Using SSH on the VM, check the GPU using [intel-gpu-tools](#intel-gpu-tools)
+   ```
+   intel_gpu_top
+   ```
+12. It's now possible to add the iGPU to the VM. Enable 'PCI-Express'
     <img width="921" height="236" alt="image" src="https://github.com/user-attachments/assets/096b208b-f95c-4e0e-9db1-685909cc55c1" />
 
 ## Update device firmware
