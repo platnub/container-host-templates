@@ -68,6 +68,7 @@ To fix this, restart the service pve-cluster
    Reboot
 3. Edit grub
    ```
+   cp -a /etc/default/grub{,.bak}
    nano /etc/default/grub
    ```
 4. Edit `GRUB_CMDLINE_LINUX_DEFAULT="quiet"` to
