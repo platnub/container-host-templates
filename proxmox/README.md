@@ -3,6 +3,7 @@
 - [Manuals](#manuals)
    - [Passthrough drives to VM](#passthrough-drives-to-vm-source)
    - [VM Crash](#vm-crash)
+   - [Enable iGPU with dedicated graphics card](#enable-igpu-with-dedicated-graphics-card)
    - [iGPU Passthrough Intel CPU](#igpu-passthrough-intel-cpu-source)
    - [Update device firmware](#update-device-firmware)
 
