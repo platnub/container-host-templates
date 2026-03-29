@@ -620,7 +620,7 @@ DOCKER_PREINSTALLED="no"
 
 # Install qemu-guest-agent and Docker during image customization
 msg_info "Installing base packages in image"
-if virt-customize -a "$WORK_FILE" --install qemu-guest-agent,curl,ca-certificates >/dev/null 2>&1; then
+if virt-customize -a "$WORK_FILE" --install qemu-guest-agent,curl,ca-certificates,openssh-server >/dev/null 2>&1; then
   msg_ok "Installed base packages"
 
   msg_info "Installing Docker (this may take 2-5 minutes)"
@@ -700,7 +700,7 @@ for i in {1..30}; do
 done
 
 apt-get update
-apt-get install -y qemu-guest-agent curl ca-certificates
+apt-get install -y qemu-guest-agent curl ca-certificates openssh-server
 curl -fsSL https://get.docker.com | sh
 systemctl enable docker
 systemctl start docker
