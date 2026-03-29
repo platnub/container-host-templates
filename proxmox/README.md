@@ -149,3 +149,7 @@ Example: CPU, GPU drivers
   ```
   lspci -nnk | grep -A3 -E "VGA|Display"
   ```
+- Check dmesg for i915 errors
+  ```
+  dmesg | grep -i i915
+  ```
