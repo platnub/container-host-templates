@@ -132,6 +132,27 @@ function select_cloud_init() {
   else
     USE_CLOUD_INIT="no"
     echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
+    # Prompt for sudo password when Cloud-Init is not used
+    while true; do
+      SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Set a sudo password for the Docker user" 8 58 --title "SUDO PASSWORD" 3>&1 1>&2 2>&3)
+      if [ $? -ne 0 ]; then
+        exit-script
+      fi
+      if [ -z "$SUDO_PASSWORD" ]; then
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Password cannot be empty. Please enter a password." 8 58
+        continue
+      fi
+      SUDO_PASSWORD_CONFIRM=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Confirm sudo password" 8 58 --title "CONFIRM PASSWORD" 3>&1 1>&2 2>&3)
+      if [ $? -ne 0 ]; then
+        exit-script
+      fi
+      if [ "$SUDO_PASSWORD" != "$SUDO_PASSWORD_CONFIRM" ]; then
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "PASSWORD MISMATCH" --msgbox "Passwords do not match. Please try again." 8 58
+        continue
+      fi
+      echo -e "${DEFAULT}${BOLD}${DGN}Sudo Password: ${BGN}********${CL}"
+      break
+    done
   fi
 }
 
@@ -489,15 +510,7 @@ arch_check
 pve_check
 
 if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Docker VM" --yesno "This will create a New Docker VM. Proceed?" 10 58; then
-  # Sudo password
-  if SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Enter sudo password for the Docker VM" 8 58 --title "SUDO PASSWORD" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z "$SUDO_PASSWORD" ]; then
-      msg_error "Sudo password cannot be empty."
-      exit-script
-    fi
-  else
-    exit-script
-  fi
+  :
 else
   header_info && echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
 fi
@@ -664,13 +677,15 @@ EOF' >/dev/null 2>&1 || true
 fi
 msg_ok "Finalized image"
 
-# Create Docker user and lock root user
-msg_info "Creating Docker user and locking root user"
-virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password ${HN}" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "adduser ${HN} sudo" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --password ${HN}:password:${SUDO_PASSWORD} >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
-msg_ok "${HN} Docker user created and root user locked"
+# Create Docker user and lock root user (only when Cloud-Init is not used)
+if [ "$USE_CLOUD_INIT" = "no" ]; then
+  msg_info "Creating Docker user and locking root user"
+  virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password ${HN}" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "adduser ${HN} sudo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --password ${HN}:password:${SUDO_PASSWORD} >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
+  msg_ok "${HN} Docker user created and root user locked"
+fi
 
 # Create first-boot Docker install script (fallback if virt-customize failed)
 if [ "$DOCKER_PREINSTALLED" = "no" ]; then
