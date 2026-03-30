@@ -140,7 +140,12 @@ function select_cloud_init() {
   else
     USE_CLOUD_INIT="no"
     echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
-    # Prompt for sudo password when Cloud-Init is not used
+  fi
+}
+
+function select_sudo_password() {
+  # Only prompt for sudo password when Cloud-Init is not used
+  if [ "$USE_CLOUD_INIT" = "no" ]; then
     while true; do
       SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Set a sudo password for the Docker user" 8 58 --title "SUDO PASSWORD" 3>&1 1>&2 2>&3)
       if [ $? -ne 0 ]; then
@@ -160,6 +165,65 @@ function select_cloud_init() {
       fi
       echo -e "${DEFAULT}${BOLD}${DGN}Sudo Password: ${BGN}********${CL}"
       break
+    done
+  fi
+}
+
+function select_ssh_port() {
+  # Generate random port between 10000 and 65535
+  RANDOM_SSH_PORT=$((RANDOM % 55536 + 10000))
+
+  if SSH_PORT_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH PORT" --radiolist \
+    "Choose SSH Port Configuration\n\nGenerated random port: ${RANDOM_SSH_PORT}" 14 68 3 \
+    "random" "Use generated random port (${RANDOM_SSH_PORT}) (Recommended)" ON \
+    "default" "Use default SSH port (22)" OFF \
+    "custom" "Enter custom port" OFF \
+    3>&1 1>&2 2>&3); then
+    case $SSH_PORT_CHOICE in
+    random)
+      SSH_PORT="$RANDOM_SSH_PORT"
+      ;;
+    default)
+      SSH_PORT="22"
+      ;;
+    custom)
+      while true; do
+        if CUSTOM_PORT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter custom SSH port (1024-65535)" 8 58 "$RANDOM_SSH_PORT" --title "CUSTOM SSH PORT" 3>&1 1>&2 2>&3); then
+          if [[ "$CUSTOM_PORT" =~ ^[0-9]+$ ]] && [ "$CUSTOM_PORT" -ge 1024 ] && [ "$CUSTOM_PORT" -le 65535 ]; then
+            SSH_PORT="$CUSTOM_PORT"
+            break
+          fi
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Port must be a number between 1024 and 65535." 8 58
+        else
+          exit-script
+        fi
+      done
+      ;;
+    esac
+    echo -e "${DEFAULT}${BOLD}${DGN}SSH Port: ${BGN}${SSH_PORT}${CL}"
+  else
+    exit-script
+  fi
+}
+
+function select_max_auth_tries() {
+  MAX_AUTH_TRIES="6"
+
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH MAX AUTH TRIES" \
+    --yesno "SSH MaxAuthTries limits failed authentication attempts per connection.\n\nDefault: 6 (recommended for most cases)\n\nDo you want to keep the default value of 6?\n\nSelect 'No' to set a higher value if you use multiple SSH keys." 14 68); then
+    echo -e "${DEFAULT}${BOLD}${DGN}SSH Max Auth Tries: ${BGN}${MAX_AUTH_TRIES}${CL}"
+  else
+    while true; do
+      if CUSTOM_AUTH_TRIES=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter MaxAuthTries value (1-100)" 8 58 "6" --title "MAX AUTH TRIES" 3>&1 1>&2 2>&3); then
+        if [[ "$CUSTOM_AUTH_TRIES" =~ ^[0-9]+$ ]] && [ "$CUSTOM_AUTH_TRIES" -ge 1 ] && [ "$CUSTOM_AUTH_TRIES" -le 100 ]; then
+          MAX_AUTH_TRIES="$CUSTOM_AUTH_TRIES"
+          echo -e "${DEFAULT}${BOLD}${DGN}SSH Max Auth Tries: ${BGN}${MAX_AUTH_TRIES}${CL}"
+          break
+        fi
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Value must be a number between 1 and 100." 8 58
+      else
+        exit-script
+      fi
     done
   fi
 }
@@ -252,6 +316,9 @@ function exit-script() {
 function default_settings() {
   select_os
   select_cloud_init
+  select_sudo_password
+  select_ssh_port
+  select_max_auth_tries
 
   VMID=$(get_valid_nextid)
   FORMAT=""
@@ -287,6 +354,9 @@ function default_settings() {
 function advanced_settings() {
   select_os
   select_cloud_init
+  select_sudo_password
+  select_ssh_port
+  select_max_auth_tries
 
   # SSH Key selection for Cloud-Init VMs
   if [ "$USE_CLOUD_INIT" = "yes" ]; then
@@ -668,6 +738,10 @@ virt-customize -q -a "$WORK_FILE" --run-command "rm -f /var/lib/dbus/machine-id"
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*Port.*/Port ${SSH_PORT}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*MaxAuthTries.*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*MaxSessions.*/MaxSessions 2/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*AllowTcpForwarding.*/AllowTcpForwarding No/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
 else
   # Configure auto-login for nocloud images (no Cloud-Init)
   virt-customize -q -a "$WORK_FILE" --run-command "mkdir -p /etc/systemd/system/serial-getty@ttyS0.service.d" >/dev/null 2>&1 || true
