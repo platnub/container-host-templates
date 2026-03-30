@@ -16,6 +16,7 @@ networks:
 volumes:
   mongo-data:
   mongo-config:
+  keys:
 
 ########################### SERVICES
 services:
@@ -28,8 +29,8 @@ services:
     # ports:
     #   - 27017:27017
     volumes:
-      - ./appdata/mongo-data:/data/db
-      - ./appdata/mongo-config:/data/configdb
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
     command: --quiet --wiredTigerCacheSizeGB 0.25
     env_file: ./.env
     environment:
@@ -40,6 +41,7 @@ services:
 
   core:
     image: ghcr.io/moghtech/komodo-core:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    init: true
     restart: always
     user: ${PUID}:${PGID}
     networks:
@@ -69,10 +71,12 @@ services:
 
   periphery:
     image: ghcr.io/moghtech/komodo-periphery:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    init: true
     restart: always
     networks:
       - komodo
     volumes:
+      - keys:/config/keys
       ## Docker socket. Write permissions necessary
       - /var/run/docker.sock:/var/run/docker.sock
       ## Allow Periphery to see processes outside of container
