@@ -136,10 +136,10 @@ function select_cloud_init() {
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" \
     --yesno "Enable Cloud-Init for VM configuration?\n\nCloud-Init allows automatic configuration of:\n- User accounts and passwords\n- SSH keys\n- Network settings (DHCP/Static)\n- DNS configuration\n\nYou can also configure these settings later in Proxmox UI.\n\nNote: Debian without Cloud-Init will use nocloud image with console auto-login." 18 68); then
     USE_CLOUD_INIT="yes"
-    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}yes${CL}"
+    echo -e "${CLOUD:-${TAB}☁️${TAB}${CL}}${BOLD}${DGN}Cloud-Init: ${BGN}yes${CL}"
   else
     USE_CLOUD_INIT="no"
-    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
+    echo -e "${CLOUD:-${TAB}☁️${TAB}${CL}}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
     # Prompt for sudo password when Cloud-Init is not used
     while true; do
       SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Set a sudo password for the Docker user" 8 58 --title "SUDO PASSWORD" 3>&1 1>&2 2>&3)
