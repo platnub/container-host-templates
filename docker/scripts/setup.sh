@@ -78,7 +78,7 @@ groupadd -g 1001 bkup
 adduser --gecos GECOS --disabled-password --system --uid 1001 --gid 1001 bkup
 # Configure komodo user
 groupadd -g 1337 komodo
-adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo
+adduser --gecos GECOS --password '*' --uid 1337 --gid 1337 komodo
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- komodo
 
 # Configure timezone
