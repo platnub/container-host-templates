@@ -9,10 +9,8 @@ systemctl --user status periphery
 
 ## Update Komodo Core
 ```
-cd /opt/docker/komodo
-docker compose pull
-docker compose down
-docker compose up -d
+cd /opt/docker
+docker compose -p komodo -f komodo/compose.yml --env-file komodo/.env up -d --force-recreate
 ```
 
 # Requirements
