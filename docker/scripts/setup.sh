@@ -47,11 +47,11 @@ read -p "Enter the allowed IPs for Komodo (comma separated, example: \"1.2.3.0/2
 read -p "Enter the Komodo core passkey: " passkey
 
 # Install SSH and UFW
-apt-get update -y && apt-get upgrade -y
-apt-get install ssh -y
-apt-get install fail2ban -y
-apt-get install ufw -y
-apt-get install wget -y
+apt update && apt upgrade -y
+apt install ssh -y
+apt install fail2ban -y
+apt install ufw -y
+apt install wget -y
 
 # Change SSH port, disable IPv6, Setup UFW firewall
 sed -i "s/\#Port 22/Port $ssh_port /" /etc/ssh/sshd_config
@@ -85,18 +85,6 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-t
 
 # Configure timezone
 dpkg-reconfigure tzdata
-
-# Install and configure Docker
-apt-get install ca-certificates curl
-install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-chmod a+r /etc/apt/keyrings/docker.asc
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  tee /etc/apt/sources.list.d/docker.list > /dev/null
-apt update -y
-apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 # Create folders
 mkdir /opt/docker
