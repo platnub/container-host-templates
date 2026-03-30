@@ -79,6 +79,7 @@ adduser --gecos GECOS --disabled-password --system --uid 1001 --gid 1001 bkup
 # Configure komodo user
 groupadd -g 1337 komodo
 adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo
+usermod -a -G "$(getent group docker | cut -d: -f3)" komodo
 usermod -p '*' komodo
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- komodo
 
