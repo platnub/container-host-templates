@@ -19,9 +19,9 @@
 
 # Get started
 
-- [Install a Debian Docker container host VM in Proxmox](/virtual-machines)
-- [Setup Docker engine & Komodo mangement](/docker/README.md)
-- [Configure BorgBackups of each container](/tools/borgbackup/BorgBackup.md)
+1. [Install a Debian Docker container host VM in Proxmox](/virtual-machines)
+2. [Setup Docker engine & Komodo mangement](/docker/README.md)
+3. [Configure BorgBackups of each container](/tools/borgbackup/BorgBackup.md)
 
 # Host overview
 
