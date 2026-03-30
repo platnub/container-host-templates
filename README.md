@@ -23,6 +23,18 @@
 - [Setup Docker engine & Komodo mangement](/docker/README.md)
 - [Configure BorgBackups of each container](/tools/borgbackup/BorgBackup.md)
 
+# Host overview
+
+- DMZ vlan 90
+   - dmz-authentik
+   - dmz-automation
+   - dmz-gaming
+   - dmz-information
+   - dmz-media
+- Services vlan 20
+   - media
+   - information
+
 # Containers
 Install containers
 
@@ -72,7 +84,6 @@ Install containers
   - [n8n - Automation workflow platform](/docker/containers/n8n)
   - [OpenWebUI - AI agent dashboard](/docker/containers/openwebui)
   - [SearXNG - Metasearch engine](/docker/containers/searxng)
-
 
 # Resource Requirements
 
