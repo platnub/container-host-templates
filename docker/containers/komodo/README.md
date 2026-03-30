@@ -1,5 +1,6 @@
 # Useful Commands
 ## Update Komodo Periphery agent (NOT CORE)
+USE KOMODO USER!!
 ```
 cd /home/komodo
 curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user
