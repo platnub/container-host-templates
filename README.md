@@ -34,6 +34,7 @@
 - Services vlan 20
    - media
    - information
+   - komodo-core
 
 # Containers
 Install containers
