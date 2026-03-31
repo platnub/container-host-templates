@@ -1,45 +1,5 @@
 #!/usr/bin/env bash
 
-# Setup SSH key for sudo user
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)" -- "$(hostname -s)"
-
-# Ask for SSH port
-
-# Generate a random port in 10000-65535
-generate_port() {
-  shuf -i 10000-65535 -n 1
-}
-
-while true; do
-  default_port=$(generate_port)
-  read -p "Enter the SSH port you want to use (press Enter for default ${default_port}, or type 'r' to regenerate): " ssh_port
-
-  # If user asked for a new random port, loop and prompt again
-  if [[ "$ssh_port" == "r" ]]; then
-    continue
-  fi
-
-  # Use default if empty
-  if [[ -z "$ssh_port" ]]; then
-    ssh_port=$default_port
-    break
-  fi
-
-  # Validate numeric
-  if ! [[ "$ssh_port" =~ ^[0-9]+$ ]]; then
-    echo "Invalid port: not a number. Please enter a numeric port between 1024 and 65535, or 'r' to regenerate."
-    continue
-  fi
-
-  # Validate range 1024-65535
-  if (( ssh_port < 1024 || ssh_port > 65535 )); then
-    echo "Invalid port: must be between 1024 and 65535."
-    continue
-  fi
-  break
-done
-echo "Using SSH port: $ssh_port"
-
 # Ask for Komodo allowed IPs
 read -p "Enter the allowed IPs for Komodo (comma separated, example: \"1.2.3.0/24\",\"1.2.3.4\"): " allowed_ips
 
@@ -48,14 +8,11 @@ read -p "Enter the Komodo core passkey: " passkey
 
 # Install SSH and UFW
 apt update && apt upgrade -y
-apt install ssh -y
 apt install fail2ban -y
 apt install ufw -y
 apt install wget -y
 
 # Change SSH port, disable IPv6, Setup UFW firewall
-sed -i "s/\#Port 22/Port $ssh_port /" /etc/ssh/sshd_config
-sed -i "s/\#MaxAuthTries 6/MaxAuthTries 20 /" /etc/ssh/sshd_config
 sed -i "s/\#PasswordAuthentication yes/PasswordAuthentication no /" /etc/ssh/sshd_config
 sed -i "s/\UsePAM yes/UsePAM no /" /etc/ssh/sshd_config
 echo "ChallengeResponseAuthentication no" /etc/ssh/sshd_config
