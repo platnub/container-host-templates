@@ -186,17 +186,17 @@ function select_sudo_password() {
   fi
 }
 
-function select_ssh_port() {
+function select_port() {
   # Generate random port between 10000 and 65535
-  RANDOM_SSH_PORT=$((RANDOM % 55536 + 10000))
+  RANDOM_PORT=$((RANDOM % 55536 + 10000))
 
-  if SSH_PORT_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH PORT" --radiolist \
-    "Choose SSH Port Configuration\n\nGenerated random port: ${RANDOM_SSH_PORT}" 14 68 3 \
-    "random" "Use generated random port (${RANDOM_SSH_PORT}) (Recommended)" ON \
+  if PORT_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH PORT" --radiolist \
+    "Choose SSH Port Configuration\n\nGenerated random port: ${RANDOM_PORT}" 14 68 3 \
+    "random" "Use generated random port (${RANDOM_PORT}) (Recommended)" ON \
     "default" "Use default SSH port (22)" OFF \
     "custom" "Enter custom port" OFF \
     3>&1 1>&2 2>&3); then
-    case $SSH_PORT_CHOICE in
+    case $PORT_CHOICE in
     random)
       SSH_PORT="$RANDOM_SSH_PORT"
       ;;
@@ -748,11 +748,14 @@ virt-customize -q -a "$WORK_FILE" --run-command "rm -f /var/lib/dbus/machine-id"
 
 # Configure SSH for Cloud-Init
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*Port.*/Port ${SSH_PORT}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*MaxAuthTries.*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*MaxSessions.*/MaxSessions 2/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*UsePAM.*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "echo 'ChallengeResponseAuthentication no' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*AllowTcpForwarding.*/AllowTcpForwarding No/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
 else
   # Configure auto-login for nocloud images (no Cloud-Init)
@@ -774,10 +777,10 @@ msg_ok "Finalized image"
 # Create Docker user and lock root user (only when Cloud-Init is not used)
 if [ "$USE_CLOUD_INIT" = "no" ]; then
   msg_info "Creating Docker user and locking root user"
+  virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password ${HN}" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "adduser ${HN} sudo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --password ${HN}:password:${SUDO_PASSWORD} >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
   msg_ok "${HN} Docker user created and root user locked"
 fi
 
@@ -835,6 +838,47 @@ systemctl enable install-docker.service' >/dev/null 2>&1 || true
     msg_error "  curl -fsSL https://get.docker.com | sh"
   fi
 fi
+
+# Configure bkup user
+virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1001 bkup" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1001 --gid 1001 bkup" >/dev/null 2>&1 || true
+
+# Setup Komodo
+virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1337 komodo" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "usermod -a-G docker komodo" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "" >/dev/null 2>&1 || true
+
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*UsePAM.*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+
+virt-customize -q -a "$WORK_FILE" --run-command "" >/dev/null 2>&1 || true
+
+# Setup docker file structure
+virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --chown "1337:1337:/opt/docker" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --chmod "700:/opt/docker" >/dev/null 2>&1 || true
+
+# Configure Komodo
+virt-customize -q -a "$WORK_FILE" --mkdir "/home/komodo/.config/komodo" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "curl -o /home/komodo/.config/komodo/periphery.config.toml https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml" >/dev/null 2>&1 || true
+
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+
+virt-customize -q -a "$WORK_FILE" --run-command "chown -R komodo:komodo /home/komodo" >/dev/null 2>&1 || true
+
+# Configure firewall
+virt-customize -q -a "$WORK_FILE" --install "fail2ban,ufw" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw default deny incoming" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw default allow outgoing" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw allow ${SSH_PORT}/tcp" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw allow 8120/tcp" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*IPV6.*/IPV6=no/' /etc/default/uf" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw --force enable" >/dev/null 2>&1 || true
 
 # Resize disk to target size
 msg_info "Resizing disk image to ${DISK_SIZE}"
