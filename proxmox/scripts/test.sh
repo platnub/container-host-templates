@@ -278,7 +278,7 @@ function select_komodo() {
         fi
         # Validate format: should match pattern like "x.x.x.x" or "x.x.x.x/xx" with commas
         if [[ "$KOMODO_IPS_INPUT" =~ ^(\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")(,\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")*$ ]]; then
-          KOMODO_ALLOWED_IPS="${KOMODO_IPS_INPUT//\"/\\\"}"
+          KOMODO_ALLOWED_IPS="${KOMODO_IPS_INPUT}"
           echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}${KOMODO_IPS_INPUT}${CL}"
           break
         fi
