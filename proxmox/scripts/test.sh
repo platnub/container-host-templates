@@ -198,14 +198,14 @@ function select_ssh_port() {
     3>&1 1>&2 2>&3); then
     case $PORT_CHOICE in
     random)
-      SSH_PORT="$RANDOM_SSH_PORT"
+      SSH_PORT="$RANDOM_PORT"
       ;;
     default)
       SSH_PORT="22"
       ;;
     custom)
       while true; do
-        if CUSTOM_PORT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter custom SSH port (1024-65535)" 8 58 "$RANDOM_SSH_PORT" --title "CUSTOM SSH PORT" 3>&1 1>&2 2>&3); then
+        if CUSTOM_PORT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter custom SSH port (1024-65535)" 8 58 "$RANDOM_PORT" --title "CUSTOM SSH PORT" 3>&1 1>&2 2>&3); then
           if [[ "$CUSTOM_PORT" =~ ^[0-9]+$ ]] && [ "$CUSTOM_PORT" -ge 1024 ] && [ "$CUSTOM_PORT" -le 65535 ]; then
             SSH_PORT="$CUSTOM_PORT"
             break
