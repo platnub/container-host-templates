@@ -264,7 +264,7 @@ function select_komodo() {
   KOMODO_CORE_PUBLIC_KEY=""
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "KOMODO CONFIGURATION" \
-    --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall" 12 68); then
+    --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall\nKomodo will still need to be installed by Komodo user!" 12 68); then
     CONFIGURE_KOMODO="yes"
     echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}yes${CL}"
 
