@@ -821,14 +821,14 @@ virt-customize -q -a "$WORK_FILE" --timezone "${TIMEZONE}" >/dev/null 2>&1 || tr
 # Configure SSH for Cloud-Init
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*Port.*/Port ${SSH_PORT}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*MaxAuthTries.*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*MaxSessions.*/MaxSessions 2/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*UsePAM.*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*Port .*/Port ${SSH_PORT}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxAuthTries .*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxSessions .*/MaxSessions 2/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*UsePAM .*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "echo 'ChallengeResponseAuthentication no' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*AllowTcpForwarding.*/AllowTcpForwarding No/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*AllowTcpForwarding .*/AllowTcpForwarding No/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
 else
   # Configure auto-login for nocloud images (no Cloud-Init)
   virt-customize -q -a "$WORK_FILE" --run-command "mkdir -p /etc/systemd/system/serial-getty@ttyS0.service.d" >/dev/null 2>&1 || true
@@ -932,10 +932,10 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --mkdir "/home/komodo/.config/komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "curl -o /home/komodo/.config/komodo/periphery.config.toml https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml" >/dev/null 2>&1 || true
 
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*allowed_ips.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*stack_dir.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*core_public_keys.*|core_public_keys = \"$KOMODO_CORE_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*root_directory =.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*allowed_ips =.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_CORE_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   msg_ok "Configured Komodo"
 fi
 
@@ -949,7 +949,7 @@ virt-customize -q -a "$WORK_FILE" --run-command "ufw allow ${SSH_PORT}/tcp" >/de
 if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "ufw allow 8120/tcp" >/dev/null 2>&1 || true
 fi
-virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*IPV6.*/IPV6=no/' /etc/default/uf" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*IPV6=.*/IPV6=no/' /etc/default/uf" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "ufw --force enable" >/dev/null 2>&1 || true
 
 # Resize disk to target size
