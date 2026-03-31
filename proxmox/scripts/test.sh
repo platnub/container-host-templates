@@ -278,8 +278,8 @@ function select_komodo() {
         fi
         # Validate format: should match pattern like "x.x.x.x" or "x.x.x.x/xx" with commas
         if [[ "$KOMODO_IPS_INPUT" =~ ^(\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")(,\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")*$ ]]; then
-          KOMODO_ALLOWED_IPS="$KOMODO_IPS_INPUT"
-          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}${KOMODO_ALLOWED_IPS}${CL}"
+          KOMODO_ALLOWED_IPS="${KOMODO_IPS_INPUT//\"/\\\"}"
+          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}${KOMODO_IPS_INPUT}${CL}"
           break
         fi
         whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid format. Please use the format:\n\"1.2.3.0/24\",\"1.2.3.4\"\n\nEach IP must be in quotes and separated by commas." 10 58
@@ -940,7 +940,7 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
 
   # Setup SSH authorized_keys for komodo user
-  # virt-customize -q -a "$WORK_FILE" --ssh-inject komodo:string:${KOMODO_USER_PUBLIC_KEY} >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --ssh-inject komodo:string:${KOMODO_USER_PUBLIC_KEY} >/dev/null 2>&1 || true
 
   # Setup docker file structure
   virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
