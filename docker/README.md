@@ -58,14 +58,6 @@
 7. Disable sudo verification. Type `sudo visudo`.<br>
    Change `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=(ALL:ALL) NOPASSWD: ALL`
 
-# Add SSH key for user
-
-Suffix `-- <username>` to change targeted user
-
-   ```
-   bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/ssh.sh)"
-   ```
-
 # Update Komodo Periphery
 ```
 cd /home/komodo
