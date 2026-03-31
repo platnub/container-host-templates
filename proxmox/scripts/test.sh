@@ -840,10 +840,10 @@ if [ "$USE_CLOUD_INIT" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*Port .*/Port ${SSH_PORT}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxAuthTries .*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxSessions .*/MaxSessions 2/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  #virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*UsePAM .*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "printf '\nChallengeResponseAuthentication no' > /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "echo '\nChallengeResponseAuthentication no' > /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*AllowTcpForwarding .*/AllowTcpForwarding No/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
 else
   # Configure auto-login for nocloud images (no Cloud-Init)
@@ -970,7 +970,7 @@ virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*IPV6=.*/IPV6=no
 virt-customize -q -a "$WORK_FILE" --run-command "ufw --force enable" >/dev/null 2>&1 || true
 
 # Disable IPV6
-virt-customize -q -a "$WORK_FILE" --run-command "printf '\n\n# Disabling the IPv6\nnet.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1' > /etc/sysctl.conf" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "echo '\n\n# Disabling the IPv6\nnet.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1' > /etc/sysctl.conf" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "sysctl -p" >/dev/null 2>&1 || true
 
 # Resize disk to target size
