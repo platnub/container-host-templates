@@ -940,7 +940,7 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
 
   # Setup SSH authorized_keys for komodo user
-  virt-customize -q -a "$WORK_FILE" --ssh-inject komodo:string:${KOMODO_USER_PUBLIC_KEY} >/dev/null 2>&1 || true
+  #virt-customize -q -a "$WORK_FILE" --ssh-inject komodo:string:${KOMODO_USER_PUBLIC_KEY} >/dev/null 2>&1 || true
 
   # Setup docker file structure
   virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
