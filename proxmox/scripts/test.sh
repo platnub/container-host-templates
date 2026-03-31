@@ -30,6 +30,7 @@ USE_CLOUD_INIT="no"
 OS_TYPE=""
 OS_VERSION=""
 THIN="discard=on,ssd=1,"
+GENERATED_PASSWORD=""
 
 function header_info() {
   clear
@@ -104,6 +105,27 @@ function error_handler() {
   cleanup_vmid
 }
 # ==============================================================================
+# PASSWORD GENERATION FUNCTION
+# ==============================================================================
+function generate_xkcd_password() {
+  # Install xkcdpass if not available
+  if ! command -v xkcdpass &>/dev/null; then
+    msg_info "Installing xkcdpass for password generation"
+    apt-get -qq update >/dev/null
+    apt-get -qq install -y xkcdpass >/dev/null 2>&1 || pip3 install xkcdpass >/dev/null 2>&1
+    msg_ok "Installed xkcdpass"
+  fi
+
+  # Select random separator from . - _
+  local separators=("." "-" "_")
+  local random_index=$((RANDOM % 3))
+  local separator="${separators[$random_index]}"
+
+  # Generate password with xkcdpass
+  GENERATED_PASSWORD=$(xkcdpass -n 7 --min 4 --max 10 -d "$separator")
+}
+
+# ==============================================================================
 # OS SELECTION FUNCTIONS
 # ==============================================================================
 function select_os() {
@@ -146,8 +168,12 @@ function select_cloud_init() {
 function select_sudo_password() {
   # Only prompt for sudo password when Cloud-Init is not used
   if [ "$USE_CLOUD_INIT" = "no" ]; then
+    # Generate a random password using xkcdpass
+    generate_xkcd_password
+    local suggested_password="$GENERATED_PASSWORD"
+
     while true; do
-      SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Set a sudo password for the Docker user" 8 58 --title "SUDO PASSWORD" 3>&1 1>&2 2>&3)
+      SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a sudo password for the Docker user\n\nPress Enter to use the generated password, or modify it:" 10 68 "$suggested_password" --title "SUDO PASSWORD" 3>&1 1>&2 2>&3)
       if [ $? -ne 0 ]; then
         exit-script
       fi
@@ -155,15 +181,7 @@ function select_sudo_password() {
         whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Password cannot be empty. Please enter a password." 8 58
         continue
       fi
-      SUDO_PASSWORD_CONFIRM=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Confirm sudo password" 8 58 --title "CONFIRM PASSWORD" 3>&1 1>&2 2>&3)
-      if [ $? -ne 0 ]; then
-        exit-script
-      fi
-      if [ "$SUDO_PASSWORD" != "$SUDO_PASSWORD_CONFIRM" ]; then
-        whiptail --backtitle "Proxmox VE Helper Scripts" --title "PASSWORD MISMATCH" --msgbox "Passwords do not match. Please try again." 8 58
-        continue
-      fi
-      echo -e "${DEFAULT}${BOLD}${DGN}Sudo Password: ${BGN}********${CL}"
+      echo -e "${DEFAULT}${BOLD}${DGN}Sudo Password: ${BGN}${SUDO_PASSWORD}${CL}"
       break
     done
   fi
@@ -881,6 +899,10 @@ set_description
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
   msg_info "Configuring Cloud-Init"
   CLOUDINIT_DEFAULT_USER="${HN}" setup_cloud_init "$VMID" "$STORAGE" "$HN" "yes"
+  # Override the cloud-init password with xkcdpass-generated password
+  generate_xkcd_password
+  CLOUDINIT_PASSWORD="$GENERATED_PASSWORD"
+  qm set "$VMID" --cipassword "$CLOUDINIT_PASSWORD" >/dev/null
   msg_ok "Cloud-Init configured"
 fi
 
