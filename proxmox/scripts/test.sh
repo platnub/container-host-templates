@@ -240,6 +240,56 @@ function select_max_auth_tries() {
   done
 }
 
+function select_timezone() {
+  while true; do
+    if TIMEZONE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Timezone (IANA format)\n\nExamples: Europe/Amsterdam, America/New_York, Asia/Tokyo\n\nLeave empty for UTC" 12 68 "Europe/Amsterdam" --title "TIMEZONE" 3>&1 1>&2 2>&3); then
+      if [ -z "$TIMEZONE" ]; then
+        TIMEZONE="UTC"
+      fi
+      # Validate timezone format (basic check for Region/City pattern or UTC)
+      if [[ "$TIMEZONE" == "UTC" ]] || [[ "$TIMEZONE" =~ ^[A-Za-z]+/[A-Za-z_]+$ ]]; then
+        echo -e "${DEFAULT}${BOLD}${DGN}Timezone: ${BGN}${TIMEZONE}${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid timezone format. Please use IANA format (e.g., Europe/Amsterdam)." 8 58
+    else
+      exit-script
+    fi
+  done
+}
+
+function select_komodo() {
+  CONFIGURE_KOMODO="no"
+  KOMODO_ALLOWED_IPS=""
+
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "KOMODO CONFIGURATION" \
+    --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall" 12 68); then
+    CONFIGURE_KOMODO="yes"
+    echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}yes${CL}"
+
+    while true; do
+      if KOMODO_IPS_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter allowed IPs for Komodo (comma-separated)\n\nFormat: Each IP/CIDR must be in quotes, separated by commas\nExample: \"1.2.3.0/24\",\"1.2.3.4\",\"10.0.0.0/8\"\n\nLeave empty to allow all IPs" 14 68 "" --title "KOMODO ALLOWED IPS" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_IPS_INPUT" ]; then
+          KOMODO_ALLOWED_IPS=""
+          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}All${CL}"
+          break
+        fi
+        # Validate format: should match pattern like "x.x.x.x" or "x.x.x.x/xx" with commas
+        if [[ "$KOMODO_IPS_INPUT" =~ ^(\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")(,\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")*$ ]]; then
+          KOMODO_ALLOWED_IPS="$KOMODO_IPS_INPUT"
+          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}${KOMODO_ALLOWED_IPS}${CL}"
+          break
+        fi
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid format. Please use the format:\n\"1.2.3.0/24\",\"1.2.3.4\"\n\nEach IP must be in quotes and separated by commas." 10 58
+      else
+        exit-script
+      fi
+    done
+  else
+    echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}no${CL}"
+  fi
+}
+
 function get_image_url() {
   local arch=$(dpkg --print-architecture)
   if [ "$USE_CLOUD_INIT" = "yes" ]; then
@@ -331,6 +381,8 @@ function default_settings() {
   select_sudo_password
   select_ssh_port
   select_max_auth_tries
+  select_timezone
+  select_komodo
 
   VMID=$(get_valid_nextid)
   FORMAT=""
@@ -369,6 +421,8 @@ function advanced_settings() {
   select_sudo_password
   select_ssh_port
   select_max_auth_tries
+  select_timezone
+  select_komodo
 
   # SSH Key selection for Cloud-Init VMs
   if [ "$USE_CLOUD_INIT" = "yes" ]; then
@@ -745,6 +799,8 @@ msg_info "Finalizing image (hostname, SSH config)"
 virt-customize -q -a "$WORK_FILE" --hostname "${HN}" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "truncate -s 0 /etc/machine-id" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "rm -f /var/lib/dbus/machine-id" >/dev/null 2>&1 || true
+# Set timezone
+virt-customize -q -a "$WORK_FILE" --timezone "${TIMEZONE}" >/dev/null 2>&1 || true
 
 # Configure SSH for Cloud-Init
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
@@ -843,40 +899,43 @@ fi
 virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1001 bkup" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1001 --gid 1001 bkup" >/dev/null 2>&1 || true
 
-# Setup Komodo
-virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1337 komodo" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "usermod -a-G docker komodo" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "" >/dev/null 2>&1 || true
+# Setup Komodo (only if configured)
+if [ "$CONFIGURE_KOMODO" = "yes" ]; then
+  msg_info "Configuring Komodo user and settings"
+  virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1337 komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "usermod -a-G docker komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "" >/dev/null 2>&1 || true
+
+  virt-customize -q -a "$WORK_FILE" --run-command "" >/dev/null 2>&1 || true
+
+  # Setup docker file structure
+  virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --chown "1337:1337:/opt/docker" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --chmod "700:/opt/docker" >/dev/null 2>&1 || true
+
+  # Configure Komodo
+  virt-customize -q -a "$WORK_FILE" --mkdir "/home/komodo/.config/komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "curl -o /home/komodo/.config/komodo/periphery.config.toml https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml" >/dev/null 2>&1 || true
+
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*allowed_ips.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*stack_dir.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*stats_polling_rate.*|stats_polling_rate = \"1-sec\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  msg_ok "Configured Komodo"
+fi
 
 virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*UsePAM.*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-
-virt-customize -q -a "$WORK_FILE" --run-command "" >/dev/null 2>&1 || true
-
-# Setup docker file structure
-virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --chown "1337:1337:/opt/docker" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --chmod "700:/opt/docker" >/dev/null 2>&1 || true
-
-# Configure Komodo
-virt-customize -q -a "$WORK_FILE" --mkdir "/home/komodo/.config/komodo" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "curl -o /home/komodo/.config/komodo/periphery.config.toml https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml" >/dev/null 2>&1 || true
-
-virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*root_directory.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-
-virt-customize -q -a "$WORK_FILE" --run-command "chown -R komodo:komodo /home/komodo" >/dev/null 2>&1 || true
 
 # Configure firewall
 virt-customize -q -a "$WORK_FILE" --install "fail2ban,ufw" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "ufw default deny incoming" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "ufw default allow outgoing" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "ufw allow ${SSH_PORT}/tcp" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "ufw allow 8120/tcp" >/dev/null 2>&1 || true
+if [ "$CONFIGURE_KOMODO" = "yes" ]; then
+  virt-customize -q -a "$WORK_FILE" --run-command "ufw allow 8120/tcp" >/dev/null 2>&1 || true
+fi
 virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*IPV6.*/IPV6=no/' /etc/default/uf" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "ufw --force enable" >/dev/null 2>&1 || true
 
