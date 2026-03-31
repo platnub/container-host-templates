@@ -958,8 +958,6 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   msg_ok "Configured Komodo"
 fi
 
-virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*UsePAM.*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-
 # Configure firewall
 virt-customize -q -a "$WORK_FILE" --install "fail2ban,ufw" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "ufw default deny incoming" >/dev/null 2>&1 || true
@@ -968,8 +966,12 @@ virt-customize -q -a "$WORK_FILE" --run-command "ufw allow ${SSH_PORT}/tcp" >/de
 if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "ufw allow 8120/tcp" >/dev/null 2>&1 || true
 fi
-virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*IPV6=.*/IPV6=no/' /etc/default/uf" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*IPV6=.*/IPV6=no/' /etc/default/ufw" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "ufw --force enable" >/dev/null 2>&1 || true
+
+# Disable IPV6
+virt-customize -q -a "$WORK_FILE" --run-command "printf '\n\n# Disabling the IPv6\nnet.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1' > /etc/sysctl.conf" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sysctl -p" >/dev/null 2>&1 || true
 
 # Resize disk to target size
 msg_info "Resizing disk image to ${DISK_SIZE}"
