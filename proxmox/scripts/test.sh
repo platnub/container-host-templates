@@ -410,6 +410,12 @@ function exit-script() {
 function default_settings() {
   select_os
   select_cloud_init
+
+  # SSH Key selection for Cloud-Init VMs (ask immediately after cloud-init decision)
+  if [ "$USE_CLOUD_INIT" = "yes" ]; then
+    configure_cloudinit_ssh_keys || true
+  fi
+
   select_sudo_password
   select_ssh_port
   select_max_auth_tries
@@ -450,16 +456,17 @@ function default_settings() {
 function advanced_settings() {
   select_os
   select_cloud_init
+
+  # SSH Key selection for Cloud-Init VMs (ask immediately after cloud-init decision)
+  if [ "$USE_CLOUD_INIT" = "yes" ]; then
+    configure_cloudinit_ssh_keys || true
+  fi
+
   select_sudo_password
   select_ssh_port
   select_max_auth_tries
   select_timezone
   select_komodo
-
-  # SSH Key selection for Cloud-Init VMs
-  if [ "$USE_CLOUD_INIT" = "yes" ]; then
-    configure_cloudinit_ssh_keys || true
-  fi
 
   METHOD="advanced"
   [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
