@@ -262,6 +262,7 @@ function select_komodo() {
   CONFIGURE_KOMODO="no"
   KOMODO_ALLOWED_IPS=""
   KOMODO_CORE_PUBLIC_KEY=""
+  KOMODO_USER_PUBLIC_KEY=""
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "KOMODO CONFIGURATION" \
     --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall\nKomodo will still need to be installed by Komodo user!" 12 68); then
@@ -296,6 +297,21 @@ function select_komodo() {
         fi
         KOMODO_CORE_PUBLIC_KEY="$KOMODO_KEY_INPUT"
         echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}${KOMODO_CORE_PUBLIC_KEY}${CL}"
+        break
+      else
+        exit-script
+      fi
+    done
+
+    # Ask for Komodo User Public Key (required)
+    while true; do
+      if KOMODO_USER_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Paste your Komodo User Public Key\n\nThis SSH public key will be added to the komodo user's authorized_keys for authentication." 12 68 "" --title "KOMODO USER PUBLIC KEY" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_USER_KEY_INPUT" ]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Komodo User Public Key is required." 8 58
+          continue
+        fi
+        KOMODO_USER_PUBLIC_KEY="$KOMODO_USER_KEY_INPUT"
+        echo -e "${DEFAULT}${BOLD}${DGN}Komodo User Public Key: ${BGN}Configured${CL}"
         break
       else
         exit-script
@@ -922,6 +938,9 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "usermod -a-G docker komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
+
+  # Setup SSH authorized_keys for komodo user
+  virt-customize -q -a "$WORK_FILE" --ssh-inject komodo:string:${KOMODO_USER_PUBLIC_KEY} >/dev/null 2>&1 || true
 
   # Setup docker file structure
   virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
