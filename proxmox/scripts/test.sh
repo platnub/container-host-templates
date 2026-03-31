@@ -113,7 +113,6 @@ function generate_xkcd_password() {
     msg_info "Installing xkcdpass for password generation"
     apt-get -qq update >/dev/null
     apt-get -qq install -y xkcdpass >/dev/null 2>&1 || pip3 install xkcdpass >/dev/null 2>&1
-    msg_ok "Installed xkcdpass"
   fi
 
   # Select random separator from . - _
