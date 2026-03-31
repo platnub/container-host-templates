@@ -91,6 +91,12 @@ services:
         reservations:
           cpus: '0.10'
           memory: 50M
+    healthcheck:
+      test: ["CMD", "/gluetun-entrypoint"]
+      interval: 5s
+      timeout: 5s
+      retries: 1
+      start_period: 10s
 
   gluetun-qbittorrent-port-manager:
     image: snoringdragon/gluetun-qbittorrent-port-manager:latest
