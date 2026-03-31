@@ -186,7 +186,7 @@ function select_sudo_password() {
   fi
 }
 
-function select_port() {
+function select_ssh_port() {
   # Generate random port between 10000 and 65535
   RANDOM_PORT=$((RANDOM % 55536 + 10000))
 
