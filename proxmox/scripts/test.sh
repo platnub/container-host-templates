@@ -261,6 +261,7 @@ function select_timezone() {
 function select_komodo() {
   CONFIGURE_KOMODO="no"
   KOMODO_ALLOWED_IPS=""
+  KOMODO_CORE_PUBLIC_KEY=""
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "KOMODO CONFIGURATION" \
     --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall" 12 68); then
@@ -285,6 +286,19 @@ function select_komodo() {
         exit-script
       fi
     done
+
+    # Ask for Komodo Core Public Key
+    if KOMODO_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Core Public Key\n\nThis is used for authentication with Komodo Core.\n\nLeave empty to skip." 12 68 "" --title "KOMODO CORE PUBLIC KEY" 3>&1 1>&2 2>&3); then
+      if [ -z "$KOMODO_KEY_INPUT" ]; then
+        KOMODO_CORE_PUBLIC_KEY=""
+        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}Not set${CL}"
+      else
+        KOMODO_CORE_PUBLIC_KEY="$KOMODO_KEY_INPUT"
+        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}${KOMODO_CORE_PUBLIC_KEY}${CL}"
+      fi
+    else
+      exit-script
+    fi
   else
     echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}no${CL}"
   fi
@@ -906,9 +920,6 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "usermod -a-G docker komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "" >/dev/null 2>&1 || true
-
-  virt-customize -q -a "$WORK_FILE" --run-command "" >/dev/null 2>&1 || true
 
   # Setup docker file structure
   virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
@@ -923,6 +934,7 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*allowed_ips.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*stack_dir.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*stats_polling_rate.*|stats_polling_rate = \"1-sec\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*core_public_keys.*|core_public_keys = \"$KOMODO_CORE_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   msg_ok "Configured Komodo"
 fi
 
