@@ -242,7 +242,7 @@ function select_max_auth_tries() {
 
 function select_timezone() {
   while true; do
-    if TIMEZONE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Timezone (IANA format)\n\nExamples: Europe/Amsterdam, America/New_York, Asia/Tokyo\n\nLeave empty for UTC" 12 68 "Europe/Amsterdam" --title "TIMEZONE" 3>&1 1>&2 2>&3); then
+    if TIMEZONE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Timezone (IANA format)\n\nExamples: Europe/Amsterdam, America/New_York, Asia/Tokyo\n\nLeave empty for UTC" 12 68 "" --title "TIMEZONE" 3>&1 1>&2 2>&3); then
       if [ -z "$TIMEZONE" ]; then
         TIMEZONE="UTC"
       fi
@@ -287,18 +287,20 @@ function select_komodo() {
       fi
     done
 
-    # Ask for Komodo Core Public Key
-    if KOMODO_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Core Public Key\n\nThis is used for authentication with Komodo Core.\n\nLeave empty to skip." 12 68 "" --title "KOMODO CORE PUBLIC KEY" 3>&1 1>&2 2>&3); then
-      if [ -z "$KOMODO_KEY_INPUT" ]; then
-        KOMODO_CORE_PUBLIC_KEY=""
-        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}Not set${CL}"
-      else
+    # Ask for Komodo Core Public Key (required)
+    while true; do
+      if KOMODO_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Core Public Key\n\nThis is used for authentication with Komodo Core." 10 68 "" --title "KOMODO CORE PUBLIC KEY" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_KEY_INPUT" ]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Komodo Core Public Key is required." 8 58
+          continue
+        fi
         KOMODO_CORE_PUBLIC_KEY="$KOMODO_KEY_INPUT"
         echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}${KOMODO_CORE_PUBLIC_KEY}${CL}"
+        break
+      else
+        exit-script
       fi
-    else
-      exit-script
-    fi
+    done
   else
     echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}no${CL}"
   fi
