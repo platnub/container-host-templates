@@ -843,7 +843,7 @@ if [ "$USE_CLOUD_INIT" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*UsePAM .*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "echo 'ChallengeResponseAuthentication no' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "printf '\nChallengeResponseAuthentication no' > /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*AllowTcpForwarding .*/AllowTcpForwarding No/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
 else
   # Configure auto-login for nocloud images (no Cloud-Init)
