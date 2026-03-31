@@ -207,25 +207,20 @@ function select_ssh_port() {
 }
 
 function select_max_auth_tries() {
-  MAX_AUTH_TRIES="6"
-
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH MAX AUTH TRIES" \
-    --yesno "SSH MaxAuthTries limits failed authentication attempts per connection.\n\nDefault: 6 (recommended for most cases)\n\nDo you want to keep the default value of 6?\n\nSelect 'No' to set a higher value if you use multiple SSH keys." 14 68); then
-    echo -e "${DEFAULT}${BOLD}${DGN}SSH Max Auth Tries: ${BGN}${MAX_AUTH_TRIES}${CL}"
-  else
-    while true; do
-      if CUSTOM_AUTH_TRIES=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter MaxAuthTries value (1-100)" 8 58 "6" --title "MAX AUTH TRIES" 3>&1 1>&2 2>&3); then
-        if [[ "$CUSTOM_AUTH_TRIES" =~ ^[0-9]+$ ]] && [ "$CUSTOM_AUTH_TRIES" -ge 1 ] && [ "$CUSTOM_AUTH_TRIES" -le 100 ]; then
-          MAX_AUTH_TRIES="$CUSTOM_AUTH_TRIES"
-          echo -e "${DEFAULT}${BOLD}${DGN}SSH Max Auth Tries: ${BGN}${MAX_AUTH_TRIES}${CL}"
-          break
-        fi
-        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Value must be a number between 1 and 100." 8 58
-      else
-        exit-script
+  while true; do
+    if MAX_AUTH_TRIES=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set SSH MaxAuthTries (limits failed authentication attempts per connection)\n\nDefault: 6 (recommended)\nIncrease if you use multiple SSH keys" 12 68 "6" --title "SSH MAX AUTH TRIES" 3>&1 1>&2 2>&3); then
+      if [ -z "$MAX_AUTH_TRIES" ]; then
+        MAX_AUTH_TRIES="6"
       fi
-    done
-  fi
+      if [[ "$MAX_AUTH_TRIES" =~ ^[0-9]+$ ]] && [ "$MAX_AUTH_TRIES" -ge 1 ] && [ "$MAX_AUTH_TRIES" -le 100 ]; then
+        echo -e "${DEFAULT}${BOLD}${DGN}SSH Max Auth Tries: ${BGN}${MAX_AUTH_TRIES}${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Value must be a number between 1 and 100." 8 58
+    else
+      exit-script
+    fi
+  done
 }
 
 function get_image_url() {
@@ -736,7 +731,7 @@ virt-customize -q -a "$WORK_FILE" --run-command "rm -f /var/lib/dbus/machine-id"
 
 # Configure SSH for Cloud-Init
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*Port.*/Port ${SSH_PORT}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*MaxAuthTries.*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
@@ -885,7 +880,7 @@ set_description
 # Cloud-Init configuration
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
   msg_info "Configuring Cloud-Init"
-  setup_cloud_init "$VMID" "$STORAGE" "$HN" "yes"
+  CLOUDINIT_DEFAULT_USER="${HN}" setup_cloud_init "$VMID" "$STORAGE" "$HN" "yes"
   msg_ok "Cloud-Init configured"
 fi
 
