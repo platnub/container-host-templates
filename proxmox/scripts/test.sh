@@ -105,6 +105,55 @@ function error_handler() {
   cleanup_vmid
 }
 
+# ==============================================================================
+# PASSWORD GENERATION FUNCTION
+# ==============================================================================
+function generate_xkcd_password() {
+  # Install xkcdpass if not available
+  if ! command -v xkcdpass &>/dev/null; then
+    msg_info "Installing xkcdpass for password generation"
+    apt-get -qq update >/dev/null
+    apt-get -qq install -y xkcdpass >/dev/null 2>&1 || pip3 install xkcdpass >/dev/null 2>&1
+  fi
+
+  # Select random separator from . - _
+  local separators=("." "-" "_")
+  local random_index=$((RANDOM % 3))
+  local separator="${separators[$random_index]}"
+
+  # Generate password with xkcdpass
+  GENERATED_PASSWORD=$(xkcdpass -n 7 --min 4 --max 10 -d "$separator")
+}
+
+# ==============================================================================
+# OS SELECTION FUNCTIONS
+# ==============================================================================
+function select_os() {
+  if OS_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT OS" --radiolist \
+    "Choose Operating System for Docker VM" 12 68 2 \
+    "debian13" "Debian 13 (Trixie) - Latest" ON \
+    "debian12" "Debian 12 (Bookworm) - Stable" OFF \
+    3>&1 1>&2 2>&3); then
+    case $OS_CHOICE in
+    debian13)
+      OS_TYPE="debian"
+      OS_VERSION="13"
+      OS_CODENAME="trixie"
+      OS_DISPLAY="Debian 13 (Trixie)"
+      ;;
+    debian12)
+      OS_TYPE="debian"
+      OS_VERSION="12"
+      OS_CODENAME="bookworm"
+      OS_DISPLAY="Debian 12 (Bookworm)"
+      ;;
+    esac
+    echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}${OS_DISPLAY}${CL}"
+  else
+    exit-script
+  fi
+}
+
 function select_cloud_init() {
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" \
     --yesno "Enable Cloud-Init for VM configuration?\n\nCloud-Init allows automatic configuration of:\n- User accounts and passwords\n- SSH keys\n- Network settings (DHCP/Static)\n- DNS configuration\n\nYou can also configure these settings later in Proxmox UI.\n\nNote: Debian without Cloud-Init will use nocloud image with console auto-login." 18 68); then
@@ -113,6 +162,28 @@ function select_cloud_init() {
   else
     USE_CLOUD_INIT="no"
     echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
+  fi
+}
+
+function select_sudo_password() {
+  # Only prompt for sudo password when Cloud-Init is not used
+  if [ "$USE_CLOUD_INIT" = "no" ]; then
+    # Generate a random password using xkcdpass
+    generate_xkcd_password
+    local suggested_password="$GENERATED_PASSWORD"
+
+    while true; do
+      SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a sudo password for the Docker user\n\nPress Enter to use the generated password, or modify it:" 10 68 "$suggested_password" --title "SUDO PASSWORD" 3>&1 1>&2 2>&3)
+      if [ $? -ne 0 ]; then
+        exit-script
+      fi
+      if [ -z "$SUDO_PASSWORD" ]; then
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Password cannot be empty. Please enter a password." 8 58
+        continue
+      fi
+      echo -e "${DEFAULT}${BOLD}${DGN}Sudo Password: ${BGN}${SUDO_PASSWORD}${CL}"
+      break
+    done
   fi
 }
 
@@ -153,6 +224,23 @@ function select_ssh_port() {
   fi
 }
 
+function select_max_auth_tries() {
+  while true; do
+    if MAX_AUTH_TRIES=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set SSH MaxAuthTries (limits failed authentication attempts per connection)\n\nDefault: 6 (recommended)\nIncrease if you use multiple SSH keys" 12 68 "6" --title "SSH MAX AUTH TRIES" 3>&1 1>&2 2>&3); then
+      if [ -z "$MAX_AUTH_TRIES" ]; then
+        MAX_AUTH_TRIES="6"
+      fi
+      if [[ "$MAX_AUTH_TRIES" =~ ^[0-9]+$ ]] && [ "$MAX_AUTH_TRIES" -ge 1 ] && [ "$MAX_AUTH_TRIES" -le 100 ]; then
+        echo -e "${DEFAULT}${BOLD}${DGN}SSH Max Auth Tries: ${BGN}${MAX_AUTH_TRIES}${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Value must be a number between 1 and 100." 8 58
+    else
+      exit-script
+    fi
+  done
+}
+
 function select_timezone() {
   while true; do
     if TIMEZONE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Timezone (IANA format)\n\nExamples: Europe/Amsterdam, America/New_York, Asia/Tokyo\n\nLeave empty for UTC" 12 68 "" --title "TIMEZONE" 3>&1 1>&2 2>&3); then
@@ -171,7 +259,49 @@ function select_timezone() {
   done
 }
 
+function select_komodo() {
+  CONFIGURE_KOMODO="no"
+  KOMODO_ALLOWED_IPS=""
+  KOMODO_PUBLIC_KEY=""
 
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "KOMODO CONFIGURATION" \
+    --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall\n- Install Komodo" 12 68); then
+    CONFIGURE_KOMODO="yes"
+    echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}yes${CL}"
+
+    while true; do
+      if KOMODO_IPS_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter allowed IPs for Komodo (comma-separated)\n\nFormat: Each IP/CIDR must be in quotes, separated by commas\nExample: \"1.2.3.0/24\",\"1.2.3.4\",\"10.0.0.0/8\"\n\nLeave empty to allow all IPs" 14 68 "" --title "KOMODO ALLOWED IPS" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_IPS_INPUT" ]; then
+          KOMODO_ALLOWED_IPS=""
+          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}All${CL}"
+          break
+        fi
+        # Validate format: should match pattern like "x.x.x.x" or "x.x.x.x/xx" with commas
+        if [[ "$KOMODO_IPS_INPUT" =~ ^(\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")(,\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")*$ ]]; then
+          KOMODO_ALLOWED_IPS="${KOMODO_IPS_INPUT}"
+          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}${KOMODO_IPS_INPUT}${CL}"
+          break
+        fi
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid format. Please use the format:\n\"1.2.3.0/24\",\"1.2.3.4\"\n\nEach IP must be in quotes and separated by commas." 10 58
+      else
+        exit-script
+      fi
+    done
+
+    # Ask for Komodo Core Public Key (required)
+    while true; do
+      if KOMODO_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Core Public Key\n\nThis is used for authentication with Komodo Core." 10 68 "" --title "KOMODO CORE PUBLIC KEY" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_KEY_INPUT" ]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Komodo Core Public Key is required." 8 58
+          continue
+        fi
+        KOMODO_PUBLIC_KEY="$KOMODO_KEY_INPUT"
+        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}Configured${CL}"
+        break
+      else
+        exit-script
+      fi
+    done
 
 function get_image_url() {
   local arch=$(dpkg --print-architecture)
@@ -197,6 +327,66 @@ function get_valid_nextid() {
     break
   done
   echo "$try_id"
+}
+function cleanup_vmid() {
+  if qm status $VMID &>/dev/null; then
+    qm stop $VMID &>/dev/null
+    qm destroy $VMID &>/dev/null
+  fi
+}
+function cleanup() {
+  popd >/dev/null
+  post_update_to_api "done" "none"
+  rm -rf $TEMP_DIR
+}
+TEMP_DIR=$(mktemp -d)
+pushd $TEMP_DIR >/dev/null
+function msg_info() {
+  local msg="$1"
+  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
+}
+function msg_ok() {
+  local msg="$1"
+  echo -e "${BFR}${CM}${GN}${msg}${CL}"
+}
+function msg_error() {
+  local msg="$1"
+  echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
+}
+function check_root() {
+  if [[ "$(id -u)" -ne 0 || $(ps -o comm= -p $PPID) == "sudo" ]]; then
+    clear
+    msg_error "Please run this script as root."
+    echo -e "\nExiting..."
+    sleep 2
+    exit
+  fi
+}
+function arch_check() {
+  if [ "$(dpkg --print-architecture)" != "amd64" ]; then
+    echo -e "\n ${INFO}${YWB}This script will not work with PiMox! \n"
+    echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
+    echo -e "Exiting..."
+    sleep 2
+    exit
+  fi
+}
+function ssh_check() {
+  if command -v pveversion >/dev/null 2>&1; then
+    if [ -n "${SSH_CLIENT:+x}" ]; then
+      if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH DETECTED" --yesno "It's suggested to use the Proxmox shell instead of SSH, since SSH can create issues while gathering variables. Would you like to proceed with using SSH?" 10 62; then
+        echo "you've been warned"
+      else
+        clear
+        exit
+      fi
+    fi
+  fi
+}
+function exit-script() {
+  clear
+  echo -e "\n${CROSS}${RD}User exited script${CL}\n"
+  exit
 }
 function default_settings() {
   select_os
