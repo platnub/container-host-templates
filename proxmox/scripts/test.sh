@@ -104,54 +104,6 @@ function error_handler() {
   echo -e "\n$error_message\n"
   cleanup_vmid
 }
-# ==============================================================================
-# PASSWORD GENERATION FUNCTION
-# ==============================================================================
-function generate_xkcd_password() {
-  # Install xkcdpass if not available
-  if ! command -v xkcdpass &>/dev/null; then
-    msg_info "Installing xkcdpass for password generation"
-    apt-get -qq update >/dev/null
-    apt-get -qq install -y xkcdpass >/dev/null 2>&1 || pip3 install xkcdpass >/dev/null 2>&1
-  fi
-
-  # Select random separator from . - _
-  local separators=("." "-" "_")
-  local random_index=$((RANDOM % 3))
-  local separator="${separators[$random_index]}"
-
-  # Generate password with xkcdpass
-  GENERATED_PASSWORD=$(xkcdpass -n 7 --min 4 --max 10 -d "$separator")
-}
-
-# ==============================================================================
-# OS SELECTION FUNCTIONS
-# ==============================================================================
-function select_os() {
-  if OS_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT OS" --radiolist \
-    "Choose Operating System for Docker VM" 12 68 2 \
-    "debian13" "Debian 13 (Trixie) - Latest" ON \
-    "debian12" "Debian 12 (Bookworm) - Stable" OFF \
-    3>&1 1>&2 2>&3); then
-    case $OS_CHOICE in
-    debian13)
-      OS_TYPE="debian"
-      OS_VERSION="13"
-      OS_CODENAME="trixie"
-      OS_DISPLAY="Debian 13 (Trixie)"
-      ;;
-    debian12)
-      OS_TYPE="debian"
-      OS_VERSION="12"
-      OS_CODENAME="bookworm"
-      OS_DISPLAY="Debian 12 (Bookworm)"
-      ;;
-    esac
-    echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}${OS_DISPLAY}${CL}"
-  else
-    exit-script
-  fi
-}
 
 function select_cloud_init() {
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" \
