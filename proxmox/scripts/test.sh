@@ -37,7 +37,7 @@ function header_info() {
   cat <<"EOF"
  /$$$$$$$                      /$$                                 /$$   /$$                       /$$    
 | $$__  $$                    | $$                                | $$  | $$                      | $$    
-| $$  \ $$  /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$   /$$$$$$$ /$$$$$$  
+| $$ x\ $$  /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$   /$$$$$$$ /$$$$$$  
 | $$  | $$ /$$__  $$ /$$_____/| $$  /$$/ /$$__  $$ /$$__  $$      | $$$$$$$$ /$$__  $$ /$$_____/|_  $$_/  
 | $$  | $$| $$  \ $$| $$      | $$$$$$/ | $$$$$$$$| $$  \__/      | $$__  $$| $$  \ $$|  $$$$$$   | $$    
 | $$  | $$| $$  | $$| $$      | $$_  $$ | $$_____/| $$            | $$  | $$| $$  | $$ \____  $$  | $$ /$$
@@ -239,36 +239,6 @@ function msg_ok() {
 function msg_error() {
   local msg="$1"
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
-}
-function check_root() {
-  if [[ "$(id -u)" -ne 0 || $(ps -o comm= -p $PPID) == "sudo" ]]; then
-    clear
-    msg_error "Please run this script as root."
-    echo -e "\nExiting..."
-    sleep 2
-    exit
-  fi
-}
-function arch_check() {
-  if [ "$(dpkg --print-architecture)" != "amd64" ]; then
-    echo -e "\n ${INFO}${YWB}This script will not work with PiMox! \n"
-    echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
-    echo -e "Exiting..."
-    sleep 2
-    exit
-  fi
-}
-function ssh_check() {
-  if command -v pveversion >/dev/null 2>&1; then
-    if [ -n "${SSH_CLIENT:+x}" ]; then
-      if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH DETECTED" --yesno "It's suggested to use the Proxmox shell instead of SSH, since SSH can create issues while gathering variables. Would you like to proceed with using SSH?" 10 62; then
-        echo "you've been warned"
-      else
-        clear
-        exit
-      fi
-    fi
-  fi
 }
 
 function exit-script() {
