@@ -33,6 +33,7 @@
          - Ignore any folders inside archives: Enable
          - Ignore Samples: Enable
          - Deobfuscate final filenames: Enable
+         - Make Windows compatible: Enable
      - Categories
          - movies_en
              - Script: `replace_for.py`
