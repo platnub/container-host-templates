@@ -919,6 +919,10 @@ systemctl enable install-docker.service' >/dev/null 2>&1 || true
   fi
 fi
 
+# Configure user user
+virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1000 user" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1000 --gid 1000 user" >/dev/null 2>&1 || true
+
 # Configure bkup user
 virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1001 bkup" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1001 --gid 1001 bkup" >/dev/null 2>&1 || true
@@ -948,6 +952,7 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sudo -u komodo bash -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ enable periphery" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
   msg_ok "Configured Komodo"
 fi
 
