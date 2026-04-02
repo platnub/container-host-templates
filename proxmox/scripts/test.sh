@@ -37,9 +37,9 @@ function header_info() {
   cat <<"EOF"
  /$$$$$$$                      /$$                                 /$$   /$$                       /$$    
 | $$__  $$                    | $$                                | $$  | $$                      | $$    
-| $$ x\ $$  /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$   /$$$$$$$ /$$$$$$  
+| $$  \ $$  /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$   /$$$$$$$ /$$$$$$  
 | $$  | $$ /$$__  $$ /$$_____/| $$  /$$/ /$$__  $$ /$$__  $$      | $$$$$$$$ /$$__  $$ /$$_____/|_  $$_/  
-| $$  | $$| $$  \ $$| $$      | $$$$$$/ | $$$$$$$$| $$  \__/      | $$__  $$| $$  \ $$|  $$$$$$   | $$    
+| $$  | $$| $$  \ $$| $$  x   | $$$$$$/ | $$$$$$$$| $$  \__/      | $$__  $$| $$  \ $$|  $$$$$$   | $$    
 | $$  | $$| $$  | $$| $$      | $$_  $$ | $$_____/| $$            | $$  | $$| $$  | $$ \____  $$  | $$ /$$
 | $$$$$$$/|  $$$$$$/|  $$$$$$$| $$ \  $$|  $$$$$$$| $$            | $$  | $$|  $$$$$$/ /$$$$$$$/  |  $$$$/
 |_______/  \______/  \_______/|__/  \__/ \_______/|__/            |__/  |__/ \______/ |_______/    \___/
@@ -151,23 +151,6 @@ function select_ssh_port() {
   else
     exit-script
   fi
-}
-
-function select_max_auth_tries() {
-  while true; do
-    if MAX_AUTH_TRIES=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set SSH MaxAuthTries (limits failed authentication attempts per connection)\n\nDefault: 6 (recommended)\nIncrease if you use multiple SSH keys" 12 68 "6" --title "SSH MAX AUTH TRIES" 3>&1 1>&2 2>&3); then
-      if [ -z "$MAX_AUTH_TRIES" ]; then
-        MAX_AUTH_TRIES="6"
-      fi
-      if [[ "$MAX_AUTH_TRIES" =~ ^[0-9]+$ ]] && [ "$MAX_AUTH_TRIES" -ge 1 ] && [ "$MAX_AUTH_TRIES" -le 100 ]; then
-        echo -e "${DEFAULT}${BOLD}${DGN}SSH Max Auth Tries: ${BGN}${MAX_AUTH_TRIES}${CL}"
-        break
-      fi
-      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Value must be a number between 1 and 100." 8 58
-    else
-      exit-script
-    fi
-  done
 }
 
 function select_timezone() {
