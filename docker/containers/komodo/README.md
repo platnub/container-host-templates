@@ -3,7 +3,8 @@
 **USE KOMODO USER!!**
 ```
 cd /home/komodo
-curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user
+sudo -u komodo curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user
+chown -R komodo:komodo /home/komodo
 systemctl --user status periphery
 
 ```
