@@ -39,7 +39,7 @@ function header_info() {
 | $$__  $$                    | $$                                | $$  | $$                      | $$    
 | $$  \ $$  /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$   /$$$$$$$ /$$$$$$  
 | $$  | $$ /$$__  $$ /$$_____/| $$  /$$/ /$$__  $$ /$$__  $$      | $$$$$$$$ /$$__  $$ /$$_____/|_  $$_/  
-| $$ x| $$| $$  \ $$| $$      | $$$$$$/ | $$$$$$$$| $$  \__/      | $$__  $$| $$  \ $$|  $$$$$$   | $$    
+| $$  | $$| $$  \ $$| $$      | $$$$$$/ | $$$$$$$$| $$  \__/      | $$__  $$| $$  \ $$|  $$$$$$   | $$    
 | $$  | $$| $$  | $$| $$      | $$_  $$ | $$_____/| $$            | $$  | $$| $$  | $$ \____  $$  | $$ /$$
 | $$$$$$$/|  $$$$$$/|  $$$$$$$| $$ \  $$|  $$$$$$$| $$            | $$  | $$|  $$$$$$/ /$$$$$$$/  |  $$$$/
 |_______/  \______/  \_______/|__/  \__/ \_______/|__/            |__/  |__/ \______/ |_______/    \___/
@@ -113,28 +113,6 @@ function select_cloud_init() {
   else
     USE_CLOUD_INIT="no"
     echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
-  fi
-}
-
-function select_sudo_password() {
-  # Only prompt for sudo password when Cloud-Init is not used
-  if [ "$USE_CLOUD_INIT" = "no" ]; then
-    # Generate a random password using xkcdpass
-    generate_xkcd_password
-    local suggested_password="$GENERATED_PASSWORD"
-
-    while true; do
-      SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a sudo password for the Docker user\n\nPress Enter to use the generated password, or modify it:" 10 68 "$suggested_password" --title "SUDO PASSWORD" 3>&1 1>&2 2>&3)
-      if [ $? -ne 0 ]; then
-        exit-script
-      fi
-      if [ -z "$SUDO_PASSWORD" ]; then
-        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Password cannot be empty. Please enter a password." 8 58
-        continue
-      fi
-      echo -e "${DEFAULT}${BOLD}${DGN}Sudo Password: ${BGN}${SUDO_PASSWORD}${CL}"
-      break
-    done
   fi
 }
 
