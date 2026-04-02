@@ -40,7 +40,7 @@ function header_info() {
 | $$  \ $$  /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$   /$$$$$$$ /$$$$$$  
 | $$  | $$ /$$__  $$ /$$_____/| $$  /$$/ /$$__  $$ /$$__  $$      | $$$$$$$$ /$$__  $$ /$$_____/|_  $$_/  
 | $$  | $$| $$  \ $$| $$      | $$$$$$/ | $$$$$$$$| $$  \__/      | $$__  $$| $$  \ $$|  $$$$$$   | $$    
-| $$  | $$| $$  | $$| $$  x   | $$_  $$ | $$_____/| $$            | $$  | $$| $$  | $$ \____  $$  | $$ /$$
+| $$  | $$| $$  | $$| $$      | $$_  $$ | $$_____/| $$            | $$  | $$| $$  | $$ \____  $$  | $$ /$$
 | $$$$$$$/|  $$$$$$/|  $$$$$$$| $$ \  $$|  $$$$$$$| $$            | $$  | $$|  $$$$$$/ /$$$$$$$/  |  $$$$/
 |_______/  \______/  \_______/|__/  \__/ \_______/|__/            |__/  |__/ \______/ |_______/    \___/
  _    _            _      _                                                 
@@ -104,7 +104,6 @@ function error_handler() {
   echo -e "\n$error_message\n"
   cleanup_vmid
 }
-
 # ==============================================================================
 # PASSWORD GENERATION FUNCTION
 # ==============================================================================
@@ -259,6 +258,55 @@ function select_timezone() {
   done
 }
 
+function select_komodo() {
+  CONFIGURE_KOMODO="no"
+  KOMODO_ALLOWED_IPS=""
+  KOMODO_PUBLIC_KEY=""
+
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "KOMODO CONFIGURATION" \
+    --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall\n- Install Komodo" 12 68); then
+    CONFIGURE_KOMODO="yes"
+    echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}yes${CL}"
+
+    while true; do
+      if KOMODO_IPS_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter allowed IPs for Komodo (comma-separated)\n\nFormat: Each IP/CIDR must be in quotes, separated by commas\nExample: \"1.2.3.0/24\",\"1.2.3.4\",\"10.0.0.0/8\"\n\nLeave empty to allow all IPs" 14 68 "" --title "KOMODO ALLOWED IPS" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_IPS_INPUT" ]; then
+          KOMODO_ALLOWED_IPS=""
+          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}All${CL}"
+          break
+        fi
+        # Validate format: should match pattern like "x.x.x.x" or "x.x.x.x/xx" with commas
+        if [[ "$KOMODO_IPS_INPUT" =~ ^(\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")(,\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")*$ ]]; then
+          KOMODO_ALLOWED_IPS="${KOMODO_IPS_INPUT}"
+          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}${KOMODO_IPS_INPUT}${CL}"
+          break
+        fi
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid format. Please use the format:\n\"1.2.3.0/24\",\"1.2.3.4\"\n\nEach IP must be in quotes and separated by commas." 10 58
+      else
+        exit-script
+      fi
+    done
+
+    # Ask for Komodo Core Public Key (required)
+    while true; do
+      if KOMODO_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Core Public Key\n\nThis is used for authentication with Komodo Core." 10 68 "" --title "KOMODO CORE PUBLIC KEY" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_KEY_INPUT" ]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Komodo Core Public Key is required." 8 58
+          continue
+        fi
+        KOMODO_PUBLIC_KEY="$KOMODO_KEY_INPUT"
+        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}Configured${CL}"
+        break
+      else
+        exit-script
+      fi
+    done
+
+  else
+    echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}no${CL}"
+  fi
+}
+
 function get_image_url() {
   local arch=$(dpkg --print-architecture)
   if [ "$USE_CLOUD_INIT" = "yes" ]; then
@@ -390,7 +438,238 @@ function default_settings() {
   echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
   echo -e "${CREATING}${BOLD}${DGN}Creating a Docker VM using the above settings${CL}"
 }
+function advanced_settings() {
+  select_os
+  select_cloud_init
 
+  # SSH Key selection for Cloud-Init VMs (ask immediately after cloud-init decision)
+  if [ "$USE_CLOUD_INIT" = "yes" ]; then
+    configure_cloudinit_ssh_keys || true
+  fi
+
+  select_sudo_password
+  select_ssh_port
+  select_max_auth_tries
+  select_timezone
+  select_komodo
+
+  METHOD="advanced"
+  [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
+
+  # VM ID
+  while true; do
+    if VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $VMID --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$VMID" ]; then
+        VMID=$(get_valid_nextid)
+      fi
+      if pct status "$VMID" &>/dev/null || qm status "$VMID" &>/dev/null; then
+        echo -e "${CROSS}${RD} ID $VMID is already in use${CL}"
+        sleep 2
+        continue
+      fi
+      echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}$VMID${CL}"
+      break
+    else
+      exit-script
+    fi
+  done
+
+  # Machine Type
+  if MACH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "MACHINE TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 10 58 2 \
+    "q35" "Q35 (Modern, PCIe)" ON \
+    "i440fx" "i440fx (Legacy, PCI)" OFF \
+    3>&1 1>&2 2>&3); then
+    if [ $MACH = q35 ]; then
+      echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}Q35 (Modern)${CL}"
+      FORMAT=""
+      MACHINE=" -machine q35"
+    else
+      echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx (Legacy)${CL}"
+      FORMAT=",efitype=4m"
+      MACHINE=""
+    fi
+  else
+    exit-script
+  fi
+  if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GiB (e.g., 10, 20)" 8 58 "$DISK_SIZE" --title "DISK SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    DISK_SIZE=$(echo "$DISK_SIZE" | tr -d ' ')
+    if [[ "$DISK_SIZE" =~ ^[0-9]+$ ]]; then
+      DISK_SIZE="${DISK_SIZE}G"
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}$DISK_SIZE${CL}"
+    elif [[ "$DISK_SIZE" =~ ^[0-9]+G$ ]]; then
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}$DISK_SIZE${CL}"
+    else
+      echo -e "${DISKSIZE}${BOLD}${RD}Invalid Disk Size. Please use a number (e.g., 10 or 10G).${CL}"
+      exit-script
+    fi
+  else
+    exit-script
+  fi
+  if DISK_CACHE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISK CACHE" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
+    "0" "None (Default)" ON \
+    "1" "Write Through" OFF \
+    3>&1 1>&2 2>&3); then
+    if [ $DISK_CACHE = "1" ]; then
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}Write Through${CL}"
+      DISK_CACHE="cache=writethrough,"
+    else
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}None${CL}"
+      DISK_CACHE=""
+    fi
+  else
+    exit-script
+  fi
+  # Hostname
+  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 docker --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z $VM_NAME ]; then
+      HN="docker"
+    else
+      HN=$(echo "${VM_NAME,,}" | tr -cs 'a-z0-9-' '-' | sed 's/^-//;s/-$//')
+      if [ "$HN" != "${VM_NAME,,}" ]; then
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "HOSTNAME ADJUSTED" --msgbox "Invalid characters detected. Hostname has been adjusted to:\n\n  $HN" 10 58
+      fi
+    fi
+    echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
+  else
+    exit-script
+  fi
+  # CPU Model
+  if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
+    "1" "Host (Recommended)" ON \
+    "0" "KVM64" OFF \
+    3>&1 1>&2 2>&3); then
+    if [ $CPU_TYPE1 = "1" ]; then
+      echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
+      CPU_TYPE=" -cpu host"
+    else
+      echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}KVM64${CL}"
+      CPU_TYPE=""
+    fi
+  else
+    exit-script
+  fi
+  # CPU Cores
+  while true; do
+    if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 2 --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$CORE_COUNT" ]; then CORE_COUNT="2"; fi
+      if [[ "$CORE_COUNT" =~ ^[1-9][0-9]*$ ]]; then
+        echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "CPU Cores must be a positive integer (e.g., 2)." 8 58
+    else
+      exit-script
+    fi
+  done
+
+  # RAM Size
+  while true; do
+    if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 4096 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$RAM_SIZE" ]; then RAM_SIZE="4096"; fi
+      if [[ "$RAM_SIZE" =~ ^[1-9][0-9]*$ ]]; then
+        echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "RAM Size must be a positive integer in MiB (e.g., 4096)." 8 58
+    else
+      exit-script
+    fi
+  done
+  # Bridge
+  if BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Bridge" 8 58 vmbr0 --title "BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z $BRG ]; then
+      BRG="vmbr0"
+    fi
+    echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
+  else
+    exit-script
+  fi
+
+  # MAC Address
+  while true; do
+    if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$MAC1" ]; then
+        MAC="$GEN_MAC"
+        echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC${CL}"
+        break
+      fi
+      if [[ "$MAC1" =~ ^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$ ]]; then
+        MAC="$MAC1"
+        echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid MAC address format. Use XX:XX:XX:XX:XX:XX (e.g., AA:BB:CC:DD:EE:FF)." 8 58
+    else
+      exit-script
+    fi
+  done
+  # VLAN
+  while true; do
+    if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan (leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$VLAN1" ]; then
+        VLAN1="Default"
+        VLAN=""
+        echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
+        break
+      fi
+      if [[ "$VLAN1" =~ ^[0-9]+$ ]] && [ "$VLAN1" -ge 1 ] && [ "$VLAN1" -le 4094 ]; then
+        VLAN=",tag=$VLAN1"
+        echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "VLAN must be a number between 1 and 4094, or leave blank for default." 8 58
+    else
+      exit-script
+    fi
+  done
+
+  # MTU
+  while true; do
+    if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+      if [ -z "$MTU1" ]; then
+        MTU1="Default"
+        MTU=""
+        echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+        break
+      fi
+      if [[ "$MTU1" =~ ^[0-9]+$ ]] && [ "$MTU1" -ge 576 ] && [ "$MTU1" -le 65520 ]; then
+        MTU=",mtu=$MTU1"
+        echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "MTU Size must be a number between 576 and 65520, or leave blank for default." 8 58
+    else
+      exit-script
+    fi
+  done
+
+  # Start VM
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "START VIRTUAL MACHINE" --yesno "Start VM when completed?" 10 58); then
+    echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
+    START_VM="yes"
+  else
+    echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}no${CL}"
+    START_VM="no"
+  fi
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a Docker VM?" --no-button Do-Over 10 58); then
+    echo -e "${CREATING}${BOLD}${DGN}Creating a Docker VM using the above advanced settings${CL}"
+  else
+    header_info
+    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
+    advanced_settings
+  fi
+}
+function start_script() {
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --yesno "Use Default Settings?" --no-button Advanced 10 58); then
+    header_info
+    echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
+    default_settings
+  else
+    header_info
+    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
+    advanced_settings
+  fi
+}
 # ==============================================================================
 # MAIN EXECUTION
 # ==============================================================================
@@ -494,6 +773,199 @@ btrfs)
   DISK_IMPORT="--format raw"
   ;;
 esac
+
+# ==============================================================================
+# IMAGE CUSTOMIZATION WITH DOCKER
+# ==============================================================================
+msg_info "Preparing ${OS_DISPLAY} image with Docker"
+
+WORK_FILE=$(mktemp --suffix=.qcow2)
+cp "$CACHE_FILE" "$WORK_FILE"
+
+export LIBGUESTFS_BACKEND_SETTINGS=dns=8.8.8.8,1.1.1.1
+
+DOCKER_PREINSTALLED="no"
+
+# Install qemu-guest-agent and Docker during image customization
+msg_info "Installing base packages in image"
+if virt-customize -a "$WORK_FILE" --install qemu-guest-agent,curl,ca-certificates,openssh-server >/dev/null 2>&1; then
+  msg_ok "Installed base packages"
+
+  msg_info "Installing Docker (this may take 2-5 minutes)"
+  if virt-customize -q -a "$WORK_FILE" --run-command "curl -fsSL https://get.docker.com | sh" >/dev/null 2>&1 &&
+    virt-customize -q -a "$WORK_FILE" --run-command "systemctl enable docker" >/dev/null 2>&1; then
+    msg_ok "Installed Docker"
+
+    msg_info "Configuring Docker daemon"
+    # Optimize Docker daemon configuration
+    virt-customize -q -a "$WORK_FILE" --run-command "mkdir -p /etc/docker" >/dev/null 2>&1
+    virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/docker/daemon.json << EOF
+{
+  "storage-driver": "overlay2",
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
+EOF' >/dev/null 2>&1
+    DOCKER_PREINSTALLED="yes"
+    msg_ok "Configured Docker daemon"
+  else
+    msg_ok "Docker will be installed on first boot"
+  fi
+else
+  msg_ok "Packages will be installed on first boot"
+fi
+
+msg_info "Finalizing image (hostname, SSH config)"
+# Set hostname and prepare for unique machine-id
+virt-customize -q -a "$WORK_FILE" --hostname "${HN}" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "truncate -s 0 /etc/machine-id" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "rm -f /var/lib/dbus/machine-id" >/dev/null 2>&1 || true
+# Set timezone
+virt-customize -q -a "$WORK_FILE" --timezone "${TIMEZONE}" >/dev/null 2>&1 || true
+
+# Configure SSH for Cloud-Init
+if [ "$USE_CLOUD_INIT" = "yes" ]; then
+  virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*Port .*/Port ${SSH_PORT}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxAuthTries .*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxSessions .*/MaxSessions 2/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*UsePAM .*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "echo '\nChallengeResponseAuthentication no' > /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*AllowTcpForwarding .*/AllowTcpForwarding No/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+else
+  # Configure auto-login for nocloud images (no Cloud-Init)
+  virt-customize -q -a "$WORK_FILE" --run-command "mkdir -p /etc/systemd/system/serial-getty@ttyS0.service.d" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf << EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear %I \$TERM
+EOF' >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "mkdir -p /etc/systemd/system/getty@tty1.service.d" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear %I \$TERM
+EOF' >/dev/null 2>&1 || true
+fi
+msg_ok "Finalized image"
+
+# Create Docker user and lock root user (only when Cloud-Init is not used)
+if [ "$USE_CLOUD_INIT" = "no" ]; then
+  msg_info "Creating Docker user and locking root user"
+  virt-customize -q -a "$WORK_FILE" --run-command "passwd -l root" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password ${HN}" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "adduser ${HN} sudo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --password ${HN}:password:${SUDO_PASSWORD} >/dev/null 2>&1 || true
+  msg_ok "${HN} Docker user created and root user locked"
+fi
+
+# Create first-boot Docker install script (fallback if virt-customize failed)
+if [ "$DOCKER_PREINSTALLED" = "no" ]; then
+  if virt-customize -q -a "$WORK_FILE" --run-command 'cat > /root/install-docker.sh << "DOCKERSCRIPT"
+#!/bin/bash
+exec > /var/log/install-docker.log 2>&1
+echo "[$(date)] Starting Docker installation"
+
+for i in {1..30}; do
+  ping -c 1 8.8.8.8 >/dev/null 2>&1 && break
+  sleep 2
+done
+
+apt-get update
+apt-get install -y qemu-guest-agent curl ca-certificates openssh-server
+curl -fsSL https://get.docker.com | sh
+systemctl enable docker
+systemctl start docker
+
+mkdir -p /etc/docker
+cat > /etc/docker/daemon.json << DAEMON
+{
+  "storage-driver": "overlay2",
+  "log-driver": "json-file",
+  "log-opts": { "max-size": "10m", "max-file": "3" }
+}
+DAEMON
+systemctl restart docker
+
+touch /root/.docker-installed
+echo "[$(date)] Docker installation completed"
+DOCKERSCRIPT
+chmod +x /root/install-docker.sh' >/dev/null 2>&1; then
+
+    virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/systemd/system/install-docker.service << "DOCKERSERVICE"
+[Unit]
+Description=Install Docker on First Boot
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=!/root/.docker-installed
+
+[Service]
+Type=oneshot
+ExecStart=/root/install-docker.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+DOCKERSERVICE
+systemctl enable install-docker.service' >/dev/null 2>&1 || true
+  else
+    msg_error "virt-customize failed for this image. Docker must be installed manually after first boot:"
+    msg_error "  curl -fsSL https://get.docker.com | sh"
+  fi
+fi
+
+# Configure bkup user
+virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1001 bkup" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1001 --gid 1001 bkup" >/dev/null 2>&1 || true
+
+# Setup Komodo (only if configured)
+if [ "$CONFIGURE_KOMODO" = "yes" ]; then
+  msg_info "Configuring Komodo user and settings"
+  virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1337 komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "usermod -a-G docker komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
+
+  # Setup docker file structure
+  virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --chown "1337:1337:/opt/docker" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --chmod "700:/opt/docker" >/dev/null 2>&1 || true
+
+  # Configure Komodo
+  virt-customize -q -a "$WORK_FILE" --mkdir "/home/komodo/.config/komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "curl -o /home/komodo/.config/komodo/periphery.config.toml https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml" >/dev/null 2>&1 || true
+
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*root_directory =.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*allowed_ips =.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  msg_ok "Configured Komodo"
+fi
+
+# Configure firewall
+virt-customize -q -a "$WORK_FILE" --install "fail2ban,ufw" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw default deny incoming" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw default allow outgoing" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw allow ${SSH_PORT}/tcp" >/dev/null 2>&1 || true
+if [ "$CONFIGURE_KOMODO" = "yes" ]; then
+  virt-customize -q -a "$WORK_FILE" --run-command "ufw allow 8120/tcp" >/dev/null 2>&1 || true
+fi
+virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*IPV6=.*/IPV6=no/' /etc/default/ufw" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "ufw --force enable" >/dev/null 2>&1 || true
+
+# Disable IPV6
+virt-customize -q -a "$WORK_FILE" --run-command "echo '\n\n# Disabling the IPv6\nnet.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1' > /etc/sysctl.conf" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "sysctl -p" >/dev/null 2>&1 || true
+
+# Resize disk to target size
+msg_info "Resizing disk image to ${DISK_SIZE}"
+qemu-img resize "$WORK_FILE" "${DISK_SIZE}" >/dev/null 2>&1
+msg_ok "Resized disk image"
 
 # ==============================================================================
 # VM CREATION
