@@ -259,50 +259,6 @@ function select_timezone() {
   done
 }
 
-function select_komodo() {
-  CONFIGURE_KOMODO="no"
-  KOMODO_ALLOWED_IPS=""
-  KOMODO_PUBLIC_KEY=""
-
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "KOMODO CONFIGURATION" \
-    --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall\n- Install Komodo" 12 68); then
-    CONFIGURE_KOMODO="yes"
-    echo -e "${DEFAULT}${BOLD}${DGN}Configure Komodo: ${BGN}yes${CL}"
-
-    while true; do
-      if KOMODO_IPS_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter allowed IPs for Komodo (comma-separated)\n\nFormat: Each IP/CIDR must be in quotes, separated by commas\nExample: \"1.2.3.0/24\",\"1.2.3.4\",\"10.0.0.0/8\"\n\nLeave empty to allow all IPs" 14 68 "" --title "KOMODO ALLOWED IPS" 3>&1 1>&2 2>&3); then
-        if [ -z "$KOMODO_IPS_INPUT" ]; then
-          KOMODO_ALLOWED_IPS=""
-          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}All${CL}"
-          break
-        fi
-        # Validate format: should match pattern like "x.x.x.x" or "x.x.x.x/xx" with commas
-        if [[ "$KOMODO_IPS_INPUT" =~ ^(\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")(,\"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9]+)?\")*$ ]]; then
-          KOMODO_ALLOWED_IPS="${KOMODO_IPS_INPUT}"
-          echo -e "${DEFAULT}${BOLD}${DGN}Komodo Allowed IPs: ${BGN}${KOMODO_IPS_INPUT}${CL}"
-          break
-        fi
-        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid format. Please use the format:\n\"1.2.3.0/24\",\"1.2.3.4\"\n\nEach IP must be in quotes and separated by commas." 10 58
-      else
-        exit-script
-      fi
-    done
-
-    # Ask for Komodo Core Public Key (required)
-    while true; do
-      if KOMODO_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Core Public Key\n\nThis is used for authentication with Komodo Core." 10 68 "" --title "KOMODO CORE PUBLIC KEY" 3>&1 1>&2 2>&3); then
-        if [ -z "$KOMODO_KEY_INPUT" ]; then
-          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Komodo Core Public Key is required." 8 58
-          continue
-        fi
-        KOMODO_PUBLIC_KEY="$KOMODO_KEY_INPUT"
-        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}Configured${CL}"
-        break
-      else
-        exit-script
-      fi
-    done
-
 function get_image_url() {
   local arch=$(dpkg --print-architecture)
   if [ "$USE_CLOUD_INIT" = "yes" ]; then
