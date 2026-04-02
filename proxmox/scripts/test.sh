@@ -86,6 +86,213 @@ CREATING="${TAB}🚀${TAB}${CL}"
 ADVANCED="${TAB}🧩${TAB}${CL}"
 CLOUD="${TAB}☁️${TAB}${CL}"
 
+# ==============================================================================
+# ERROR HANDLING & CLEANUP
+# ==============================================================================
+set -e
+trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+trap cleanup EXIT
+trap 'post_update_to_api "failed" "130"' SIGINT
+trap 'post_update_to_api "failed" "143"' SIGTERM
+trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
+function error_handler() {
+  local exit_code="$?"
+  local line_number="$1"
+  local command="$2"
+  local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
+  post_update_to_api "failed" "${exit_code}"
+  echo -e "\n$error_message\n"
+  cleanup_vmid
+}
+
+function select_cloud_init() {
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" \
+    --yesno "Enable Cloud-Init for VM configuration?\n\nCloud-Init allows automatic configuration of:\n- User accounts and passwords\n- SSH keys\n- Network settings (DHCP/Static)\n- DNS configuration\n\nYou can also configure these settings later in Proxmox UI.\n\nNote: Debian without Cloud-Init will use nocloud image with console auto-login." 18 68); then
+    USE_CLOUD_INIT="yes"
+    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}yes${CL}"
+  else
+    USE_CLOUD_INIT="no"
+    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
+  fi
+}
+
+function select_sudo_password() {
+  # Only prompt for sudo password when Cloud-Init is not used
+  if [ "$USE_CLOUD_INIT" = "no" ]; then
+    # Generate a random password using xkcdpass
+    generate_xkcd_password
+    local suggested_password="$GENERATED_PASSWORD"
+
+    while true; do
+      SUDO_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a sudo password for the Docker user\n\nPress Enter to use the generated password, or modify it:" 10 68 "$suggested_password" --title "SUDO PASSWORD" 3>&1 1>&2 2>&3)
+      if [ $? -ne 0 ]; then
+        exit-script
+      fi
+      if [ -z "$SUDO_PASSWORD" ]; then
+        whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Password cannot be empty. Please enter a password." 8 58
+        continue
+      fi
+      echo -e "${DEFAULT}${BOLD}${DGN}Sudo Password: ${BGN}${SUDO_PASSWORD}${CL}"
+      break
+    done
+  fi
+}
+
+function select_ssh_port() {
+  # Generate random port between 10000 and 65535
+  RANDOM_PORT=$((RANDOM % 55536 + 10000))
+
+  if PORT_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH PORT" --radiolist \
+    "Choose SSH Port Configuration\n\nGenerated random port: ${RANDOM_PORT}" 14 68 3 \
+    "random" "Use generated random port (${RANDOM_PORT}) (Recommended)" ON \
+    "default" "Use default SSH port (22)" OFF \
+    "custom" "Enter custom port" OFF \
+    3>&1 1>&2 2>&3); then
+    case $PORT_CHOICE in
+    random)
+      SSH_PORT="$RANDOM_PORT"
+      ;;
+    default)
+      SSH_PORT="22"
+      ;;
+    custom)
+      while true; do
+        if CUSTOM_PORT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter custom SSH port (1024-65535)" 8 58 "$RANDOM_PORT" --title "CUSTOM SSH PORT" 3>&1 1>&2 2>&3); then
+          if [[ "$CUSTOM_PORT" =~ ^[0-9]+$ ]] && [ "$CUSTOM_PORT" -ge 1024 ] && [ "$CUSTOM_PORT" -le 65535 ]; then
+            SSH_PORT="$CUSTOM_PORT"
+            break
+          fi
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Port must be a number between 1024 and 65535." 8 58
+        else
+          exit-script
+        fi
+      done
+      ;;
+    esac
+    echo -e "${DEFAULT}${BOLD}${DGN}SSH Port: ${BGN}${SSH_PORT}${CL}"
+  else
+    exit-script
+  fi
+}
+
+function select_max_auth_tries() {
+  while true; do
+    if MAX_AUTH_TRIES=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set SSH MaxAuthTries (limits failed authentication attempts per connection)\n\nDefault: 6 (recommended)\nIncrease if you use multiple SSH keys" 12 68 "6" --title "SSH MAX AUTH TRIES" 3>&1 1>&2 2>&3); then
+      if [ -z "$MAX_AUTH_TRIES" ]; then
+        MAX_AUTH_TRIES="6"
+      fi
+      if [[ "$MAX_AUTH_TRIES" =~ ^[0-9]+$ ]] && [ "$MAX_AUTH_TRIES" -ge 1 ] && [ "$MAX_AUTH_TRIES" -le 100 ]; then
+        echo -e "${DEFAULT}${BOLD}${DGN}SSH Max Auth Tries: ${BGN}${MAX_AUTH_TRIES}${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Value must be a number between 1 and 100." 8 58
+    else
+      exit-script
+    fi
+  done
+}
+
+function select_timezone() {
+  while true; do
+    if TIMEZONE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Timezone (IANA format)\n\nExamples: Europe/Amsterdam, America/New_York, Asia/Tokyo\n\nLeave empty for UTC" 12 68 "" --title "TIMEZONE" 3>&1 1>&2 2>&3); then
+      if [ -z "$TIMEZONE" ]; then
+        TIMEZONE="UTC"
+      fi
+      # Validate timezone format (basic check for Region/City pattern or UTC)
+      if [[ "$TIMEZONE" == "UTC" ]] || [[ "$TIMEZONE" =~ ^[A-Za-z]+/[A-Za-z_]+$ ]]; then
+        echo -e "${DEFAULT}${BOLD}${DGN}Timezone: ${BGN}${TIMEZONE}${CL}"
+        break
+      fi
+      whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Invalid timezone format. Please use IANA format (e.g., Europe/Amsterdam)." 8 58
+    else
+      exit-script
+    fi
+  done
+}
+
+
+
+function get_image_url() {
+  local arch=$(dpkg --print-architecture)
+  if [ "$USE_CLOUD_INIT" = "yes" ]; then
+    echo "https://cloud.debian.org/images/cloud/${OS_CODENAME}/latest/debian-${OS_VERSION}-generic-${arch}.qcow2"
+  else
+    echo "https://cloud.debian.org/images/cloud/${OS_CODENAME}/latest/debian-${OS_VERSION}-nocloud-${arch}.qcow2"
+  fi
+}
+
+function get_valid_nextid() {
+  local try_id
+  try_id=$(pvesh get /cluster/nextid)
+  while true; do
+    if [ -f "/etc/pve/qemu-server/${try_id}.conf" ] || [ -f "/etc/pve/lxc/${try_id}.conf" ]; then
+      try_id=$((try_id + 1))
+      continue
+    fi
+    if lvs --noheadings -o lv_name | grep -qE "(^|[-_])${try_id}($|[-_])"; then
+      try_id=$((try_id + 1))
+      continue
+    fi
+    break
+  done
+  echo "$try_id"
+}
+function cleanup_vmid() {
+  if qm status $VMID &>/dev/null; then
+    qm stop $VMID &>/dev/null
+    qm destroy $VMID &>/dev/null
+  fi
+}
+function cleanup() {
+  popd >/dev/null
+  post_update_to_api "done" "none"
+  rm -rf $TEMP_DIR
+}
+TEMP_DIR=$(mktemp -d)
+pushd $TEMP_DIR >/dev/null
+function msg_info() {
+  local msg="$1"
+  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
+}
+function msg_ok() {
+  local msg="$1"
+  echo -e "${BFR}${CM}${GN}${msg}${CL}"
+}
+function msg_error() {
+  local msg="$1"
+  echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
+}
+function check_root() {
+  if [[ "$(id -u)" -ne 0 || $(ps -o comm= -p $PPID) == "sudo" ]]; then
+    clear
+    msg_error "Please run this script as root."
+    echo -e "\nExiting..."
+    sleep 2
+    exit
+  fi
+}
+function arch_check() {
+  if [ "$(dpkg --print-architecture)" != "amd64" ]; then
+    echo -e "\n ${INFO}${YWB}This script will not work with PiMox! \n"
+    echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
+    echo -e "Exiting..."
+    sleep 2
+    exit
+  fi
+}
+function ssh_check() {
+  if command -v pveversion >/dev/null 2>&1; then
+    if [ -n "${SSH_CLIENT:+x}" ]; then
+      if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH DETECTED" --yesno "It's suggested to use the Proxmox shell instead of SSH, since SSH can create issues while gathering variables. Would you like to proceed with using SSH?" 10 62; then
+        echo "you've been warned"
+      else
+        clear
+        exit
+      fi
+    fi
+  fi
+}
+
 function exit-script() {
   clear
   echo -e "\n${CROSS}${RD}User exited script${CL}\n"
