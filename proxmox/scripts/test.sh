@@ -944,6 +944,10 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*allowed_ips =.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sudo -u komodo bash -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ enable periphery" >/dev/null 2>&1 || true
   msg_ok "Configured Komodo"
 fi
 
