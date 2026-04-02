@@ -116,9 +116,13 @@ function generate_xkcd_password() {
   fi
 
   # Select random separator from . - _
-  local separators=("." "-" "_")
   local random_index=$((RANDOM % 3))
-  local separator="${separators[$random_index]}"
+  local separator
+  case $random_index in
+    0) separator="." ;;
+    1) separator="-" ;;
+    2) separator="_" ;;
+  esac
 
   # Generate password with xkcdpass
   GENERATED_PASSWORD=$(xkcdpass -n 7 --min 4 --max 10 -d "$separator")
