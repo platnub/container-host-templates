@@ -7,30 +7,6 @@
 
 # Host configuration script
 
-> [!CAUTION]
-> Allowed IPs **MUST** be surrounded by quotes: "1.1.1.1","2.2.2.2"
-
-1. Connect to the VM through SSH port 22 using sudo user
-2. ```
-   sudo su
-   ```
-   ```
-   bash -c "$(curl -fsSL https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/scripts/setup.sh)"
-   ```
-   1. Random SSH port between 10000 - 65535 by default. Can be modified
-   2. Set Komodo allowed IP's
-   3. Set Komodo user SSH key
-
-3. Connect to the VM through SSH using the komodo user
-   ```
-   # Install Periphery
-   cd /home/komodo
-   curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user
-   loginctl enable-linger $USER
-   systemctl --user enable periphery
-   systemctl --user status periphery
-   
-    ```
 4. Connect to the VM through SSH using a sudo priveledged user. Configure automatic upgrades - [Periodic Updates](https://wiki.debian.org/PeriodicUpdates)
    ```
    # Configure automatic upgrades
