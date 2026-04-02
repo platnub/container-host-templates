@@ -198,37 +198,6 @@ function get_valid_nextid() {
   done
   echo "$try_id"
 }
-function cleanup_vmid() {
-  if qm status $VMID &>/dev/null; then
-    qm stop $VMID &>/dev/null
-    qm destroy $VMID &>/dev/null
-  fi
-}
-function cleanup() {
-  popd >/dev/null
-  post_update_to_api "done" "none"
-  rm -rf $TEMP_DIR
-}
-TEMP_DIR=$(mktemp -d)
-pushd $TEMP_DIR >/dev/null
-function msg_info() {
-  local msg="$1"
-  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
-}
-function msg_ok() {
-  local msg="$1"
-  echo -e "${BFR}${CM}${GN}${msg}${CL}"
-}
-function msg_error() {
-  local msg="$1"
-  echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
-}
-
-function exit-script() {
-  clear
-  echo -e "\n${CROSS}${RD}User exited script${CL}\n"
-  exit
-}
 function default_settings() {
   select_os
   select_cloud_init
