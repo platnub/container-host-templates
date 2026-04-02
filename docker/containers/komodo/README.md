@@ -5,7 +5,7 @@
 cd /home/komodo
 sudo -u komodo curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user
 chown -R komodo:komodo /home/komodo
-systemctl --user status periphery
+systemctl --user -M komodo@ status periphery
 
 ```
 
