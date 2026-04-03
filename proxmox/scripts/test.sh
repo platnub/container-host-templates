@@ -307,6 +307,20 @@ function select_komodo() {
   fi
 }
 
+function select_docker_rootless() {
+  CONFIGURE_DOCKER_ROOTLESS="no"
+
+  if [ "$CONFIGURE_KOMODO" = "yes" ]; then
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "DOCKER ROOTLESS MODE" \
+      --yesno "Do you want to configure Docker in rootless mode for Komodo?\n\nThis will:\n- Disable the system Docker service\n- Install Docker rootless for the Komodo user\n- Configure Periphery to use the rootless Docker socket\n\nRecommended for improved security." 14 68); then
+      CONFIGURE_DOCKER_ROOTLESS="yes"
+      echo -e "${DEFAULT}${BOLD}${DGN}Docker Rootless: ${BGN}yes${CL}"
+    else
+      echo -e "${DEFAULT}${BOLD}${DGN}Docker Rootless: ${BGN}no${CL}"
+    fi
+  fi
+}
+
 function get_image_url() {
   local arch=$(dpkg --print-architecture)
   if [ "$USE_CLOUD_INIT" = "yes" ]; then
@@ -406,6 +420,7 @@ function default_settings() {
   select_max_auth_tries
   select_timezone
   select_komodo
+  select_docker_rootless
 
   VMID=$(get_valid_nextid)
   FORMAT=""
@@ -660,15 +675,9 @@ function advanced_settings() {
   fi
 }
 function start_script() {
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --yesno "Use Default Settings?" --no-button Advanced 10 58); then
-    header_info
-    echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
-    default_settings
-  else
-    header_info
-    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
-    advanced_settings
-  fi
+  header_info
+  echo -e "${DEFAULT}${BOLD}${BL}Configuring Docker VM${CL}"
+  default_settings
 }
 # ==============================================================================
 # MAIN EXECUTION
@@ -954,6 +963,21 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ enable periphery" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
   msg_ok "Configured and installed Komodo"
+
+  # Configure Docker rootless mode for Komodo if selected
+  if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
+    msg_info "Configuring Docker rootless mode for Komodo"
+    virt-customize -q -a "$WORK_FILE" --run-command "systemctl disable --now docker.service docker.socket" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "rm /var/run/docker.sock" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "machinectl shell komodo@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force'" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ enable docker.service" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ restart docker.service" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "sed -i '0,/^Environment=/ s/\$/ \"DOCKER_HOST=unix:\\/\\/\\/run\\/user\\/1337\\/docker.sock\"/' /home/komodo/.config/systemd/user/periphery.service" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ daemon-reload" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ restart periphery" >/dev/null 2>&1 || true
+    msg_ok "Configured Docker rootless mode"
+  fi
 fi
 
 # Configure firewall
