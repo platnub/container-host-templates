@@ -467,6 +467,7 @@ function advanced_settings() {
   select_max_auth_tries
   select_timezone
   select_komodo
+  select_docker_rootless
 
   METHOD="advanced"
   [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
@@ -677,7 +678,7 @@ function advanced_settings() {
 function start_script() {
   header_info
   echo -e "${DEFAULT}${BOLD}${BL}Configuring Docker VM${CL}"
-  default_settings
+  advanced_settings
 }
 # ==============================================================================
 # MAIN EXECUTION
