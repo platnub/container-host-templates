@@ -1024,14 +1024,16 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
 fi
 
 # Setup Komodo for rootless
-if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ] && [ "$CONFIGURE_KOMODO" = "yes" ]; then
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell docker@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force' &&\
-  loginctl enable-linger docker &&\
-  systemctl --user -M docker@ enable docker.service &&\
-  systemctl --user -M docker@ restart docker.service &&\
-  sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1000/docker.sock# }' /home/komodo/.config/systemd/user/periphery.service &&\
-  systemctl --user -M komodo@ daemon-reload &&\
-  systemctl --user -M komodo@ restart periphery" >/dev/null 2>&1 || true
+if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
+  if [ "$CONFIGURE_KOMODO" = "yes" ]; then
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell docker@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force' &&\
+    loginctl enable-linger docker &&\
+    systemctl --user -M docker@ enable docker.service &&\
+    systemctl --user -M docker@ restart docker.service &&\
+    sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1000/docker.sock# }' /home/komodo/.config/systemd/user/periphery.service &&\
+    systemctl --user -M komodo@ daemon-reload &&\
+    systemctl --user -M komodo@ restart periphery" >/dev/null 2>&1 || true
+  fi
 fi
 
 # ==============================================================================
