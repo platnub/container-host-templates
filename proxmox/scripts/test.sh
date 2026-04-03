@@ -953,7 +953,7 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ enable periphery" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
-  msg_ok "Configured Komodo"
+  msg_ok "Configured and installed Komodo"
 fi
 
 # Configure firewall
