@@ -1021,7 +1021,8 @@ if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
     systemctl --user -M komodo@ restart docker.service &&\
     sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1337/docker.sock# }' /home/komodo/.config/systemd/user/periphery.service &&\
     systemctl --user -M komodo@ daemon-reload &&\
-    systemctl --user -M komodo@ restart periphery" >/dev/null 2>&1 || true
+    systemctl --user -M komodo@ restart periphery &&\
+    reboot -f" >/dev/null 2>&1 || true
   fi
 fi
 
