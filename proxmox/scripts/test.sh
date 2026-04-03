@@ -820,7 +820,7 @@ else
   msg_ok "Packages will be installed on first boot"
 fi
 
-msg_info "Finalizing image (hostname, SSH config)"
+msg_info "Configuring image (hostname, SSH config)"
 # Set hostname and prepare for unique machine-id
 virt-customize -q -a "$WORK_FILE" --hostname "${HN}" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "truncate -s 0 /etc/machine-id" >/dev/null 2>&1 || true
@@ -854,7 +854,7 @@ ExecStart=
 ExecStart=-/sbin/agetty --autologin root --noclear %I \$TERM
 EOF' >/dev/null 2>&1 || true
 fi
-msg_ok "Finalized image"
+msg_ok "Configured image"
 
 # Create Docker user and lock root user (only when Cloud-Init is not used)
 if [ "$USE_CLOUD_INIT" = "no" ]; then
@@ -953,7 +953,7 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell komodo@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'" #>/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell komodo@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --firstboot-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M komodo@ enable periphery" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --firstboot-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
