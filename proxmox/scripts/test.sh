@@ -113,7 +113,7 @@ function generate_xkcd_password() {
   local separator="${separators[$random_index]}"
 
   # Generate password with xkcdpass
-  GENERATED_PASSWORD=$(xkcdpass -n 7 --min 4 --max 10 -c alternating -d "$separator")
+  GENERATED_PASSWORD=$(xkcdpass --numwords=7 --min 4 --max 10 --case alternating --delimiter="$separator")
 
   # Replace one random delimiter with a random 1-2 digit number
   local random_number=$((RANDOM % 99 + 1))
