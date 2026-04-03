@@ -948,7 +948,7 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   # Setup docker file structure
   virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --chown "1337:1337:/opt/docker" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --chmod "700:/opt/docker" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --chmod "0700:/opt/docker" >/dev/null 2>&1 || true
 
   # Configure Komodo
   virt-customize -q -a "$WORK_FILE" --mkdir "/home/komodo/.config/komodo" >/dev/null 2>&1 || true
