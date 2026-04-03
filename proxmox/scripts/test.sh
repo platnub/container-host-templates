@@ -37,7 +37,7 @@ function header_info() {
   cat <<"EOF"
  /$$$$$$$                      /$$                                 /$$   /$$                       /$$    
 | $$__  $$                    | $$                                | $$  | $$                      | $$    
-| $$  \ $$  /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$   /$$$$$$$ /$$$$$$  
+| $$x \ $$  /$$$$$$   /$$$$$$$| $$   /$$  /$$$$$$   /$$$$$$       | $$  | $$  /$$$$$$   /$$$$$$$ /$$$$$$  
 | $$  | $$ /$$__  $$ /$$_____/| $$  /$$/ /$$__  $$ /$$__  $$      | $$$$$$$$ /$$__  $$ /$$_____/|_  $$_/  
 | $$  | $$| $$  \ $$| $$      | $$$$$$/ | $$$$$$$$| $$  \__/      | $$__  $$| $$  \ $$|  $$$$$$   | $$    
 | $$  | $$| $$  | $$| $$      | $$_  $$ | $$_____/| $$            | $$  | $$| $$  | $$ \____  $$  | $$ /$$
@@ -942,8 +942,8 @@ systemctl enable install-docker.service' >/dev/null 2>&1 || true
 fi
 
 # Configure user docker
-virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1000 docker" >/dev/null 2>&1 || true
-virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1000 --gid 1000 docker" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1000 user" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1000 --gid 1000 user" >/dev/null 2>&1 || true
 
 # Configure bkup user
 virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1001 bkup" >/dev/null 2>&1 || true
@@ -973,10 +973,6 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell komodo@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M komodo@ enable periphery" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
   msg_ok "Configured and installed Komodo"
 fi
 
@@ -985,13 +981,6 @@ if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
   msg_info "Configuring Docker rootless mode"
   virt-customize -q -a "$WORK_FILE" --run-command "systemctl disable --now docker.service docker.socket" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "rm /var/run/docker.sock" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell docker@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force'" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "loginctl enable-linger docker" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M docker@ enable docker.service" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M docker@ restart docker.service" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1000/docker.sock# }' /home/komodo/.config/systemd/user/periphery.service" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M docker@ daemon-reload" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M docker@ restart periphery" >/dev/null 2>&1 || true
   msg_ok "Configured Docker rootless mode"
 fi
 
@@ -1026,11 +1015,11 @@ fi
 # Setup Komodo for rootless
 if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
   if [ "$CONFIGURE_KOMODO" = "yes" ]; then
-    virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell docker@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force' &&\
-    loginctl enable-linger docker &&\
-    systemctl --user -M docker@ enable docker.service &&\
-    systemctl --user -M docker@ restart docker.service &&\
-    sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1000/docker.sock# }' /home/komodo/.config/systemd/user/periphery.service &&\
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell komodo@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force' &&\
+    loginctl enable-linger komodo &&\
+    systemctl --user -M komodo@ enable docker.service &&\
+    systemctl --user -M komodo@ restart docker.service &&\
+    sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1337/docker.sock# }' /home/komodo/.config/systemd/user/periphery.service &&\
     systemctl --user -M komodo@ daemon-reload &&\
     systemctl --user -M komodo@ restart periphery" >/dev/null 2>&1 || true
   fi
