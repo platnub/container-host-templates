@@ -953,10 +953,10 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "machinectl shell komodo@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'" #>/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ enable periphery" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell komodo@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'" #>/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M komodo@ enable periphery" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
   msg_ok "Configured and installed Komodo"
 
   # Configure Docker rootless mode for Komodo if selected
@@ -964,13 +964,13 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
     msg_info "Configuring Docker rootless mode for Komodo"
     virt-customize -q -a "$WORK_FILE" --run-command "systemctl disable --now docker.service docker.socket" >/dev/null 2>&1 || true
     virt-customize -q -a "$WORK_FILE" --run-command "rm /var/run/docker.sock" >/dev/null 2>&1 || true
-    virt-customize -q -a "$WORK_FILE" --run-command "machinectl shell komodo@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force'" >/dev/null 2>&1 || true
-    virt-customize -q -a "$WORK_FILE" --run-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
-    virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ enable docker.service" >/dev/null 2>&1 || true
-    virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ restart docker.service" >/dev/null 2>&1 || true
-    virt-customize -q -a "$WORK_FILE" --run-command "sed -i '0,/^Environment=/ { /^Environment=/ s#$# \"DOCKER_HOST=unix:///run/user/1337/docker.sock\"# }' /home/komodo/.config/systemd/user/periphery.service" >/dev/null 2>&1 || true
-    virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ daemon-reload" >/dev/null 2>&1 || true
-    virt-customize -q -a "$WORK_FILE" --run-command "systemctl --user -M komodo@ restart periphery" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell komodo@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force'" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "loginctl enable-linger komodo" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M komodo@ enable docker.service" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M komodo@ restart docker.service" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "sed -i '0,/^Environment=/ { /^Environment=/ s#$# \"DOCKER_HOST=unix:///run/user/1337/docker.sock\"# }' /home/komodo/.config/systemd/user/periphery.service" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M komodo@ daemon-reload" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "systemctl --user -M komodo@ restart periphery" >/dev/null 2>&1 || true
     msg_ok "Configured Docker rootless mode"
   fi
 fi
