@@ -934,7 +934,9 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   msg_info "Configuring Komodo user and settings"
   virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1337 komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "usermod -a-G docker komodo" >/dev/null 2>&1 || true
+  if [ "$CONFIGURE_DOCKER_ROOTLESS" = "no" ]; then
+    virt-customize -q -a "$WORK_FILE" --run-command "usermod -aG docker komodo" >/dev/null 2>&1 || true
+  fi
   virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
 
   # Setup docker file structure
