@@ -2,7 +2,7 @@
 title: README
 description: 
 published: true
-date: 2026-04-05T21:41:16.565Z
+date: 2026-04-05T22:07:30.922Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:01:58.822Z
@@ -15,7 +15,7 @@ dateCreated: 2026-04-05T21:01:58.822Z
 > Tested with Proxmox 8.x.x - 9.1.x
 > - Root user disabled
 > - Sudo user username = hostname
-{.is-info}
+<!-- {blockquote:.is-info} -->
 
 1. Run this from Proxmox node shell
    ```
