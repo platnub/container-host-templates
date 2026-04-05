@@ -2,7 +2,7 @@
 title: Home
 description: 
 published: true
-date: 2026-04-05T21:11:27.962Z
+date: 2026-04-05T21:16:16.838Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:01:51.322Z
@@ -54,50 +54,50 @@ Install containers
 
 ## Docker
 - <ins>**Core**</ins>
-  - [Socket Proxy - Proxy access to docker socket](/docker/containers/socket-proxy)
-  - [Pangolin - Reverse proxy host](/docker/containers/pangolin)
-    - [Pangolin Newt - Pangolin VPN tunnel](/docker/containers/pangolin/newt)
+  - [Socket Proxy - Proxy access to docker socket](/docker/containers/socket-proxy/README.md)
+  - [Pangolin - Reverse proxy host](/docker/containers/pangolin/README.md)
+    - [Pangolin Newt - Pangolin VPN tunnel](/docker/containers/pangolin/newt/README.md)
     - Includes [CrowdSec](https://www.crowdsec.net/) - Crowd powered security
 - <ins>**Authentication**</ins>
-  - [Authentik - Single sign on](/docker/containers/authentik)
+  - [Authentik - Single sign on](/docker/containers/authentik/README.md)
 - <ins>**Information**</ins>
   - [Actual - Finance]
-  - [Grocy - Recipe and food stock dashboard](/docker/containers/grocy)
+  - [Grocy - Recipe and food stock dashboard](/docker/containers/grocy/README.md)
   - [Homepage - Service dashboard]
-  - [Nextcloud - Cloud storage](/docker/containers/nextcloud)
+  - [Nextcloud - Cloud storage](/docker/containers/nextcloud/README.md)
     - Integrated with Collabora - Cloud office suite
   - [Paperless NGX - Document management system]
-  - [Vaultwarden - Password manager](/docker/containers/vaultwarden)
+  - [Vaultwarden - Password manager](/docker/containers/vaultwarden/README.md)
 - <ins>**Media**</ins>
-  - [Jellyfin - Netflix-like media streaming](/docker/containers/jellyfin)
-  - [Jellyseerr - Media requests](/docker/containers/jellyseerr)
-  - [Tdarr - Media transcoding automation](/docker/containers/tdarr)
+  - [Jellyfin - Netflix-like media streaming](/docker/containers/jellyfin/README.md)
+  - [Jellyseerr - Media requests](/docker/containers/jellyseerr/README.md)
+  - [Tdarr - Media transcoding automation](/docker/containers/tdarr/README.md)
     - Uses [Tdarr-one-flow](https://github.com/samssausages/Tdarr-One-Flow)
-  - [Recyclarr - TRaSH guide sync](/docker/containers/recyclarr)
-  - [Radarr - Movie organization and management](/docker/containers/radarr)
+  - [Recyclarr - TRaSH guide sync](/docker/containers/recyclarr/README.md)
+  - [Radarr - Movie organization and management](/docker/containers/radarr/README.md)
     - Unpackerr - Unpack compressed torrent downloads
-  - [Sonarr - Series organization and management](/docker/containers/sonarr)
+  - [Sonarr - Series organization and management](/docker/containers/sonarr/README.md)
     - Unpackerr - Unpack compressed torrent downloads
   - [Bazarr - Subtitle management]
-  - [Lidarr - Music organization and management](/docker/containers/lidarr)
+  - [Lidarr - Music organization and management](/docker/containers/lidarr/README.md)
     - Includes Soulseek - Music downloader
     - [Beets - Metadata]()
-  - [Bookshelf - Book organization and management](/docker/containers/bookshelf)
+  - [Bookshelf - Book organization and management](/docker/containers/bookshelf/README.md)
   - [Kapowarr - Comics and managa organization and management]
-  - [Jackett - Indexer proxy](/docker/containers/jackett)
-  - [SABnzbd - Usenet download client](/docker/containers/sabnzbd)
-  - [qBittorrent - Torrent download client](/docker/containers/qbittorrent)
+  - [Jackett - Indexer proxy](/docker/containers/jackett/README.md)
+  - [SABnzbd - Usenet download client](/docker/containers/sabnzbd/README.md)
+  - [qBittorrent - Torrent download client](/docker/containers/qbittorrent/README.md)
     - Includes Gluetun - VPN
   - [Cleanuparr - Download cleaner for torrents]
 - <ins>**Gaming**</ins>
-  - [Pelican Panel - Management Panel for game servers](/docker/containers/pelican)
+  - [Pelican Panel - Management Panel for game servers](/docker/containers/pelican/README.md)
     - Pelican Node - Game server hosting node
 - <ins>**Automation & AI**</ins>
   - [Archon - AI coding command center]
   - [Flowise - AI agent builder]
-  - [n8n - Automation workflow platform](/docker/containers/n8n)
-  - [OpenWebUI - AI agent dashboard](/docker/containers/openwebui)
-  - [SearXNG - Metasearch engine](/docker/containers/searxng)
+  - [n8n - Automation workflow platform](/docker/containers/n8n/README.md)
+  - [OpenWebUI - AI agent dashboard](/docker/containers/openwebui/README.md)
+  - [SearXNG - Metasearch engine](/docker/containers/searxng/README.md)
 
 # Resource Requirements
 
