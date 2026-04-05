@@ -949,15 +949,16 @@ virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disable
 virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1001 bkup" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1001 --gid 1001 bkup" >/dev/null 2>&1 || true
 
+virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1337 dockerd" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 dockerd" >/dev/null 2>&1 || true
+
 # Setup Komodo
 if [ "$CONFIGURE_KOMODO" = "yes" ]; then
-  msg_info "Configuring Komodo user and settings"
-  virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1337 komodo" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 komodo" >/dev/null 2>&1 || true
+  msg_info "Configuring dockerd user and settings"
   if [ "$CONFIGURE_DOCKER_ROOTLESS" = "no" ]; then
-    virt-customize -q -a "$WORK_FILE" --run-command "usermod -aG docker komodo" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "usermod -aG docker dockerd" >/dev/null 2>&1 || true
   fi
-  virt-customize -q -a "$WORK_FILE" --password komodo:password:* >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --password dockerd:password:* >/dev/null 2>&1 || true
 
   # Setup docker file structure
   virt-customize -q -a "$WORK_FILE" --mkdir "/opt/docker" >/dev/null 2>&1 || true
@@ -965,14 +966,14 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --chmod "0700:/opt/docker" >/dev/null 2>&1 || true
 
   # Configure Komodo
-  virt-customize -q -a "$WORK_FILE" --mkdir "/home/komodo/.config/komodo" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "curl -o /home/komodo/.config/komodo/periphery.config.toml https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --mkdir "/home/dockerd/.config/komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "curl -o /home/dockerd/.config/komodo/periphery.config.toml https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml" >/dev/null 2>&1 || true
 
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*root_directory =.*|root_directory = \"/home/komodo/periphery\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*allowed_ips =.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_PUBLIC_KEY\"|' /home/komodo/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "chown komodo:komodo -R /home/komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*root_directory =.*|root_directory = \"/home/dockerd/periphery\"|' /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*allowed_ips =.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_PUBLIC_KEY\"|' /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "chown dockerd:dockerd -R /home/dockerd" >/dev/null 2>&1 || true
   msg_ok "Configured and installed Komodo"
 fi
 
@@ -1006,23 +1007,23 @@ msg_ok "Resized disk image"
 
 # Setup Komodo
 if [ "$CONFIGURE_KOMODO" = "yes" ]; then
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell komodo@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user' &&\
-  chown komodo:komodo -R /home/komodo &&\
-  systemctl --user -M komodo@ enable periphery &&\
-  loginctl enable-linger komodo" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell dockerd@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user' &&\
+  chown dockerd:dockerd -R /home/dockerd &&\
+  systemctl --user -M dockerd@ enable periphery &&\
+  loginctl enable-linger dockerd" >/dev/null 2>&1 || true
 fi
 
 # Setup Komodo for rootless
 if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell komodo@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force' &&\
-  loginctl enable-linger komodo &&\
-  systemctl --user -M komodo@ enable docker.service &&\
-  systemctl --user -M komodo@ restart docker.service
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell dockerd@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force' &&\
+  loginctl enable-linger dockerd &&\
+  systemctl --user -M dockerd@ enable docker.service &&\
+  systemctl --user -M dockerd@ restart docker.service
   reboot -f" >/dev/null 2>&1 || true
   if [ "$CONFIGURE_KOMODO" = "yes" ]; then
-    virt-customize -q -a "$WORK_FILE" --firstboot-command "sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1337/docker.sock# }' /home/komodo/.config/systemd/user/periphery.service &&\
-    systemctl --user -M komodo@ daemon-reload &&\
-    systemctl --user -M komodo@ restart periphery &&\
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1337/docker.sock# }' /home/dockerd/.config/systemd/user/periphery.service &&\
+    systemctl --user -M dockerd@ daemon-reload &&\
+    systemctl --user -M dockerd@ restart periphery &&\
     reboot -f" >/dev/null 2>&1 || true
   fi
 fi
