@@ -1,8 +1,8 @@
 ---
-title: Info
+title: Seerr
 description: 
 published: true
-date: 2026-04-05T21:14:37.859Z
+date: 2026-04-05T21:18:40.924Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:13.815Z
