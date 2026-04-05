@@ -1,3 +1,13 @@
+---
+title: Info
+description: 
+published: true
+date: 2026-04-05T21:14:37.859Z
+tags: 
+editor: markdown
+dateCreated: 2026-04-05T21:02:13.815Z
+---
+
 # Information
 - [Jellyseerr OIDC branch to seerr migration](https://voidauth.app/#/OIDC-Guides?id=-jellyseerr)
 # Manuals
