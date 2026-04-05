@@ -2,7 +2,7 @@
 title: Home
 description: 
 published: true
-date: 2026-04-05T21:16:16.838Z
+date: 2026-04-05T21:19:25.212Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:01:51.322Z
@@ -70,7 +70,7 @@ Install containers
   - [Vaultwarden - Password manager](/docker/containers/vaultwarden/README.md)
 - <ins>**Media**</ins>
   - [Jellyfin - Netflix-like media streaming](/docker/containers/jellyfin/README.md)
-  - [Jellyseerr - Media requests](/docker/containers/jellyseerr/README.md)
+  - [Seerr - Media requests](/docker/containers/seerr/README.md)
   - [Tdarr - Media transcoding automation](/docker/containers/tdarr/README.md)
     - Uses [Tdarr-one-flow](https://github.com/samssausages/Tdarr-One-Flow)
   - [Recyclarr - TRaSH guide sync](/docker/containers/recyclarr/README.md)
