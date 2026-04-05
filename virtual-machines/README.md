@@ -1,12 +1,22 @@
+---
+title: README
+description: 
+published: true
+date: 2026-04-05T21:40:38.271Z
+tags: 
+editor: markdown
+dateCreated: 2026-04-05T21:01:58.822Z
+---
+
 # Install
 
 ## Docker
 
-> [!NOTE]
 > Tested with Proxmox 8.x.x - 9.1.x
-> - Default port 22
 > - Root user disabled
 > - Sudo user username = hostname
+{.is-info}
+
 
 1. Run this from Proxmox node shell
    ```
