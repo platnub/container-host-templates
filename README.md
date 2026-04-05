@@ -29,11 +29,11 @@
    - pangolin-core
 - DMZ vlan 90
    - dmz-public
-   - dmz-authentik
-   - dmz-frontend
    - dmz-gaming
-   - dmz-information
    - dmz-media
+   - dmz-frontend
+   - dmz-information
+   - dmz-authentik
 - Services vlan 20
    - media
    - backend
