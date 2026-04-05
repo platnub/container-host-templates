@@ -25,15 +25,18 @@
 
 # Host overview
 
+- External
+   - pangolin-core
 - DMZ vlan 90
+   - dmz-public
    - dmz-authentik
-   - dmz-automation
+   - dmz-frontend
    - dmz-gaming
    - dmz-information
    - dmz-media
 - Services vlan 20
    - media
-   - information
+   - backend
    - komodo-core
 
 # Containers
