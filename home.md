@@ -2,14 +2,14 @@
 title: Home
 description: 
 published: true
-date: 2026-04-05T21:06:34.198Z
+date: 2026-04-05T21:11:02.846Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:01:51.322Z
 ---
 
-> [!WARNING]
 > WORK IN PROGRESS!
+{.is-warning}
 
 # Info
 - Full Proxmox VM-Debian OS installation and configuration scripts
