@@ -951,6 +951,7 @@ virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disable
 
 virt-customize -q -a "$WORK_FILE" --run-command "groupadd -g 1337 dockerd" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "adduser --gecos GECOS --disabled-password --uid 1337 --gid 1337 dockerd" >/dev/null 2>&1 || true
+virt-customize -q -a "$WORK_FILE" --run-command "loginctl enable-linger dockerd" >/dev/null 2>&1 || true
 
 # Setup Komodo
 if [ "$CONFIGURE_KOMODO" = "yes" ]; then
@@ -1016,16 +1017,13 @@ fi
 # Setup Komodo for rootless
 if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell dockerd@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force' &&\
-  loginctl enable-linger dockerd &&\
   systemctl --user -M dockerd@ enable docker.service &&\
   systemctl --user -M dockerd@ restart docker.service
   reboot -f" >/dev/null 2>&1 || true
   if [ "$CONFIGURE_KOMODO" = "yes" ]; then
     virt-customize -q -a "$WORK_FILE" --firstboot-command "sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1337/docker.sock# }' /home/dockerd/.config/systemd/user/periphery.service &&\
     systemctl --user -M dockerd@ daemon-reload &&\
-    systemctl --user -M dockerd@ enable periphery.service &&\
-    systemctl --user -M dockerd@ restart periphery.service &&\
-    reboot -f" >/dev/null 2>&1 || true
+    systemctl --user -M dockerd@ restart periphery.service" >/dev/null 2>&1 || true
   fi
 fi
 
