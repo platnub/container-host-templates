@@ -1,3 +1,13 @@
+---
+title: backup
+description: 
+published: true
+date: 2026-04-05T21:19:00.266Z
+tags: 
+editor: markdown
+dateCreated: 2026-04-05T21:02:15.113Z
+---
+
 [Seerr backup and restore guide](https://docs.seerr.dev/using-seerr/backups)
 
 # Borgbackup parameters
