@@ -2,7 +2,7 @@
 title: BorgBackup
 description: 
 published: true
-date: 2026-04-06T10:44:21.020Z
+date: 2026-04-06T10:47:48.956Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:00.087Z
@@ -69,8 +69,9 @@ Server that will store the backups and make backups to offsite locations
 # Container Host Manuals
 Hosts that run containers that need to backup data to a central server
 
-> [!NOTE]
 > These manuals are written for Debian
+{.is-info}
+
 
 ## Installing BorgBackup Debian
 
@@ -81,10 +82,11 @@ Hosts that run containers that need to backup data to a central server
 
 ## Configuring BorgBackup
 
-> [!NOTE]
 > __Requirements:__
 > - Repository on a central server
 > - SSH private key for 'bkup' user saved as `/home/<hostname>/.ssh/bkup` using `chmod 600`
+<!-- {blockquote:.is-info} -->
+
 
 1. Create a new script file. Make sure to name the script after the container.
    ```
