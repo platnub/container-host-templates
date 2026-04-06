@@ -2,7 +2,7 @@
 title: n8n
 description: 
 published: true
-date: 2026-04-06T12:34:46.134Z
+date: 2026-04-06T12:34:53.773Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:21.180Z
@@ -174,4 +174,4 @@ borg create -v --stats \
 </details>
 
 ## Backup recovery
-[BorgBackup - Backup recovery](https://wiki-js-public.alion.host/en/tools/borgbackup#backup-recovery)
+[BorgBackup - Backup recovery](/tools/borgbackup#backup-recovery)
