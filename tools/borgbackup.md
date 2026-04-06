@@ -2,7 +2,7 @@
 title: BorgBackup
 description: 
 published: true
-date: 2026-04-06T10:47:48.956Z
+date: 2026-04-06T10:49:08.110Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:00.087Z
@@ -77,7 +77,7 @@ Hosts that run containers that need to backup data to a central server
 
 1. Install BorgBackup
    ```
-   apt update -y && apt upgrade -y && apt install borgbackup -y
+   apt update && apt install borgbackup -y
    ```
 
 ## Configuring BorgBackup
