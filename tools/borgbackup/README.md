@@ -1,3 +1,13 @@
+---
+title: README
+description: 
+published: true
+date: 2026-04-06T10:43:29.497Z
+tags: 
+editor: markdown
+dateCreated: 2026-04-05T21:02:00.087Z
+---
+
 **OMV Server Manuals**
 - [Installing BorgBackup OMV](#Installing-BorgBackup-OMV)
 - [Create Local repository for container backups](#Create-Local-repository-for-container-backups)
@@ -83,7 +93,68 @@ Hosts that run containers that need to backup data to a central server
    sudo chmod 700 /usr/local/bin/<container>.sh
    ```
 2. Fill in the '[borgbackup_template.sh](borgbackup_template.sh)' and paste it into the file.
+
    - BACKUP_PATH is the full path of the remote folder on the remote machine (Shared folder in OMV)
+
+  <details><summary>borgbackup_template.sh</summary>
+  
+   ```bash
+  #!/usr/bin/env bash
+
+  # Specify the path to the key
+  USERNAME="$(hostname)"
+  export BORG_RSH="ssh -i /home/$USERNAME/.ssh/bkup"
+
+  ## Borg passphrase
+  export BORG_PASSPHRASE=''
+
+  LOG='/var/log/borg/backup_<container>.log'
+
+  # Set backup location
+  BACKUP_USER='<user>'
+  BACKUP_HOST='<server>'
+  BACKUP_PORT='<ssh port>'
+  BACKUP_PATH='<repository path>'
+
+  export REPOSITORY="ssh://${BACKUP_USER}@${BACKUP_HOST}:${BACKUP_PORT}${BACKUP_PATH}"
+
+  # Output to a logfile
+  exec > >(tee -i ${LOG})
+  exec 2>&1
+
+  echo "###### Backup started: $(date) ######"
+
+  # Perform tasks that will run before the backup here, e.g.
+  # - Create a list of installed software
+  # - Create a database dump
+
+  # Run backup
+  echo "Transfer files ..."
+  borg create -v --stats \
+      $REPOSITORY::<container>_'{now:%Y-%m-%d_%H:%M}' \
+      /var/lib/docker/volumes/example/_data \
+      /var/lib/docker/volumes/example2/_data \
+      --exclude /var/lib/docker/volumes/example/_data/exclude
+      --exclude /var/lib/docker/volumes/example2/_data/exclude
+
+  echo "###### Backup ended: $(date) ######"
+
+  # Pruning backups
+  borg prune -v --list \
+      $REPOSITORY \
+      --keep-yearly 1 \
+      --keep-monthly 3 \
+      --keep-weekly 4 \
+      --keep-daily 7
+
+  borg compact $REPOSITORY
+
+  # Perform tasks that will run after the backup here
+
+   ```
+  
+   </details>
+
 3. Save the repo keyfile under '/root/.config/borg/keys'
    - Edit permissions `chmod 400 /root/.config/borg/keys/...`
    - If .config folder is missing
