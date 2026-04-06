@@ -2,7 +2,7 @@
 title: README
 description: 
 published: true
-date: 2026-04-06T11:03:01.764Z
+date: 2026-04-06T11:55:00.719Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:21.180Z
@@ -137,30 +137,4 @@ N8N_SMTP_SENDER= # Email sender
 ...
 
 ## Backup recovery
-1. Create the container in Komodo and destroy it again.
-2. Note down the UID:GID, then wipe the volumes
-   <details><summary>Rootless Docker</summary>
-  
-   ```bash
-   ls /home/dockerd/.local/share/docker/volumes/n8n_data &&\
-   rm -rf /home/dockerd/.local/share/docker/volumes/n8n_data/_data
-   ```
-  
-   </details>
-   
-   <details><summary>Rootfull Docker</summary>
-  
-   ```bash
-   ls /var/lib/docker/volumes/n8n_data &&\
-   rm -rf /var/lib/docker/volumes/n8n_data/_data
-   ```
-  
-   </details>
-   
-3. Restore data using BorgBackup
-   ```bash
-   borg list ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>
-   ```
-   ```bash
-   borg extract ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>
-   ```
+[BorgBackup - Backup recovery](https://wiki-js-public.alion.host/en/tools/borgbackup#backup-recovery)
