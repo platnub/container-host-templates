@@ -2,7 +2,7 @@
 title: BorgBackup
 description: 
 published: true
-date: 2026-04-06T10:49:08.110Z
+date: 2026-04-06T11:49:01.754Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:00.087Z
@@ -84,9 +84,20 @@ Hosts that run containers that need to backup data to a central server
 
 > __Requirements:__
 > - Repository on a central server
-> - SSH private key for 'bkup' user saved as `/home/<hostname>/.ssh/bkup` using `chmod 600`
 <!-- {blockquote:.is-info} -->
 
+1. Create a bkup private key file at `/home/<hostname>/.ssh/bkup` and `chmod 600`
+
+2. Save the repo keyfile under '/root/.config/borg/keys'
+   - Edit permissions `chmod 400 /root/.config/borg/keys/...`
+   - If .config folder is missing
+     ```
+     sudo mkdir -p /root/.config/borg/keys && \
+     sudo mkdir -p /root/.config/borg/security && \
+     chmod 700 /root/.config -R
+     ```
+
+## Setup BorgBackup script
 
 1. Create a new script file. Make sure to name the script after the container.
    ```
@@ -157,15 +168,7 @@ Hosts that run containers that need to backup data to a central server
   
    </details>
 
-3. Save the repo keyfile under '/root/.config/borg/keys'
-   - Edit permissions `chmod 400 /root/.config/borg/keys/...`
-   - If .config folder is missing
-     ```
-     sudo mkdir -p /root/.config/borg/keys && \
-     sudo mkdir -p /root/.config/borg/security && \
-     chmod 700 /root/.config -R
-     ```
-5. Create a run schedule using CRON. Install CRON if necessary `apt update -y && apt upgrade -y && apt install cron -y`
+3. Create a run schedule using CRON. Install CRON if necessary `apt update -y && apt upgrade -y && apt install cron -y`
    ```
    sudo crontab -e
    ```
