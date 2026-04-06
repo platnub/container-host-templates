@@ -1,8 +1,8 @@
 ---
-title: README
+title: n8n
 description: 
 published: true
-date: 2026-04-06T11:55:00.719Z
+date: 2026-04-06T12:20:29.143Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:21.180Z
@@ -134,7 +134,24 @@ N8N_SMTP_SENDER= # Email sender
      - 'Settings > Usage plan'
 
 ## Create backups
-...
+[n8n backup guide](https://docs.n8n.io/embed/deployment/#backups)
+
+### Recommended
+
+- Run daily at 00:45
+```
+45 0 * * * /usr/local/bin/n8n.sh > /dev/null 2>&1
+```
+
+### Create
+```
+borg create -v --stats \
+    $REPOSITORY::n8n_'{now:%Y-%m-%d_%H:%M}' \
+    /var/lib/docker/volumes/n8n_data/_data \
+    --exclude /var/lib/docker/volumes/n8n_data/_data/crash.journal \
+    --exclude '/var/lib/docker/volumes/n8n_data/_data/database.sqlite*' \
+    --exclude '/var/lib/docker/volumes/n8n_data/_data/n8nEventLog*.log'
+```
 
 ## Backup recovery
 [BorgBackup - Backup recovery](https://wiki-js-public.alion.host/en/tools/borgbackup#backup-recovery)
