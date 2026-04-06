@@ -2,7 +2,7 @@
 title: BorgBackup
 description: 
 published: true
-date: 2026-04-06T11:57:48.676Z
+date: 2026-04-06T11:58:53.486Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:00.087Z
@@ -182,8 +182,8 @@ Hosts that run containers that need to backup data to a central server
    <details><summary>Rootless Docker</summary>
   
    ```bash
-   ls /home/dockerd/.local/share/docker/volumes/n8n_data &&\
-   rm -rf /home/dockerd/.local/share/docker/volumes/n8n_data/_data/*
+   ls /home/dockerd/.local/share/docker/volumes/<container_volume> &&\
+   rm -rf /home/dockerd/.local/share/docker/volumes/<container_volume>/_data/*
    ```
   
    </details>
@@ -191,8 +191,8 @@ Hosts that run containers that need to backup data to a central server
    <details><summary>Rootfull Docker</summary>
   
    ```bash
-   ls /var/lib/docker/volumes/n8n_data &&\
-   rm -rf /var/lib/docker/volumes/n8n_data/_data/*
+   ls /var/lib/docker/volumes/<container_volume> &&\
+   rm -rf /var/lib/docker/volumes/<container_volume>/_data/*
    ```
   
    </details>
