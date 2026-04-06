@@ -2,7 +2,7 @@
 title: BorgBackup
 description: 
 published: true
-date: 2026-04-06T12:06:24.249Z
+date: 2026-04-06T12:09:15.336Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:00.087Z
@@ -209,3 +209,5 @@ Hosts that run containers that need to backup data to a central server
    cd / && \
    borg extract ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>::<ARCHIVE>
    ```
+
+     4. Restore the UID:GID permissions recursively using IDs noted down in step 2
