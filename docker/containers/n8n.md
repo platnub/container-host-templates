@@ -2,7 +2,7 @@
 title: n8n
 description: 
 published: true
-date: 2026-04-06T12:20:29.143Z
+date: 2026-04-06T12:34:34.558Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:21.180Z
@@ -136,6 +136,8 @@ N8N_SMTP_SENDER= # Email sender
 ## Create backups
 [n8n backup guide](https://docs.n8n.io/embed/deployment/#backups)
 
+[Setup BorgBackup Script](https://wiki-js-public.alion.host/en/tools/borgbackup#setup-borgbackup-script)
+
 ### Recommended
 
 - Run daily at 00:45
@@ -144,7 +146,23 @@ N8N_SMTP_SENDER= # Email sender
 ```
 
 ### Create
+
+<details><summary>Rootless Docker</summary>
+  
+```bash
+borg create -v --stats \
+    $REPOSITORY::n8n_'{now:%Y-%m-%d_%H:%M}' \
+    /home/dockerd/.local/share/docker/volumes/n8n_data/_data \
+    --exclude /home/dockerd/.local/share/docker/volumes/n8n_data/_data/crash.journal \
+    --exclude '/home/dockerd/.local/share/docker/volumes/n8n_data/_data/database.sqlite*' \
+    --exclude '/home/dockerd/.local/share/docker/volumes/n8n_data/_data/n8nEventLog*.log'
 ```
+  
+</details>
+   
+<details><summary>Rootfull Docker</summary>
+  
+```bash
 borg create -v --stats \
     $REPOSITORY::n8n_'{now:%Y-%m-%d_%H:%M}' \
     /var/lib/docker/volumes/n8n_data/_data \
@@ -152,6 +170,8 @@ borg create -v --stats \
     --exclude '/var/lib/docker/volumes/n8n_data/_data/database.sqlite*' \
     --exclude '/var/lib/docker/volumes/n8n_data/_data/n8nEventLog*.log'
 ```
+  
+</details>
 
 ## Backup recovery
 [BorgBackup - Backup recovery](https://wiki-js-public.alion.host/en/tools/borgbackup#backup-recovery)
