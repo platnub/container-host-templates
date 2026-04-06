@@ -2,7 +2,7 @@
 title: BorgBackup
 description: 
 published: true
-date: 2026-04-06T11:49:01.754Z
+date: 2026-04-06T11:54:14.604Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:00.087Z
@@ -173,3 +173,38 @@ Hosts that run containers that need to backup data to a central server
    sudo crontab -e
    ```
    - Append (example!!) `0 0 * * * /usr/local/bin/<container>.sh > /dev/null 2>&1`
+
+## Backup recovery
+
+
+1. Create the container in Komodo and destroy it again.
+2. Connect to the container host using SSH, note down the UID:GID, then wipe the volumes
+   <details><summary>Rootless Docker</summary>
+  
+   ```bash
+   ls /home/dockerd/.local/share/docker/volumes/n8n_data &&\
+   rm -rf /home/dockerd/.local/share/docker/volumes/n8n_data/_data
+   ```
+  
+   </details>
+   
+   <details><summary>Rootfull Docker</summary>
+  
+   ```bash
+   ls /var/lib/docker/volumes/n8n_data &&\
+   rm -rf /var/lib/docker/volumes/n8n_data/_data
+   ```
+  
+   </details>
+   
+3. Restore data using BorgBackup
+   ```bash
+      export BORG_RSH="ssh -i /home/<hostname>/.ssh/bkup" &&\
+   export BORG_PASSPHRASE="" &&\
+   borg list ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>
+   ```
+   ```bash
+      export BORG_RSH="ssh -i /home/<hostname>/.ssh/bkup" &&\
+   export BORG_PASSPHRASE="" &&\
+   borg extract ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>
+   ```
