@@ -2,7 +2,7 @@
 title: n8n
 description: 
 published: true
-date: 2026-04-06T12:34:34.558Z
+date: 2026-04-06T12:34:46.134Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:21.180Z
@@ -136,7 +136,7 @@ N8N_SMTP_SENDER= # Email sender
 ## Create backups
 [n8n backup guide](https://docs.n8n.io/embed/deployment/#backups)
 
-[Setup BorgBackup Script](https://wiki-js-public.alion.host/en/tools/borgbackup#setup-borgbackup-script)
+[Setup BorgBackup Script](/tools/borgbackup#setup-borgbackup-script)
 
 ### Recommended
 
