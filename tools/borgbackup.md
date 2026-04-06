@@ -2,7 +2,7 @@
 title: BorgBackup
 description: 
 published: true
-date: 2026-04-06T11:58:53.486Z
+date: 2026-04-06T12:03:50.163Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:02:00.087Z
@@ -182,7 +182,7 @@ Hosts that run containers that need to backup data to a central server
    <details><summary>Rootless Docker</summary>
   
    ```bash
-   ls /home/dockerd/.local/share/docker/volumes/<container_volume> &&\
+   ls -l /home/dockerd/.local/share/docker/volumes/<container_volume> &&\
    rm -rf /home/dockerd/.local/share/docker/volumes/<container_volume>/_data/*
    ```
   
@@ -191,7 +191,7 @@ Hosts that run containers that need to backup data to a central server
    <details><summary>Rootfull Docker</summary>
   
    ```bash
-   ls /var/lib/docker/volumes/<container_volume> &&\
+   ls -l /var/lib/docker/volumes/<container_volume> &&\
    rm -rf /var/lib/docker/volumes/<container_volume>/_data/*
    ```
   
@@ -206,5 +206,5 @@ Hosts that run containers that need to backup data to a central server
    ```bash
       export BORG_RSH="ssh -i /home/<hostname>/.ssh/bkup" &&\
    export BORG_PASSPHRASE="" &&\
-   borg extract ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>
+   borg extract ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>::<ARCHIVE>
    ```
