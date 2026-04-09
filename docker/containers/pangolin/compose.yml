@@ -99,7 +99,7 @@ services:
       test:
         - CMD
         - cscli
-        - capi
+        - lapi
         - status
       timeout: 5s
       start_period: 30s
