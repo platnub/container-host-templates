@@ -2,7 +2,7 @@
 title: Home
 description: 
 published: true
-date: 2026-04-05T21:19:25.212Z
+date: 2026-04-12T15:19:58.960Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:01:51.322Z
@@ -35,18 +35,22 @@ dateCreated: 2026-04-05T21:01:51.322Z
 
 # Host overview
 
-- External
+- External DMZ
    - pangolin-core
 - DMZ vlan 90
    - dmz-public
-   - dmz-gaming
-   - dmz-media
-   - dmz-frontend
-   - dmz-information
-   - dmz-authentik
 - Services vlan 20
+   - authentik
+   - nextcloud
    - media
-   - backend
+   - media-backend
+   - automation
+   - automation-backend
+   - information
+   - gaming
+- Proxmox vlan 9
+   - proxmox
+- Komodo vlan 8
    - komodo-core
 
 # Containers
