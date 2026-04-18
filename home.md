@@ -2,7 +2,7 @@
 title: Home
 description: 
 published: true
-date: 2026-04-12T15:19:58.960Z
+date: 2026-04-18T20:31:58.415Z
 tags: 
 editor: markdown
 dateCreated: 2026-04-05T21:01:51.322Z
@@ -102,6 +102,7 @@ Install containers
   - [n8n - Automation workflow platform](/docker/containers/n8n/README.md)
   - [OpenWebUI - AI agent dashboard](/docker/containers/openwebui/README.md)
   - [SearXNG - Metasearch engine](/docker/containers/searxng/README.md)
+  - [Wolfram](/docker/containers/wolfram/README.md)
 
 # Resource Requirements
 
