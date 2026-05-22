@@ -1,6 +1,6 @@
 # Manuals
 ## Installation
-1. Create stack in Komodo using [compose.yml](compose.yml) and [.env](.env)
+1. Create and deploy the stack in Komodo using [compose.yml](compose.yml) and [.env](.env)
 2. Run the following through the Komodo terminal
    ```
    mkdir /media/downloads/sabnzbd/complete -p && \
@@ -15,6 +15,7 @@
    mkdir music
    ```
 3. Run this command on the Docker host
+     - First, from the Komodo terminal run `which python3` and replace the path at the start of the script files with the correct python3 path.
      - Import the scripts from the [TRaSH Guides](https://trash-guides.info/Downloaders/SABnzbd/scripts/)
        ```
        cd /var/lib/docker/volumes/sabnzbd_sabnzbd.scripts/_data && \
