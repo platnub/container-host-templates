@@ -199,12 +199,12 @@ Hosts that run containers that need to backup data to a central server
    
 3. Restore data using BorgBackup
    ```bash
-      export BORG_RSH="ssh -i /home/<hostname>/.ssh/bkup" && \
+   export BORG_RSH="ssh -i /home/<hostname>/.ssh/bkup" && \
    export BORG_PASSPHRASE="" && \
    borg list ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>
    ```
    ```bash
-      export BORG_RSH="ssh -i /home/<hostname>/.ssh/bkup" && \
+   export BORG_RSH="ssh -i /home/<hostname>/.ssh/bkup" && \
    export BORG_PASSPHRASE="" && \
    cd / && \
    borg extract ssh://bkup@<BACKUP_HOST>:<BACKUP_PORT><BACKUP_PATH>::<ARCHIVE>
