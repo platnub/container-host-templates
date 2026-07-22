@@ -54,4 +54,5 @@
       - OAuth2 provider 'OpenID Connect'
       - Icon URL: `https://authentik.example.com/static/dist/assets/icons/icon.png`
       - OpenID Connect Auto Discovery URL: `https://authentik.example.com/application/o/forgejo/.well-known/openid-configuration`
+      - Enable: 'Skip local 2FA'
       - Additional Scopes: `email profile`
