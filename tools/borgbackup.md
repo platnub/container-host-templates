@@ -147,7 +147,7 @@ Hosts that run containers that need to backup data to a central server
       $REPOSITORY::<container>_'{now:%Y-%m-%d_%H:%M}' \
       /var/lib/docker/volumes/example/_data \
       /var/lib/docker/volumes/example2/_data \
-      --exclude /var/lib/docker/volumes/example/_data/exclude
+      --exclude /var/lib/docker/volumes/example/_data/exclude \
       --exclude /var/lib/docker/volumes/example2/_data/exclude
 
   echo "###### Backup ended: $(date) ######"
