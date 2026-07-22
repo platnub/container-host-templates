@@ -8,9 +8,9 @@
 
 ## Recommended
 
-- Run daily at 00:50
+- Run daily at 00:45
 ```
-50 0 * * * /usr/local/bin/sonarr.sh > /dev/null 2>&1
+45 0 * * * /usr/local/bin/sonarr.sh > /dev/null 2>&1
 ```
 
 ## Extra variables
