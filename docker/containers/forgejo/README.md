@@ -30,8 +30,6 @@
 1. Deploy the stack in Komodo using the [compose.yml](compose.yml) and [.env](.env)
 2. Setup the Pangolin resource
 3. During the initial setup most can stay default
-   - Server and third-party service settings
-      - Disable: 'Enable OpenID sign-in'
    - Administrator account settings
       - Administrator username: _<Same as Authentik admin (ahadmin)>_
       - Email: _<Same as Authentik admin (ahadmin)>_
