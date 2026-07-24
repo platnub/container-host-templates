@@ -15,12 +15,21 @@
    ```
    parted
    ```
+
 - List all the devices
   ```
   print devices
   # More cluttered but can view size
   print all
   ```
+
+- Resize partition to fill disk
+  ```
+  parted
+  print
+  resizedisk <disk number> 100%
+  ```
+
 
 ## intel-gpu-tools
 
