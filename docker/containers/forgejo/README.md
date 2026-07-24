@@ -68,6 +68,16 @@
             uuid: 8d845614-3b25-46d8-8817-0e3873010337
             token: af82655f1a13bbd4acc0b9aa7ff8452943f5f567
       ```
+5. Modify value `labels: []` to:
+   ```
+     labels:
+       - ubuntu-latest:docker:ghcr.io/catthehacker/ubuntu:runner-latest
+       - ubuntu-22.04:docker:ghcr.io/catthehacker/ubuntu:runner-22.04
+       - ubuntu-20.04:docker:ghcr.io/catthehacker/ubuntu:runner-20.04
+   ```
+6. Modify value `privileged` to `privileged: true`
+7. Modify value `docker_host` to `docker_host: "tcp://docker-in-docker:2375"`
+
 ## SSO Authentik setup [_source_](https://integrations.goauthentik.io/development/forgejo/)
 1. Login to Authentik as administrator and open Admin interface
    -  Create Authentik Application with Provider
