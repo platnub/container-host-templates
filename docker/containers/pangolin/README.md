@@ -112,11 +112,10 @@
 > Replace example.com
 
 10. Configure wildcard certificates using instructions from [Pangolin docs - Wildcard domain](https://docs.pangolin.net/self-host/advanced/wild-card-domains)
-
-   ```
-   cd /opt/docker/pangolin
-   sed -i '$!N;s/^      httpChallenge:\n        entryPoint: web$/      dnsChallenge:\n        provider: "cloudflare"/;P;D' ./appdata/config/traefik/traefik_config.yml
-   ```
+    ```
+    cd /opt/docker/pangolin
+    sed -i '$!N;s/^      httpChallenge:\n        entryPoint: web$/      dnsChallenge:\n        provider: "cloudflare"/;P;D' ./appdata/config/traefik/traefik_config.yml
+    ```
 
 11. Get a Cloudflare API token and set it as `CLOUDFLARE_DNS_API_TOKEN` in the .env file.
 
@@ -126,7 +125,6 @@
     - Specify domain or All domains
 
 12. Add these 2 lines to the domain in the Pangolin `./appdata/config/config.yml` file
-
     ```diff
     domains:
         domain1:
@@ -137,11 +135,10 @@
     ```
 
 13. Edit the Traefik dynamic_config.yml file for wildcards and replace `example.com`
-
-   ```
-   cd /opt/docker/pangolin
-   sed -i '/^      tls:$/{N;s/^      tls:\n        certResolver: letsencrypt$/&\n        domains:\n          - main: "example.com"\n            sans:\n              - "*.example.com"/}' ./appdata/config/traefik/dynamic_config.yml
-   ```
+    ```
+    cd /opt/docker/pangolin
+    sed -i '/^      tls:$/{N;s/^      tls:\n        certResolver: letsencrypt$/&\n        domains:\n          - main: "example.com"\n            sans:\n              - "*.example.com"/}' ./appdata/config/traefik/dynamic_config.yml
+    ```
 
 14. Deploy the stack and check if it starts without issues
 15. Read the Setup Token from the Pangolin container log and go to https://pangolin.example.com/auth/initial-setup
