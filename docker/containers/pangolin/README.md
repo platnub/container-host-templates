@@ -139,7 +139,8 @@
 13. Edit the Traefik dynamic_config.yml file for wildcards and replace `example.com`
 
    ```
-   sed -i '/^      tls:$/{N;s/^      tls:\n        certResolver: letsencrypt$/&\n        domains:\n          - main: "example.com"\n            sans:\n              - "*.example.com"/}' traefik.yml
+   cd /opt/docker/pangolin
+   sed -i '/^      tls:$/{N;s/^      tls:\n        certResolver: letsencrypt$/&\n        domains:\n          - main: "example.com"\n            sans:\n              - "*.example.com"/}' ./appdata/config/traefik/dynamic_config.yml
    ```
 
 14. Deploy the stack and check if it starts without issues
