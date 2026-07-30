@@ -61,6 +61,8 @@ services:
     depends_on:
       pangolin:
         condition: service_healthy
+    environment:
+      CLOUDFLARE_DNS_API_TOKEN: $CLOUDFLARE_DNS_API_TOKEN
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
