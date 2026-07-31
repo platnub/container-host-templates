@@ -1,6 +1,11 @@
-# Info
- - Pangolin connection: https://authentik:9443
-   - Leave unprotected
+# Pangolin Resource configuration
+- Proxy
+  - Target
+    - Method: 'https'
+    - IP / Hostname: `authentik`
+    - Port: `443`
+- Authentication
+  - Use Platform SSO: Disabled
 
 # Instructions
 1. Create stack in Komodo using [compose.yml](https://github.com/platnub/titan-server/blob/main/docker/containers/authentik/compose.yml) and [.env](https://github.com/platnub/titan-server/blob/main/docker/containers/authentik/.env)
