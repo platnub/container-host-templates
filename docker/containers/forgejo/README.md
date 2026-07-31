@@ -17,8 +17,8 @@
 >    - reservations:
 >       - cpus: '1.00'
 >       - memory: 1G
->     
-> ** Pangolin resource**
+> 
+> **Pangolin resource**
 > - **Target**
 >    - Protocol: 'http'
 >    - Address: `forgejo`
