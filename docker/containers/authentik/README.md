@@ -3,7 +3,7 @@
   - Target
     - Method: 'https'
     - IP / Hostname: `authentik`
-    - Port: `443`
+    - Port: `9443`
 - Authentication
   - Use Platform SSO: Disabled
 
