@@ -1,6 +1,6 @@
 # Useful Commands
 ## Update Komodo Periphery agent (NOT CORE)
-```
+```bash
 sudo -u komodo bash -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'
 chown -R komodo:komodo /home/komodo &&\
 systemctl --user -M komodo@ restart periphery &&\
@@ -8,8 +8,19 @@ systemctl --user -M komodo@ status periphery
 ```
 
 ## Update Komodo Core
-```
+```bash
 docker compose -p komodo -f /opt/docker/komodo/compose.yml --env-file /opt/docker/komodo/.env up -d --force-recreate
+```
+
+## Uninstall Komodo Periphery
+```bash
+systemctl --user -M dockerd@ stop periphery
+systemctl --user -M dockerd@ disable periphery
+rm -f /home/dockerd/.config/systemd/user/periphery.service
+systemctl --user -M dockerd@ daemon-reload
+systemctl --user -M dockerd@ reset-failed
+rm -f /home/dockerd/.local/bin/periphery
+rm -f /home/dockerd/.config/komodo/periphery.config.toml
 ```
 
 # Requirements
