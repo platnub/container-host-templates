@@ -22,6 +22,6 @@
     - Match Type: 'Path'
     - Value: `/admin/*`
   - Priority: `2`
-    - Action: 'Always Allow'
+    - Action: 'Bypass Auth'
     - Match Type: 'Path'
     - Value: `/*`
