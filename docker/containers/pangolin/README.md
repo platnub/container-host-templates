@@ -146,10 +146,15 @@
 14. Deploy the stack and check if it starts without issues
 15. Read the Setup Token from the Pangolin container log and go to https://pangolin.example.com/auth/initial-setup
 16. Create an admin account and continue by creating an organisation with default settings
-
-ℹ️ Continue using instructions from [HHF Technology Forum](https://forum.hhf.technology/t/crowdsec-manager-for-pangolin-user-guide/579)
-
-10. ```
+17. Add a new site and choose 'Local'. Call it `Pangolin`
+18. Add a new public resource for Crowdsec
+    - Site: `Pangolin`
+    - Protocol: `http`
+    - Address: `crowdsec-manager`
+    - Port: `8080`
+    - Enable authentication
+19. Setup Crowdsec using instructions from [HHF Technology Forum](https://forum.hhf.technology/t/crowdsec-manager-for-pangolin-user-guide/579)
+    ```
     cd /opt/docker/pangolin-core/appdata
     curl -o setup_crowdsec_manager.sh https://gist.githubusercontent.com/hhftechnology/aadadf48ac906fc38cfd0d7088980475/raw/0a384d518e74c9963a51fcfb60d5ef5bccf9f645/setup_crowdsec_manager.sh
     chmod +x setup_crowdsec_manager.sh
