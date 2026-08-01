@@ -11,6 +11,15 @@
 >       - cpus: '1.00'
 >       - memory: 6G
 
+# Pangolin Resource configuration
+- Proxy
+  - Target
+    - Method: 'http'
+    - IP / Hostname: `jellyfin`
+    - Port: `8096`
+- Authentication
+  - Use Platform SSO: Disabled
+
 # Useful links
  - [Collection of Plugins & Themes](https://github.com/awesome-jellyfin/awesome-jellyfin)
 
