@@ -32,7 +32,7 @@
   - Use Platform SSO: Enabled
 - Rules
   - Priority: `1`
-    - Action: 'Always Allow'
+    - Action: 'Bypass Auth'
     - Match Type: 'Path'
     - Value: `/api/v3/indexer/*`
 ## Series Anime Sonarr
@@ -45,7 +45,7 @@
   - Use Platform SSO: Enabled
 - Rules
   - Priority: `1`
-    - Action: 'Always Allow'
+    - Action: 'Bypass Auth'
     - Match Type: 'Path'
     - Value: `/api/v3/indexer/*`
 ## Series DE Sonarr
@@ -58,7 +58,7 @@
   - Use Platform SSO: Enabled
 - Rules
   - Priority: `1`
-    - Action: 'Always Allow'
+    - Action: 'Bypass Auth'
     - Match Type: 'Path'
     - Value: `/api/v3/indexer/*`
 
