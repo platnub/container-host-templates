@@ -1038,7 +1038,7 @@ if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
   systemctl --user -M dockerd@ restart docker.service
   reboot -f" >/dev/null 2>&1 || true
   if [ "$CONFIGURE_KOMODO" = "yes" ]; then
-    virt-customize -q -a "$WORK_FILE" --firstboot-command "sed -i '0,/^Environment=/ { /^Environment=/ s#$# DOCKER_HOST=unix:///run/user/1337/docker.sock# }' /home/dockerd/.config/systemd/user/periphery.service &&\
+    virt-customize -q -a "$WORK_FILE" --firstboot-command "sed -i '0,/^Environment=/ { /^Environment=/ s#\$# DOCKER_HOST=unix:///run/user/1337/docker.sock# }' /home/dockerd/.config/systemd/user/periphery.service &&\
     systemctl --user -M dockerd@ daemon-reload &&\
     systemctl --user -M dockerd@ restart periphery.service" >/dev/null 2>&1 || true
   fi
