@@ -40,18 +40,18 @@ dateCreated: 2026-04-05T21:01:51.322Z
 - DMZ vlan 90
    - dmz-public
 - Services vlan 20
-   - authentik
-   - nextcloud
-   - media
-   - media-backend
-   - automation
-   - automation-backend
-   - information
-   - gaming
-- Proxmox vlan 9
-   - proxmox
-- Komodo vlan 8
+   - 10 authentik
+   - 20 nextcloud
+   - 30 media
+   - 40 media-backend
+   - 50 automation
+   - 60 automation-backend
+   - 70 information
+   - 80 gaming
+- Komodo vlan 6
    - komodo-core
+- Proxmox vlan 5
+   - proxmox
 
 # Containers
 Install containers
