@@ -273,7 +273,8 @@ function select_timezone() {
 function select_komodo() {
   CONFIGURE_KOMODO="no"
   KOMODO_ALLOWED_IPS=""
-  KOMODO_PUBLIC_KEY=""
+  KOMODO_CORE_ADDRESS=""
+  KOMODO_ONBOARDING_KEY=""
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "KOMODO CONFIGURATION" \
     --yesno "Do you want to configure Komodo?\n\nThis will:\n- Create a Komodo user\n- Configure Komodo settings\n- Open port 8120 in UFW firewall\n- Install Komodo" 12 68); then
@@ -299,15 +300,30 @@ function select_komodo() {
       fi
     done
 
-    # Ask for Komodo Core Public Key (required)
+    # Ask for Komodo Core Address (required)
     while true; do
-      if KOMODO_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Core Public Key\n\nThis is used for authentication with Komodo Core." 10 68 "" --title "KOMODO CORE PUBLIC KEY" 3>&1 1>&2 2>&3); then
-        if [ -z "$KOMODO_KEY_INPUT" ]; then
-          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Komodo Core Public Key is required." 8 58
+      if KOMODO_CORE_ADDRESS_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Core Address\n\nThis is the URL of your Komodo Core instance.\nExample: https://1.2.3.4:56789" 10 68 "" --title "KOMODO CORE ADDRESS" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_CORE_ADDRESS_INPUT" ]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Komodo Core Address is required." 8 58
           continue
         fi
-        KOMODO_PUBLIC_KEY="$KOMODO_KEY_INPUT"
-        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Public Key: ${BGN}Configured${CL}"
+        KOMODO_CORE_ADDRESS="$KOMODO_CORE_ADDRESS_INPUT"
+        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Core Address: ${BGN}${KOMODO_CORE_ADDRESS}${CL}"
+        break
+      else
+        exit-script
+      fi
+    done
+
+    # Ask for Komodo Onboarding Key (required)
+    while true; do
+      if KOMODO_ONBOARDING_KEY_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter Komodo Onboarding Key\n\nThis is used to onboard this Periphery agent to Komodo Core." 10 68 "" --title "KOMODO ONBOARDING KEY" 3>&1 1>&2 2>&3); then
+        if [ -z "$KOMODO_ONBOARDING_KEY_INPUT" ]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Komodo Onboarding Key is required." 8 58
+          continue
+        fi
+        KOMODO_ONBOARDING_KEY="$KOMODO_ONBOARDING_KEY_INPUT"
+        echo -e "${DEFAULT}${BOLD}${DGN}Komodo Onboarding Key: ${BGN}Configured${CL}"
         break
       else
         exit-script
@@ -973,7 +989,6 @@ if [ "$CONFIGURE_KOMODO" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*root_directory =.*|root_directory = \"/home/dockerd/periphery\"|' /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*allowed_ips =.*|allowed_ips = \[${KOMODO_ALLOWED_IPS}\]|' /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*stack_dir =.*|stack_dir = \"/opt/docker\"|' /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^#*\s*core_public_keys =.*|core_public_keys = \"$KOMODO_PUBLIC_KEY\"|' /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "chown -R dockerd:dockerd /home/dockerd" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "chmod -R 700 /home/dockerd/.config/komodo" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "chmod -R 600 /home/dockerd/.config/komodo/periphery.config.toml" >/dev/null 2>&1 || true
@@ -1010,7 +1025,7 @@ msg_ok "Resized disk image"
 
 # Setup Komodo
 if [ "$CONFIGURE_KOMODO" = "yes" ]; then
-  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell dockerd@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user' &&\
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell dockerd@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user --core-address=\"${KOMODO_CORE_ADDRESS}\" --connect-as=\"${HN}\" --onboarding-key=\"${KOMODO_ONBOARDING_KEY}\"' &&\
   chown dockerd:dockerd -R /home/dockerd &&\
   systemctl --user -M dockerd@ enable periphery &&\
   loginctl enable-linger dockerd" >/dev/null 2>&1 || true
