@@ -43,11 +43,11 @@ dateCreated: 2026-04-05T21:01:51.322Z
    - 10 authentik
    - 20 nextcloud
    - 30 media
-   - 40 media-backend
-   - 50 automation
-   - 60 automation-backend
-   - 70 information
-   - 80 gaming
+   - 31 media-backend
+   - 40 automation
+   - 41 automation-backend
+   - 50 information
+   - 60 gaming
 - Komodo vlan 6
    - komodo-core
 - Proxmox vlan 5
