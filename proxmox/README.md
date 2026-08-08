@@ -31,6 +31,17 @@
   ```
 
 
+## Storage usage
+
+- Install
+  ```
+  apt install ncdu -y
+  ```
+- Exclude
+  ```
+  ncdu --exclude /bla/blabla
+  ```
+
 ## intel-gpu-tools
 
 Intel GPU testing
