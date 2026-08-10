@@ -148,24 +148,52 @@
 16. Create an admin account and continue by creating an organisation with default settings
 17. Add a new site and choose 'Local'. Call it `Pangolin`
 18. Add a new public resource for Crowdsec
+    - Subdomain: `crowdsec`
     - Site: `Pangolin`
     - Protocol: `http`
     - Address: `crowdsec-manager`
     - Port: `8080`
     - Enable authentication
-19. Setup Crowdsec using instructions from [HHF Technology Forum](https://forum.hhf.technology/t/crowdsec-manager-for-pangolin-user-guide/579)
-    ```
-    cd /opt/docker/pangolin-core/appdata
-    curl -o setup_crowdsec_manager.sh https://gist.githubusercontent.com/hhftechnology/aadadf48ac906fc38cfd0d7088980475/raw/0a384d518e74c9963a51fcfb60d5ef5bccf9f645/setup_crowdsec_manager.sh
-    chmod +x setup_crowdsec_manager.sh
-    ./setup_crowdsec_manager.sh
-    ```
- - Option 7:
-   - **Recommended** Option 01: Whitelist current public IP (Whitelist in both Crowdsec and Traefik)
-   - **Recommended** Option 02: Whitelist a specific IP (Add any home addresses. Whitelist in both Crowdsec and Traefik)
- - **Recommended** Option 10: Enroll with CrowdSec console (Login in to the [CrowdSec console](https://app.crowdsec.net/) and get the string from the "Connect with console" command at the bottom
+19. 
+20. Go to 'https://crowdsec.example.com' and configure CrowdSec
+    1. Add Allowlist and Whitelist
+       1. Go to 'Allowlists' in the left menu
+       2. Add the public IP address of any connected Pangolin sites.
+       3. Go to 'Whitelist' in the left menu
+       4. Add the public IP address of any connected Pangolin sites.
+    2. Enroll CrowdSec Security Engine
+       1. Login at https://crowdsec.net
+       2. Top right, next to profile picture: Click the + and choose 'Enroll a Sec.Engine'
+       3. Copy the enroll key
+       4. In the CrowdSec dashobard, top right: Click the red shield and choose 'Enroll CrowdSec'
+       5. Fill in the enroll key
+       6. Go back to https://crowdsec.net and 'Accept enroll'
+    3. Configure Cloudflare Turnstile key
+       1. Go to https://cloudflare.com and login
+       2. Go to 'Application security > Turnstile'
+       3. Add widget manually
+          - Widget name: `CrowdSec`
+          - Select the correct hostname
+          - Widget Mode: 'Managed'
+          - Enable 'Skip future security rule challenges for verified visitors'
+          - Pre-clearance level: 'Interactive (high)'
+       4. In the left menu go to 'Captcha'
+       5. Go to Configure by clicking 'Next'
+          - Paste Site key & Secret key from Cloudflare
+       6. Save & Continue to Apply
+       7. Apply Now
+       8. Complete
+
+
+
+
+
+
+
+
+
+19.
  - **Recommended** Option 11: Set up custom scenarios
- - **Recommended** Option 12: Set up captcha protections (Get an API key from [Cloudflare Turnstile](https://dash.cloudflare.com/). Make it "Non-interactive")
 
 11. Destroy the stack in Komodo
 
