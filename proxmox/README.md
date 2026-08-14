@@ -27,7 +27,7 @@
   ```
   parted
   print
-  resizedisk <disk number> 100%
+  resizepart <disk number> 100%
   ```
 
 
