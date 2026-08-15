@@ -40,3 +40,12 @@ cd /home/komodo
 curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user
 systemctl --user status periphery
 ```
+
+# Create Docker volume with NFS share on rootless host
+
+1. Set environment variable for Docker socket location
+   ```bash
+   ls -l /run/user/$(id -u)/docker.sock # Check it exists
+   export DOCKER_HOST=unix:///run/user/1337/docker.sock # Set Environment Variable
+   echo 'export DOCKER_HOST=unix:///run/user/1337/docker.sock' >> ~/.bashrc # Make persistent across sessions
+   ```
