@@ -41,20 +41,83 @@ curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-p
 systemctl --user status periphery
 ```
 
-# Create Docker volume with NFS share on rootless host
+# Configure Docker service to wait for NFS mount
 
-1. Set environment variable for Docker socket location
+1. Install NFS
+   ```
+   apt install nfs-common -y
+   ```
+2. Create NFS directory. Edit `<NFS MOUNT NAME>`
    ```bash
-   ls -l /run/user/$(id -u)/docker.sock # Check it exists
-   export DOCKER_HOST=unix:///run/user/1337/docker.sock # Set Environment Variable
-   echo 'export DOCKER_HOST=unix:///run/user/1337/docker.sock' >> ~/.bashrc # Make persistent across sessions
+   mkdir -p /nfs/<NFS MOUNT NAME>
    ```
    
-2. Create NFS Docker volume
+3. Create NFS mount
+   - `<NFS server IP>`: IP address of NFS server
+   - `<NFS mount>`: NFS /Mount on NFS server
+   - `<NFS MOUNT NAME>`: Local NFS mount directory
    ```bash
-   docker volume create --driver local \
-     --opt type=nfs \
-     --opt o=addr=10.0.20.200,soft,nfsvers=4,anongid=100,anonuid=100 \
-     --opt device=:/Media \
-     media # Volume name
+   sudo tee /etc/systemd/system/nfs-<NFS MOUNT NAME>.mount > /dev/null <<'EOF'
+   [Unit]
+   Description=NFS mount for <NFS MOUNT NAME> (Docker)
+   After=network-online.target
+   Wants=network-online.target
+   
+   [Mount]
+   What=<NFS server IP>:/<NFS mount>
+   Where=/nfs/<NFS MOUNT NAME>
+   Type=nfs
+   Options=rw,soft,nfsvers=4,_netdev
+   
+   [Install]
+   WantedBy=multi-user.target
+   EOF
+   ```
+
+4. Reload daemon and enable script. Edit `<NFS MOUNT NAME>`
+   ```
+   systemctl daemon-reload
+   systemctl enable --now nfs-<NFS MOUNT NAME>.mount
+   ```
+
+5. Create 'wait for mount' script
+   ```
+   sudo tee /usr/local/bin/wait-for-mount.sh > /dev/null <<'EOF'
+   #!/bin/bash
+   # Usage: wait-for-mount.sh <target-path> [timeout-seconds]
+   TARGET="$1"
+   TIMEOUT="${2:-60}"
+   COUNT=0
+   
+   if [ -z "$TARGET" ]; then
+     echo "ERROR: no target path given"
+     exit 1
+   fi
+   
+   while ! mountpoint -q "$TARGET" && [ "$COUNT" -lt "$TIMEOUT" ]; do
+     echo "Waiting for $TARGET to be mounted... ($COUNT/$TIMEOUT)"
+     sleep 1
+     COUNT=$((COUNT+1))
+   done
+   
+   if ! mountpoint -q "$TARGET"; then
+     echo "ERROR: $TARGET not mounted after ${TIMEOUT}s"
+     exit 1
+   fi
+   
+   echo "$TARGET is mounted."
+   exit 0
+   EOF
+   ```
+6. Make script executable and make the Docker service wait for it.  Edit `<NFS MOUNT NAME>`
+   ```
+   chmod +x /usr/local/bin/wait-for-mount.sh
+   machinectl shell dockerd@ /bin/bash -c '
+   mkdir -p ~/.config/systemd/user/docker.service.d
+   cat > ~/.config/systemd/user/docker.service.d/wait-for-nfs.conf <<EOF
+   [Service]
+   ExecStartPre=/usr/local/bin/wait-for-mount.sh /nfs/<NFS MOUNT NAME> 60
+   EOF'
+   systemctl --user -M dockerd@ daemon-reload
+   systemctl --user -M dockerd@ restart docker
    ```
