@@ -49,3 +49,12 @@ systemctl --user status periphery
    export DOCKER_HOST=unix:///run/user/1337/docker.sock # Set Environment Variable
    echo 'export DOCKER_HOST=unix:///run/user/1337/docker.sock' >> ~/.bashrc # Make persistent across sessions
    ```
+   
+2. Create NFS Docker volume
+   ```bash
+   docker volume create --driver local \
+     --opt type=nfs \
+     --opt o=addr=10.0.20.200,soft,nfsvers=4,anongid=100,anonuid=100 \
+     --opt device=:/Media \
+     media # Volume name
+   ```
