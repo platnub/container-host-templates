@@ -48,7 +48,7 @@ Intel GPU testing
 
 - Install intel-gpu-tools
   ```
-  apt update && apt upgrade -y && apt install -y intel-gpu-tools
+  apt update && apt install -y intel-gpu-tools
   ```
 - Check GPU status
   ```
