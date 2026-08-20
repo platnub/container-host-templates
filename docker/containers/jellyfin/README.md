@@ -27,7 +27,6 @@
  - [Jellyfin SSO Plugin](https://github.com/9p4/jellyfin-plugin-sso/)
  - [Intro Skipper](https://github.com/intro-skipper/intro-skipper)
  - [BetterMix](https://github.com/StergiosBinopoulos/jellyfin-plugin-bettermix)
- - [Subtitle extractor](https://github.com/Zeryther/jellyfin-extract-subtitles-docker)
 
 ## Themes
  - [Finity](https://github.com/prism2001/finity)
