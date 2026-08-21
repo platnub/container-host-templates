@@ -1,7 +1,7 @@
 radarr:
   movies_en-radarr: # Live action movies - 1080p - English
     base_url: http://movies_en-radarr:7878
-    api_key: <API KEY movies_en-radarr>
+    api_key: 3c1c3409346640e803a20c467cd6aa81
 
     # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
     media_naming:
@@ -20,6 +20,7 @@ radarr:
         reset_unmatched_scores:
           except:
             - 'Language: Original + English'
+            - 'AV1'
 
     # Custom Format Configuration
     delete_old_custom_formats: true # Removes "Recyclarr configured" formats if they aren't configured below
@@ -74,7 +75,7 @@ radarr:
 
   movies_anime-radarr: # Anime movies - 1080p - Prioritize original language. Tries to download English dub too.
     base_url: http://movies_anime-radarr:7879
-    api_key: <API KEY movies_anime-radarr>
+    api_key: ee5023190b1dcb84bd728b37af04fd25
 
     # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
     media_naming:
@@ -95,10 +96,12 @@ radarr:
         reset_unmatched_scores:
           except:
             - 'Language: Original + English'
+            - 'AV1'
       - name: Remux-1080p - Anime
         reset_unmatched_scores:
           except:
             - 'Language: Original + English'
+            - 'AV1'
 
     # Custom Format Configuration
     delete_old_custom_formats: true # Removes "Recyclarr configured" formats if they aren't configured below
@@ -194,7 +197,7 @@ radarr:
 
   movies_de-radarr: # Live action movies - 1080p - German
     base_url: http://movies_de-radarr:7880
-    api_key: <API KEY movies_de-radarr>
+    api_key: 7310e764057c1add08ec1aa544ff50c7
 
     # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
     media_naming:
@@ -254,7 +257,7 @@ radarr:
 sonarr:
   series_en-sonarr: # Live action shows - 1080p - English
     base_url: http://series_en-sonarr:8989
-    api_key: <API KEY series_en-sonarr>
+    api_key: a98b18ac4ddcca81bf48cf4563771abb
 
     # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
     media_naming:
@@ -278,6 +281,7 @@ sonarr:
         reset_unmatched_scores:
           except:
             - 'Language: Original + English'
+            - 'AV1'
 
     # Custom Format Configuration
     delete_old_custom_formats: true # Removes "Recyclarr configured" formats if they aren't configured below
@@ -344,7 +348,7 @@ sonarr:
 
   series_anime-sonarr: # Anime series - 1080p - Prioritize original language. Tries to download English dub too.
     base_url: http://series_anime-sonarr:8990
-    api_key: <API KEY series_anime-sonarr>
+    api_key: 2946d4c47e22a66f8f9da57a4ffe8bb2
 
     # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
     media_naming:
@@ -369,10 +373,12 @@ sonarr:
         reset_unmatched_scores:
           except:
             - 'Language: Original + English'
+            - 'AV1'
       - name: Remux-1080p - Anime
         reset_unmatched_scores:
           except:
             - 'Language: Original + English'
+            - 'AV1'
 
     # Custom Format Configuration
     delete_old_custom_formats: false # Removes "Recyclarr configured" formats if they aren't configured below
@@ -488,7 +494,7 @@ sonarr:
 
   series_de-sonarr: # Live action shows - 1080p - German
     base_url: http://series_de-sonarr:8991
-    api_key: <API KEY series_de-sonarr>
+    api_key: 9443e69ffdc9f4c739049340f51dcb27
 
     # https://recyclarr.dev/wiki/yaml/config-reference/media-naming
     media_naming:
