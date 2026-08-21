@@ -21,15 +21,6 @@
         "value": 1,
         "exceptLanguage": false
       }
-    },
-    {
-      "name": "MULTi",
-      "implementation": "ReleaseTitleSpecification",
-      "negate": false,
-      "required": true,
-      "fields": {
-        "value": "\\b(MULTi)(\\b|\\d)"
-      }
     }
   ]
 }
