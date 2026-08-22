@@ -24,7 +24,7 @@
  - [Collection of Plugins & Themes](https://github.com/awesome-jellyfin/awesome-jellyfin)
 
 ## Plugins
- - [Jellyfin SSO Plugin](https://github.com/9p4/jellyfin-plugin-sso/)
+ - [Jellyfin SSO Plugin](https://github.com/Buco7854/jellyfin-plugin-sso)
  - [Intro Skipper](https://github.com/intro-skipper/intro-skipper)
  - [BetterMix](https://github.com/StergiosBinopoulos/jellyfin-plugin-bettermix)
 
