@@ -39,12 +39,14 @@ dateCreated: 2026-04-05T21:01:51.322Z
    - pangolin-core
 - DMZ vlan 90
    - dmz-public
+- media-download vlan 22
+   - 32 media-download
+- media-frontend vlan 21
+   - 30 media
 - Services vlan 20
    - 10 authentik
    - 20 nextcloud
-   - 30 media
    - 31 media-backend
-   - 32 media-download
    - 40 automation
    - 41 automation-backend
    - 50 information
