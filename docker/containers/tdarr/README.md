@@ -1,7 +1,7 @@
 # Links
  - [Tdarr Environment Variables](https://docs.tdarr.io/docs/installation/variables)
  - [Tdarr One Flow](https://github.com/samssausages/Tdarr-One-Flow/tree/main)
-   - My updated [Tdarr One Flow Updated](https://github.com/platnub/Tdarr-One-Flow-Improved)
+   - My updated [Tdarr One Flow Updated](https://github.com/platnub/Tdarr-One-Flow-Updated)
 
 
 # Tdarr One Flow Setup
