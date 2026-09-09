@@ -39,7 +39,7 @@
 - Proxy
   - Target
     - Method: 'http'
-    - IP / Hostname: `series_en-sonarr`
+    - IP / Hostname: `series_anime-sonarr`
     - Port: `8990`
 - Authentication
   - Use Platform SSO: Enabled
@@ -52,7 +52,7 @@
 - Proxy
   - Target
     - Method: 'http'
-    - IP / Hostname: `series_en-sonarr`
+    - IP / Hostname: `series_de-sonarr`
     - Port: `8991`
 - Authentication
   - Use Platform SSO: Enabled
