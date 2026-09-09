@@ -1,10 +1,8 @@
 # Useful Commands
 ## Update Komodo Periphery agent (NOT CORE)
 ```bash
-sudo -u komodo bash -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'
-chown -R komodo:komodo /home/komodo &&\
-systemctl --user -M komodo@ restart periphery &&\
-systemctl --user -M komodo@ status periphery
+machinectl shell dockerd@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'
+systemctl --user -M dockerd@ status periphery
 ```
 
 ## Update Komodo Core
