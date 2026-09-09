@@ -39,7 +39,7 @@
 - Proxy
   - Target
     - Method: 'http'
-    - IP / Hostname: `movies_en-radarr`
+    - IP / Hostname: `movies_anime-radarr`
     - Port: `7879`
 - Authentication
   - Use Platform SSO: Enabled
@@ -52,7 +52,7 @@
 - Proxy
   - Target
     - Method: 'http'
-    - IP / Hostname: `movies_en-radarr`
+    - IP / Hostname: `movies_de-radarr`
     - Port: `7880`
 - Authentication
   - Use Platform SSO: Enabled
