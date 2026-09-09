@@ -7,6 +7,7 @@ systemctl --user -M dockerd@ status periphery
 
 ## Update Komodo Core
 ```bash
+cd /opt/docker/komodo && docker compose pull
 docker compose -p komodo -f /opt/docker/komodo/compose.yml --env-file /opt/docker/komodo/.env up -d --force-recreate
 ```
 
