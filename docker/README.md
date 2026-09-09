@@ -36,9 +36,8 @@
 
 # Update Komodo Periphery
 ```
-cd /home/komodo
-curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user
-systemctl --user status periphery
+machinectl shell dockerd@ /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3 - --user'
+systemctl --user -M dockerd@ status periphery
 ```
 
 # Configure Docker service to wait for NFS mount
