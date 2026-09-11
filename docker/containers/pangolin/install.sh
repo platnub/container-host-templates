@@ -27,7 +27,7 @@ else
     IS_TTY=0
 fi
 
-TOTAL_STEPS=21
+TOTAL_STEPS=22
 STEP=0
 TAIL_KEEP=30           # lines of output kept in memory per step, shown on failure
 
@@ -245,6 +245,34 @@ ask_password() {
     done
 }
 
+ask_ssh_key() {
+    local val
+    PANGOLIN_SSH_KEY=""
+    info "SSH public key for the 'pangolin' user (optional)."
+    note "Paste the PUBLIC key only - one line, starting with ssh-ed25519,"
+    note "ssh-rsa or ecdsa-sha2-*. In Bitwarden this is the 'Public key' field."
+    note "Never paste the private key. Leave empty to skip."
+    while :; do
+        read -rp "  Public key [skip]: " val
+        # Trim surrounding whitespace but keep inner spaces (key comment)
+        val="$(printf '%s' "$val" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
+        if [[ -z "$val" ]]; then
+            return
+        fi
+        if [[ "$val" == *"PRIVATE KEY"* ]]; then
+            warn "That looks like a PRIVATE key. Paste the public key instead."
+            continue
+        fi
+        if [[ ! "$val" =~ ^(ssh-(ed25519|rsa|dss)|ecdsa-sha2-nistp(256|384|521)|sk-(ssh-ed25519|ecdsa-sha2-nistp256)@openssh\.com)\ [A-Za-z0-9+/]+={0,3}(\ .*)?$ ]]; then
+            warn "That does not look like an OpenSSH public key (ssh-ed25519 AAAA... [comment])."
+            continue
+        fi
+        PANGOLIN_SSH_KEY="$val"
+        return
+    done
+}
+
 ask_core_address() {
     local val host port
     info "Address of your Komodo Core."
@@ -376,6 +404,17 @@ task_ssh_config() {
     sed -i 's/^#*\s*MaxSessions .*/MaxSessions 2/' /etc/ssh/sshd_config
     # sed -i 's/^#*\s*PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config
     sed -i 's/^#*\s*AllowTcpForwarding .*/AllowTcpForwarding No/' /etc/ssh/sshd_config
+
+    # Key-only hardening, same set test.sh applies on its SSH-key path.
+    # Only when a public key was supplied - with root locked, disabling
+    # passwords without a working key would cut off SSH entirely.
+    if [[ -n "$PANGOLIN_SSH_KEY" ]]; then
+        sed -i 's/^#*\s*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config
+        sed -i 's/^#*\s*UsePAM .*/UsePAM no/' /etc/ssh/sshd_config
+        # Old and new spelling of the same option; cover both.
+        sed -i 's/^#*\s*KbdInteractiveAuthentication .*/KbdInteractiveAuthentication no/' /etc/ssh/sshd_config
+        printf '\nChallengeResponseAuthentication no\n' >> /etc/ssh/sshd_config
+    fi
 }
 
 task_ssh_restart() {
@@ -421,8 +460,39 @@ task_docker_install() {
 }
 
 task_user_pangolin() {
-    useradd -r pangolin
+    # -m is required: without a home directory sftp-server cannot resolve its
+    # start directory (SFTP fails while plain SSH still works), and there is
+    # nowhere to put ~/.ssh/authorized_keys.
+    useradd -m -s /bin/bash pangolin
     usermod -aG sudo pangolin
+}
+
+task_ssh_authorized_key() {
+    local sshdir="/home/pangolin/.ssh"
+    # ssh-keygen is available here (installed with the base packages) and is a
+    # stronger check than the regex at the prompt: it parses the actual key.
+    if ! printf '%s\n' "$PANGOLIN_SSH_KEY" | ssh-keygen -lf /dev/stdin >/dev/null 2>&1; then
+        echo "The supplied public key failed ssh-keygen validation." >&2
+        return 1
+    fi
+    mkdir -p "$sshdir"
+    printf '%s\n' "$PANGOLIN_SSH_KEY" > "$sshdir/authorized_keys"
+    chmod 700 "$sshdir"
+    chmod 600 "$sshdir/authorized_keys"
+    chown -R pangolin:pangolin "$sshdir"
+}
+
+# Same mechanism cloud-init uses (/etc/sudoers.d/90-cloud-init-users):
+# a validated drop-in granting passwordless sudo to the login user.
+task_sudo_nopasswd() {
+    printf 'pangolin ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/90-pangolin
+    chmod 440 /etc/sudoers.d/90-pangolin
+    # A syntax error in a sudoers file can lock sudo entirely; with root
+    # already locked that would brick the host, so validate before keeping it.
+    if ! visudo -cf /etc/sudoers.d/90-pangolin; then
+        rm -f /etc/sudoers.d/90-pangolin
+        return 1
+    fi
 }
 
 task_password_and_lock_root() {
@@ -524,33 +594,39 @@ fi
 # Questions
 # ---------------------------------------------------------------------------
 
-section "Step 1 of 8  ·  Timezone"
+section "Step 1 of 9  ·  Timezone"
 ask_timezone
 
-section "Step 2 of 8  ·  SSH port"
+section "Step 2 of 9  ·  SSH port"
 info "Which port should SSH listen on?"
 note "Leave empty to generate a random port between 1024 and 65535."
 ask_port "SSH port [random]" SSH_PORT
 
-section "Step 3 of 8  ·  Komodo Periphery port"
+section "Step 3 of 9  ·  Komodo Periphery port"
 info "Which port should Komodo Periphery listen on?"
 note "Komodo's default is 8120. Leave empty to generate a random port between 1024 and 65535."
 ask_port "Komodo port [random]" KOMODO_PORT
 
-section "Step 4 of 8  ·  SSH authentication attempts"
+section "Step 4 of 9  ·  SSH authentication attempts"
 ask_max_auth_tries
 
-section "Step 5 of 8  ·  Pangolin user password"
+section "Step 5 of 9  ·  Pangolin user password"
 ask_password
 
-section "Step 6 of 8  ·  Komodo Core address"
+section "Step 6 of 9  ·  SSH public key"
+ask_ssh_key
+
+section "Step 7 of 9  ·  Komodo Core address"
 ask_core_address
 
-section "Step 7 of 8  ·  Komodo onboarding key"
+section "Step 8 of 9  ·  Komodo onboarding key"
 ask_onboarding_key
 
-section "Step 8 of 8  ·  Allowed IPs"
+section "Step 9 of 9  ·  Allowed IPs"
 ask_allowed_ips
+
+# The SSH key step only runs when a key was supplied
+[[ -n "$PANGOLIN_SSH_KEY" ]] && TOTAL_STEPS=$((TOTAL_STEPS + 1))
 
 # ---------------------------------------------------------------------------
 # Summary & confirmation
@@ -565,6 +641,11 @@ printf '  %-22s %s%s%s\n' "SSH port:"    "$BOLD" "$SSH_PORT" "$RESET"
 printf '  %-22s %s%s%s\n' "Komodo port:" "$BOLD" "$KOMODO_PORT" "$RESET"
 printf '  %-22s %s\n' "MaxAuthTries:"    "$MAX_AUTH_TRIES"
 printf '  %-22s %s\n' "Pangolin password:" "$(printf '%*s' "${#PANGOLIN_PASSWORD}" '' | tr ' ' '*')"
+if [[ -n "$PANGOLIN_SSH_KEY" ]]; then
+    printf '  %-22s %s...%s\n' "SSH public key:" "${PANGOLIN_SSH_KEY:0:24}" "${PANGOLIN_SSH_KEY: -12}"
+else
+    printf '  %-22s %s\n' "SSH public key:" "none (password login only)"
+fi
 printf '  %-22s %s\n' "Core address:"    "$CORE_ADDRESS"
 printf '  %-22s %s\n' "Onboarding key:"   "$ONBOARDING_KEY"
 printf '  %-22s %s\n' "Allowed IPs:"     "${ALLOWED_IPS_LIST[*]}"
@@ -611,6 +692,9 @@ run "Installing Docker Engine"              task_docker_install
 
 section "Users and directories"
 run "Creating the 'pangolin' user"          task_user_pangolin
+[[ -n "$PANGOLIN_SSH_KEY" ]] && \
+run "Installing the SSH public key"         task_ssh_authorized_key
+run "Enabling passwordless sudo"            task_sudo_nopasswd
 run "Setting password, locking root"        task_password_and_lock_root
 run "Creating 'dockerd' user and /opt/docker" task_users
 
