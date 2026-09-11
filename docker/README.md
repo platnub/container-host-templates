@@ -7,6 +7,9 @@
 
 # Host configuration script
 
+> [!NOTE]
+> Steps 4-6 (and optional upgrade email reports) can be configured automatically by the Docker VM creation script when answering yes to the "UNATTENDED UPGRADES" prompt.
+
 4. Connect to the VM through SSH using a sudo priveledged user. Configure automatic upgrades - [Periodic Updates](https://wiki.debian.org/PeriodicUpdates)
    ```
    # Configure automatic upgrades

@@ -270,6 +270,107 @@ function select_timezone() {
   done
 }
 
+function select_unattended_upgrades() {
+  CONFIGURE_UNATTENDED="no"
+  UNATTENDED_EMAIL=""
+  SMTP_HOST=""
+  SMTP_PORT=""
+  SMTP_USER=""
+  SMTP_PASSWORD=""
+  SMTP_FROM=""
+  SMTP_STARTTLS="on"
+
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "UNATTENDED UPGRADES" \
+    --yesno "Configure automatic upgrades (unattended-upgrades)?\n\nThis will:\n- Enable daily automatic package updates\n- Remove unused kernels and dependencies\n- Automatically reboot at 02:00 when required\n- Download updates at 01:00, install at 01:45\n\nSee: https://wiki.debian.org/PeriodicUpdates" 16 68); then
+    CONFIGURE_UNATTENDED="yes"
+    echo -e "${DEFAULT}${BOLD}${DGN}Unattended Upgrades: ${BGN}yes${CL}"
+
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPGRADE EMAIL REPORTS" --defaultno \
+      --yesno "Send email reports about unattended upgrades?\n\nThis will:\n- Install msmtp + bsd-mailx in the VM\n- Configure an SMTP relay (your mail provider)\n- Email a report when packages are upgraded" 13 68); then
+
+      while true; do
+        if UNATTENDED_EMAIL=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Email address to receive upgrade reports" 10 68 "" --title "REPORT EMAIL" 3>&1 1>&2 2>&3); then
+          if [[ "$UNATTENDED_EMAIL" =~ ^[^@[:space:]]+@[^@[:space:]]+\.[^@[:space:]]+$ ]]; then
+            echo -e "${DEFAULT}${BOLD}${DGN}Upgrade Report Email: ${BGN}${UNATTENDED_EMAIL}${CL}"
+            break
+          fi
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Please enter a valid email address (e.g., you@example.com)." 8 58
+        else
+          exit-script
+        fi
+      done
+
+      while true; do
+        if SMTP_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SMTP server hostname\n\nExample: smtp.gmail.com" 10 68 "" --title "SMTP HOST" 3>&1 1>&2 2>&3); then
+          if [ -n "$SMTP_HOST" ]; then
+            echo -e "${DEFAULT}${BOLD}${DGN}SMTP Host: ${BGN}${SMTP_HOST}${CL}"
+            break
+          fi
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "SMTP host cannot be empty." 8 58
+        else
+          exit-script
+        fi
+      done
+
+      while true; do
+        if SMTP_PORT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SMTP port\n\n587 = STARTTLS (most common), 465 = implicit SSL/TLS" 10 68 "587" --title "SMTP PORT" 3>&1 1>&2 2>&3); then
+          if [ -z "$SMTP_PORT" ]; then SMTP_PORT="587"; fi
+          if [[ "$SMTP_PORT" =~ ^[0-9]+$ ]] && [ "$SMTP_PORT" -ge 1 ] && [ "$SMTP_PORT" -le 65535 ]; then
+            # Port 465 is implicit SSL/TLS (TLS from the first byte); everything
+            # else is assumed to be STARTTLS, msmtp's default.
+            if [ "$SMTP_PORT" = "465" ]; then
+              SMTP_STARTTLS="off"
+              echo -e "${DEFAULT}${BOLD}${DGN}SMTP Port: ${BGN}${SMTP_PORT} (implicit SSL/TLS)${CL}"
+            else
+              SMTP_STARTTLS="on"
+              echo -e "${DEFAULT}${BOLD}${DGN}SMTP Port: ${BGN}${SMTP_PORT} (STARTTLS)${CL}"
+            fi
+            break
+          fi
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "Port must be a number between 1 and 65535." 8 58
+        else
+          exit-script
+        fi
+      done
+
+      while true; do
+        if SMTP_USER=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SMTP username (usually your email address)" 10 68 "" --title "SMTP USERNAME" 3>&1 1>&2 2>&3); then
+          if [ -n "$SMTP_USER" ]; then
+            echo -e "${DEFAULT}${BOLD}${DGN}SMTP User: ${BGN}${SMTP_USER}${CL}"
+            break
+          fi
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "SMTP username cannot be empty." 8 58
+        else
+          exit-script
+        fi
+      done
+
+      while true; do
+        if SMTP_PASSWORD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "SMTP password (use an app password if available)" 10 68 --title "SMTP PASSWORD" 3>&1 1>&2 2>&3); then
+          if [ -n "$SMTP_PASSWORD" ]; then
+            echo -e "${DEFAULT}${BOLD}${DGN}SMTP Password: ${BGN}Configured${CL}"
+            break
+          fi
+          whiptail --backtitle "Proxmox VE Helper Scripts" --title "INVALID INPUT" --msgbox "SMTP password cannot be empty." 8 58
+        else
+          exit-script
+        fi
+      done
+
+      if SMTP_FROM=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Sender (From) address for reports" 10 68 "$SMTP_USER" --title "SMTP FROM ADDRESS" 3>&1 1>&2 2>&3); then
+        if [ -z "$SMTP_FROM" ]; then SMTP_FROM="$SMTP_USER"; fi
+        echo -e "${DEFAULT}${BOLD}${DGN}SMTP From: ${BGN}${SMTP_FROM}${CL}"
+      else
+        exit-script
+      fi
+    else
+      echo -e "${DEFAULT}${BOLD}${DGN}Upgrade Email Reports: ${BGN}no${CL}"
+    fi
+  else
+    echo -e "${DEFAULT}${BOLD}${DGN}Unattended Upgrades: ${BGN}no${CL}"
+  fi
+}
+
 function select_komodo() {
   CONFIGURE_KOMODO="no"
   KOMODO_ALLOWED_IPS=""
@@ -513,6 +614,7 @@ function default_settings() {
   select_ssh_port
   select_max_auth_tries
   select_timezone
+  select_unattended_upgrades
   select_komodo
   select_docker_rootless
 
@@ -560,6 +662,7 @@ function advanced_settings() {
   select_ssh_port
   select_max_auth_tries
   select_timezone
+  select_unattended_upgrades
   select_komodo
   select_docker_rootless
 
@@ -1101,6 +1204,67 @@ fi
 virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*IPV6=.*/IPV6=no/' /etc/default/ufw" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "ufw --force enable" >/dev/null 2>&1 || true
 
+# Configure unattended upgrades - https://wiki.debian.org/PeriodicUpdates
+if [ "$CONFIGURE_UNATTENDED" = "yes" ]; then
+  msg_info "Configuring unattended upgrades"
+  virt-customize -q -a "$WORK_FILE" --install "unattended-upgrades" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/52unattended-upgrades-local" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'sed -i "s|//Unattended-Upgrade::Remove-Unused-Kernel-Packages \"true\";|Unattended-Upgrade::Remove-Unused-Kernel-Packages \"true\";|g" /etc/apt/apt.conf.d/52unattended-upgrades-local' >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'sed -i "s|//Unattended-Upgrade::Remove-New-Unused-Dependencies \"true\";|Unattended-Upgrade::Remove-New-Unused-Dependencies \"true\";|g" /etc/apt/apt.conf.d/52unattended-upgrades-local' >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'sed -i "s|//Unattended-Upgrade::Remove-Unused-Dependencies \"false\";|Unattended-Upgrade::Remove-Unused-Dependencies \"false\";|g" /etc/apt/apt.conf.d/52unattended-upgrades-local' >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'sed -i "s|//Unattended-Upgrade::Automatic-Reboot \"false\";|Unattended-Upgrade::Automatic-Reboot \"true\";|g" /etc/apt/apt.conf.d/52unattended-upgrades-local' >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'sed -i "s|//Unattended-Upgrade::Automatic-Reboot-WithUsers \"true\";|Unattended-Upgrade::Automatic-Reboot-WithUsers \"true\";|g" /etc/apt/apt.conf.d/52unattended-upgrades-local' >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'sed -i "s|//Unattended-Upgrade::Automatic-Reboot-Time \"02:30\";|Unattended-Upgrade::Automatic-Reboot-Time \"02:00\";|g" /etc/apt/apt.conf.d/52unattended-upgrades-local' >/dev/null 2>&1 || true
+  # Non-interactive equivalent of `dpkg-reconfigure unattended-upgrades`
+  virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/apt/apt.conf.d/20auto-upgrades << EOF
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+EOF' >/dev/null 2>&1 || true
+
+  # Timer overrides (equivalent of `systemctl edit apt-daily.timer` / `apt-daily-upgrade.timer`)
+  virt-customize -q -a "$WORK_FILE" --run-command "mkdir -p /etc/systemd/system/apt-daily.timer.d /etc/systemd/system/apt-daily-upgrade.timer.d" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/systemd/system/apt-daily.timer.d/override.conf << EOF
+[Timer]
+OnCalendar=
+OnCalendar=01:00
+RandomizedDelaySec=30m
+EOF' >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/systemd/system/apt-daily-upgrade.timer.d/override.conf << EOF
+[Timer]
+OnCalendar=
+OnCalendar=01:45
+RandomizedDelaySec=30m
+EOF' >/dev/null 2>&1 || true
+  msg_ok "Configured unattended upgrades"
+
+  # Optional email reports via SMTP relay
+  if [ -n "$UNATTENDED_EMAIL" ]; then
+    msg_info "Configuring upgrade email reports"
+    virt-customize -q -a "$WORK_FILE" --install "msmtp-mta,bsd-mailx" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "cat > /etc/msmtprc << 'EOF'
+defaults
+auth on
+tls on
+tls_starttls ${SMTP_STARTTLS}
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile /var/log/msmtp.log
+aliases /etc/aliases
+
+account default
+host ${SMTP_HOST}
+port ${SMTP_PORT}
+user ${SMTP_USER}
+password ${SMTP_PASSWORD}
+from ${SMTP_FROM}
+EOF
+chmod 600 /etc/msmtprc" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "echo 'root: ${UNATTENDED_EMAIL}' >> /etc/aliases" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^//Unattended-Upgrade::Mail .*|Unattended-Upgrade::Mail \"${UNATTENDED_EMAIL}\";|' /etc/apt/apt.conf.d/52unattended-upgrades-local" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^//Unattended-Upgrade::MailReport .*|Unattended-Upgrade::MailReport \"on-change\";|' /etc/apt/apt.conf.d/52unattended-upgrades-local" >/dev/null 2>&1 || true
+    msg_ok "Configured upgrade email reports to ${CL}${BL}${UNATTENDED_EMAIL}${CL}"
+  fi
+fi
+
 # Disable IPV6
 virt-customize -q -a "$WORK_FILE" --run-command "echo '\n\n# Disabling the IPv6\nnet.ipv6.conf.all.disable_ipv6 = 1\nnet.ipv6.conf.default.disable_ipv6 = 1\nnet.ipv6.conf.lo.disable_ipv6 = 1' >> /etc/sysctl.conf" >/dev/null 2>&1 || true
 virt-customize -q -a "$WORK_FILE" --run-command "sysctl -p" >/dev/null 2>&1 || true
@@ -1230,6 +1394,13 @@ else
   echo -e "${TAB}${DGN}Docker: ${BGN}Installing on first boot${CL}"
   echo -e "${TAB}${YW}Warning: Wait 2-3 minutes for installation to complete${CL}"
   echo -e "${TAB}${YW}Check progress: ${BL}cat /var/log/install-docker.log${CL}"
+fi
+
+if [ "$CONFIGURE_UNATTENDED" = "yes" ]; then
+  echo -e "${TAB}${DGN}Unattended Upgrades: ${BGN}Enabled (download 01:00, install 01:45, reboot 02:00)${CL}"
+  if [ -n "$UNATTENDED_EMAIL" ]; then
+    echo -e "${TAB}${DGN}Upgrade Reports: ${BGN}${UNATTENDED_EMAIL} via ${SMTP_HOST}:${SMTP_PORT}${CL}"
+  fi
 fi
 
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
