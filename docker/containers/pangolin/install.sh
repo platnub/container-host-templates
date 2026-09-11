@@ -376,6 +376,12 @@ ask_allowed_ips() {
 
 task_hostname() {
     hostnamectl set-hostname pangolin
+    # Keep /etc/hosts in sync or sudo warns "unable to resolve host pangolin"
+    if grep -q '^127\.0\.1\.1' /etc/hosts; then
+        sed -i 's/^127\.0\.1\.1.*/127.0.1.1\tpangolin/' /etc/hosts
+    else
+        printf '127.0.1.1\tpangolin\n' >> /etc/hosts
+    fi
 }
 
 task_timezone() {
