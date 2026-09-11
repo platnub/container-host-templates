@@ -273,6 +273,86 @@ ask_ssh_key() {
     done
 }
 
+ask_unattended_upgrades() {
+    CONFIGURE_UNATTENDED="yes"
+    UNATTENDED_EMAIL=""
+    SMTP_HOST=""; SMTP_PORT=""; SMTP_USER=""; SMTP_PASSWORD=""; SMTP_FROM=""
+    SMTP_STARTTLS="on"
+    local val
+
+    info "Install and configure automatic upgrades (unattended-upgrades)?"
+    note "Daily package updates with unused kernel/dependency cleanup and an"
+    note "automatic reboot at 02:00 when required. Updates download at 01:00"
+    note "and install at 01:45. See https://wiki.debian.org/PeriodicUpdates"
+    read -rp "  Enable automatic upgrades? [Y/n]: " val
+    if [[ "${val,,}" == "n" || "${val,,}" == "no" ]]; then
+        CONFIGURE_UNATTENDED="no"
+        return
+    fi
+
+    printf '\n'
+    info "Email a report when packages are upgraded? (optional)"
+    note "Requires an SMTP relay (your mail provider). Installs msmtp + bsd-mailx."
+    read -rp "  Set up email reports? [y/N]: " val
+    [[ "${val,,}" == "y" || "${val,,}" == "yes" ]] || return
+
+    while :; do
+        read -rp "  Report email address: " val
+        val="$(printf '%s' "$val" | tr -d '[:space:]')"
+        if [[ "$val" =~ ^[^@[:space:]]+@[^@[:space:]]+\.[^@[:space:]]+$ ]]; then
+            UNATTENDED_EMAIL="$val"
+            break
+        fi
+        warn "That does not look like an email address (you@example.com)."
+    done
+    while :; do
+        read -rp "  SMTP host (e.g. smtp.gmail.com): " val
+        val="$(printf '%s' "$val" | tr -d '[:space:]')"
+        if [[ -n "$val" ]]; then
+            SMTP_HOST="$val"
+            break
+        fi
+        warn "The SMTP host cannot be empty."
+    done
+    while :; do
+        read -rp "  SMTP port (587 = STARTTLS, 465 = implicit SSL/TLS) [587]: " val
+        val="$(printf '%s' "$val" | tr -d '[:space:]')"
+        [[ -z "$val" ]] && val=587
+        if [[ "$val" =~ ^[0-9]+$ ]] && (( val >= 1 && val <= 65535 )); then
+            SMTP_PORT="$val"
+            # Port 465 is implicit SSL/TLS (TLS from the first byte); everything
+            # else is assumed to be STARTTLS, msmtp's default.
+            if [[ "$SMTP_PORT" == "465" ]]; then
+                SMTP_STARTTLS="off"
+            else
+                SMTP_STARTTLS="on"
+            fi
+            break
+        fi
+        warn "Ports are numeric, between 1 and 65535."
+    done
+    while :; do
+        read -rp "  SMTP username (usually your email address): " val
+        val="$(printf '%s' "$val" | tr -d '[:space:]')"
+        if [[ -n "$val" ]]; then
+            SMTP_USER="$val"
+            break
+        fi
+        warn "The SMTP username cannot be empty."
+    done
+    while :; do
+        read -rsp "  SMTP password (hidden, use an app password if available): " val; printf '\n'
+        if [[ -n "$val" ]]; then
+            SMTP_PASSWORD="$val"
+            break
+        fi
+        warn "The SMTP password cannot be empty."
+    done
+    read -rp "  Sender (From) address [$SMTP_USER]: " val
+    val="$(printf '%s' "$val" | tr -d '[:space:]')"
+    SMTP_FROM="${val:-$SMTP_USER}"
+}
+
 ask_core_address() {
     local val host port
     info "Address of your Komodo Core."
@@ -402,6 +482,57 @@ task_apt_upgrade() {
 task_base_packages() {
     # python3 is required by the Komodo setup-periphery script further down
     apt-get install -y ssh fail2ban ufw systemd-container python3
+}
+
+# Same configuration test.sh bakes into the Docker VM image, applied to the
+# live system - https://wiki.debian.org/PeriodicUpdates
+task_unattended_upgrades() {
+    apt-get install -y unattended-upgrades
+    cp /etc/apt/apt.conf.d/50unattended-upgrades /etc/apt/apt.conf.d/52unattended-upgrades-local
+    sed -i 's|//Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";|Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+    sed -i 's|//Unattended-Upgrade::Remove-New-Unused-Dependencies "true";|Unattended-Upgrade::Remove-New-Unused-Dependencies "true";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+    sed -i 's|//Unattended-Upgrade::Remove-Unused-Dependencies "false";|Unattended-Upgrade::Remove-Unused-Dependencies "false";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+    sed -i 's|//Unattended-Upgrade::Automatic-Reboot "false";|Unattended-Upgrade::Automatic-Reboot "true";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+    sed -i 's|//Unattended-Upgrade::Automatic-Reboot-WithUsers "true";|Unattended-Upgrade::Automatic-Reboot-WithUsers "true";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+    sed -i 's|//Unattended-Upgrade::Automatic-Reboot-Time "02:30";|Unattended-Upgrade::Automatic-Reboot-Time "02:00";|g' /etc/apt/apt.conf.d/52unattended-upgrades-local
+
+    # Non-interactive equivalent of `dpkg-reconfigure unattended-upgrades`
+    printf 'APT::Periodic::Update-Package-Lists "1";\nAPT::Periodic::Unattended-Upgrade "1";\n' \
+        > /etc/apt/apt.conf.d/20auto-upgrades
+
+    # Timer overrides (equivalent of `systemctl edit apt-daily(-upgrade).timer`).
+    # The empty OnCalendar clears the stock schedule instead of adding to it.
+    mkdir -p /etc/systemd/system/apt-daily.timer.d /etc/systemd/system/apt-daily-upgrade.timer.d
+    printf '[Timer]\nOnCalendar=\nOnCalendar=01:00\nRandomizedDelaySec=30m\n' \
+        > /etc/systemd/system/apt-daily.timer.d/override.conf
+    printf '[Timer]\nOnCalendar=\nOnCalendar=01:45\nRandomizedDelaySec=30m\n' \
+        > /etc/systemd/system/apt-daily-upgrade.timer.d/override.conf
+    systemctl daemon-reload
+    systemctl restart apt-daily.timer apt-daily-upgrade.timer
+}
+
+task_upgrade_email() {
+    apt-get install -y msmtp-mta bsd-mailx
+    cat > /etc/msmtprc <<EOF
+defaults
+auth on
+tls on
+tls_starttls ${SMTP_STARTTLS}
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile /var/log/msmtp.log
+aliases /etc/aliases
+
+account default
+host ${SMTP_HOST}
+port ${SMTP_PORT}
+user ${SMTP_USER}
+password ${SMTP_PASSWORD}
+from ${SMTP_FROM}
+EOF
+    chmod 600 /etc/msmtprc
+    printf 'root: %s\n' "$UNATTENDED_EMAIL" >> /etc/aliases
+    sed -i 's|^//Unattended-Upgrade::Mail .*|Unattended-Upgrade::Mail "'"$UNATTENDED_EMAIL"'";|' /etc/apt/apt.conf.d/52unattended-upgrades-local
+    sed -i 's|^//Unattended-Upgrade::MailReport .*|Unattended-Upgrade::MailReport "on-change";|' /etc/apt/apt.conf.d/52unattended-upgrades-local
 }
 
 task_ssh_config() {
@@ -600,39 +731,44 @@ fi
 # Questions
 # ---------------------------------------------------------------------------
 
-section "Step 1 of 9  ·  Timezone"
+section "Step 1 of 10  ·  Timezone"
 ask_timezone
 
-section "Step 2 of 9  ·  SSH port"
+section "Step 2 of 10  ·  Automatic upgrades"
+ask_unattended_upgrades
+
+section "Step 3 of 10  ·  SSH port"
 info "Which port should SSH listen on?"
 note "Leave empty to generate a random port between 1024 and 65535."
 ask_port "SSH port [random]" SSH_PORT
 
-section "Step 3 of 9  ·  Komodo Periphery port"
+section "Step 4 of 10  ·  Komodo Periphery port"
 info "Which port should Komodo Periphery listen on?"
 note "Komodo's default is 8120. Leave empty to generate a random port between 1024 and 65535."
 ask_port "Komodo port [random]" KOMODO_PORT
 
-section "Step 4 of 9  ·  SSH authentication attempts"
+section "Step 5 of 10  ·  SSH authentication attempts"
 ask_max_auth_tries
 
-section "Step 5 of 9  ·  Pangolin user password"
+section "Step 6 of 10  ·  Pangolin user password"
 ask_password
 
-section "Step 6 of 9  ·  SSH public key"
+section "Step 7 of 10  ·  SSH public key"
 ask_ssh_key
 
-section "Step 7 of 9  ·  Komodo Core address"
+section "Step 8 of 10  ·  Komodo Core address"
 ask_core_address
 
-section "Step 8 of 9  ·  Komodo onboarding key"
+section "Step 9 of 10  ·  Komodo onboarding key"
 ask_onboarding_key
 
-section "Step 9 of 9  ·  Allowed IPs"
+section "Step 10 of 10  ·  Allowed IPs"
 ask_allowed_ips
 
-# The SSH key step only runs when a key was supplied
+# Conditional steps only run when the matching answer was given
 [[ -n "$PANGOLIN_SSH_KEY" ]] && TOTAL_STEPS=$((TOTAL_STEPS + 1))
+[[ "$CONFIGURE_UNATTENDED" == "yes" ]] && TOTAL_STEPS=$((TOTAL_STEPS + 1))
+[[ -n "$UNATTENDED_EMAIL" ]] && TOTAL_STEPS=$((TOTAL_STEPS + 1))
 
 # ---------------------------------------------------------------------------
 # Summary & confirmation
@@ -655,6 +791,16 @@ fi
 printf '  %-22s %s\n' "Core address:"    "$CORE_ADDRESS"
 printf '  %-22s %s\n' "Onboarding key:"   "$ONBOARDING_KEY"
 printf '  %-22s %s\n' "Allowed IPs:"     "${ALLOWED_IPS_LIST[*]}"
+if [[ "$CONFIGURE_UNATTENDED" == "yes" ]]; then
+    printf '  %-22s %s\n' "Auto upgrades:" "enabled (download 01:00, install 01:45, reboot 02:00)"
+    if [[ -n "$UNATTENDED_EMAIL" ]]; then
+        printf '  %-22s %s\n' "Upgrade reports:" "$UNATTENDED_EMAIL via $SMTP_HOST:$SMTP_PORT"
+    else
+        printf '  %-22s %s\n' "Upgrade reports:" "none"
+    fi
+else
+    printf '  %-22s %s\n' "Auto upgrades:" "disabled"
+fi
 printf '\n'
 warn "The root account will be locked and SSH will move to port $SSH_PORT."
 warn "Keep your current session open until you have verified the new login works."
@@ -675,6 +821,13 @@ run "Setting timezone to $TIMEZONE"         task_timezone
 run "Refreshing package lists"              task_apt_update
 run "Upgrading installed packages"          task_apt_upgrade
 run "Installing base packages"              task_base_packages
+
+if [[ "$CONFIGURE_UNATTENDED" == "yes" ]]; then
+    section "Automatic upgrades"
+    run "Configuring unattended upgrades"       task_unattended_upgrades
+    [[ -n "$UNATTENDED_EMAIL" ]] && \
+    run "Configuring upgrade email reports"     task_upgrade_email
+fi
 
 section "SSH hardening"
 run "Applying SSH configuration"            task_ssh_config
