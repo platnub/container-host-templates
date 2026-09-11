@@ -1016,7 +1016,7 @@ DOCKER_PREINSTALLED="no"
 
 # Install qemu-guest-agent and Docker during image customization
 msg_info "Installing base packages in image"
-if virt-customize -a "$WORK_FILE" --install qemu-guest-agent,curl,ca-certificates,openssh-server,systemd-container,uidmap >/dev/null 2>&1; then
+if virt-customize -a "$WORK_FILE" --install qemu-guest-agent,curl,ca-certificates,openssh-server,systemd-container,uidmap,apparmor,apparmor-utils >/dev/null 2>&1; then
   msg_ok "Installed base packages"
 
   msg_info "Installing Docker (this may take 2-5 minutes)"
@@ -1053,6 +1053,10 @@ virt-customize -q -a "$WORK_FILE" --run-command "truncate -s 0 /etc/machine-id" 
 virt-customize -q -a "$WORK_FILE" --run-command "rm -f /var/lib/dbus/machine-id" >/dev/null 2>&1 || true
 # Set timezone
 virt-customize -q -a "$WORK_FILE" --timezone "${TIMEZONE}" >/dev/null 2>&1 || true
+# AppArmor: the Debian cloud images ship without the userspace tools, so
+# nothing loads profiles even though the kernel defaults to AppArmor.
+# Installed above; enable so Docker containers get docker-default confinement.
+virt-customize -q -a "$WORK_FILE" --run-command "systemctl enable apparmor" >/dev/null 2>&1 || true
 
 # Configure SSH for Cloud-Init
 if [ "$USE_CLOUD_INIT" = "yes" ]; then
@@ -1105,7 +1109,8 @@ for i in {1..30}; do
 done
 
 apt-get update
-apt-get install -y qemu-guest-agent curl ca-certificates openssh-server
+apt-get install -y qemu-guest-agent curl ca-certificates openssh-server apparmor apparmor-utils
+systemctl enable apparmor
 curl -fsSL https://get.docker.com | sh
 systemctl enable docker
 systemctl start docker

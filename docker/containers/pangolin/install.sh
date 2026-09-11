@@ -480,8 +480,12 @@ task_apt_upgrade() {
 }
 
 task_base_packages() {
-    # python3 is required by the Komodo setup-periphery script further down
-    apt-get install -y ssh fail2ban ufw systemd-container python3
+    # python3 is required by the Komodo setup-periphery script further down.
+    # apparmor: minimal Debian installs may lack the userspace tools, so no
+    # profiles load even though the kernel defaults to AppArmor. With it
+    # active, Docker confines every container with its docker-default profile.
+    apt-get install -y ssh fail2ban ufw systemd-container python3 apparmor apparmor-utils
+    systemctl enable --now apparmor
 }
 
 # Same configuration test.sh bakes into the Docker VM image, applied to the
