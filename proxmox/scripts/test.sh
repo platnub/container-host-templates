@@ -9,9 +9,21 @@
 # Docker VM - Creates a Docker-ready Virtual Machine
 # ==============================================================================
 
-source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/api.func) 2>/dev/null
-source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/vm-core.func) 2>/dev/null
-source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/cloud-init.func) 2>/dev/null || true
+# Load function libraries: prefer the copies shipped alongside this script,
+# fall back to this repository on GitHub when run via `bash <(curl ...)`.
+FUNC_SOURCE_REPO="https://raw.githubusercontent.com/platnub/container-host-templates/main/proxmox/scripts"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
+if [[ -n "${SCRIPT_DIR:-}" && -f "$SCRIPT_DIR/vm-core.func" && -f "$SCRIPT_DIR/cloud-init.func" ]]; then
+  source "$SCRIPT_DIR/vm-core.func"
+  source "$SCRIPT_DIR/cloud-init.func"
+else
+  source <(curl -fsSL "$FUNC_SOURCE_REPO/vm-core.func")
+  source <(curl -fsSL "$FUNC_SOURCE_REPO/cloud-init.func")
+fi
+if ! declare -f load_functions pve_check setup_cloud_init >/dev/null; then
+  echo "ERROR: failed to load vm-core.func / cloud-init.func - aborting." >&2
+  exit 1
+fi
 load_functions
 # ==============================================================================
 # SCRIPT VARIABLES
@@ -84,15 +96,14 @@ CLOUD="${TAB}☁️${TAB}${CL}"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
-trap 'post_update_to_api "failed" "130"' SIGINT
-trap 'post_update_to_api "failed" "143"' SIGTERM
-trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
+trap 'exit 130' SIGINT
+trap 'exit 143' SIGTERM
+trap 'exit 129' SIGHUP
 function error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
-  post_update_to_api "failed" "${exit_code}"
   echo -e "\n$error_message\n"
   cleanup_vmid
 }
@@ -545,7 +556,6 @@ function cleanup_vmid() {
 }
 function cleanup() {
   popd >/dev/null
-  post_update_to_api "done" "none"
   rm -rf $TEMP_DIR
 }
 TEMP_DIR=$(mktemp -d)
@@ -891,7 +901,6 @@ else
 fi
 
 start_script
-post_to_api_vm
 
 # ==============================================================================
 # STORAGE SELECTION
@@ -1413,5 +1422,4 @@ if [ "$USE_CLOUD_INIT" = "yes" ]; then
   display_cloud_init_info "$VMID" "$HN" 2>/dev/null || true
 fi
 
-post_update_to_api "done" "none"
 msg_ok "Completed successfully!\n"
