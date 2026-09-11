@@ -537,6 +537,10 @@ EOF
     printf 'root: %s\n' "$UNATTENDED_EMAIL" >> /etc/aliases
     sed -i 's|^//Unattended-Upgrade::Mail .*|Unattended-Upgrade::Mail "'"$UNATTENDED_EMAIL"'";|' /etc/apt/apt.conf.d/52unattended-upgrades-local
     sed -i 's|^//Unattended-Upgrade::MailReport .*|Unattended-Upgrade::MailReport "on-change";|' /etc/apt/apt.conf.d/52unattended-upgrades-local
+    # Sender is not present in the stock 50unattended-upgrades file, so append
+    # it; a later duplicate assignment overrides any earlier one in apt conf.
+    printf 'Unattended-Upgrade::Sender "%s | Unattended Upgrades <%s>";\n' "${SMTP_FROM#*@}" "$SMTP_FROM" \
+        >> /etc/apt/apt.conf.d/52unattended-upgrades-local
 }
 
 task_ssh_config() {

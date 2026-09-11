@@ -1266,6 +1266,7 @@ chmod 600 /etc/msmtprc" >/dev/null 2>&1 || true
     virt-customize -q -a "$WORK_FILE" --run-command "echo 'root: ${UNATTENDED_EMAIL}' >> /etc/aliases" >/dev/null 2>&1 || true
     virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^//Unattended-Upgrade::Mail .*|Unattended-Upgrade::Mail \"${UNATTENDED_EMAIL}\";|' /etc/apt/apt.conf.d/52unattended-upgrades-local" >/dev/null 2>&1 || true
     virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's|^//Unattended-Upgrade::MailReport .*|Unattended-Upgrade::MailReport \"on-change\";|' /etc/apt/apt.conf.d/52unattended-upgrades-local" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "echo 'Unattended-Upgrade::Sender \"${SMTP_FROM#*@} | Unattended Upgrades <${SMTP_FROM}>\";' >> /etc/apt/apt.conf.d/52unattended-upgrades-local" >/dev/null 2>&1 || true
     msg_ok "Configured upgrade email reports to ${CL}${BL}${UNATTENDED_EMAIL}${CL}"
   fi
 fi
