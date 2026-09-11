@@ -358,6 +358,68 @@ function get_image_url() {
   fi
 }
 
+# "<bytes> <device>" for the largest Linux filesystem in an image, which is the
+# root. Asked of --filesystems rather than --parts so the ESP and BIOS-boot
+# partitions are excluded by their type, and columns are looked up from the csv
+# header by name rather than by position.
+function _vm_root_fs() {
+  virt-filesystems --filesystems --long --csv -a "$1" 2>/dev/null |
+    awk -F, '
+      NR == 1 { for (i = 1; i <= NF; i++) h[$i] = i; next }
+      !h["Name"] || !h["Size"] || !h["VFS"] { exit 1 }
+      $h["VFS"] ~ /^(ext[234]|xfs|btrfs)$/ { print $h["Size"] + 0, $h["Name"] }
+    ' | sort -rn | head -1
+}
+
+# qm resize grows the block device only. The guest's partition normally follows
+# via cloud-init's growpart, so an image built without cloud-init boots with its
+# original root on a much larger disk. virt-resize fixes that offline, before
+# import. Soft failure on purpose: a smaller filesystem is worth less than a
+# failed build.
+function vm_expand_image() {
+  local src="${1:?image}" size="${2:?size}" part out before after
+
+  if ! command -v virt-resize >/dev/null 2>&1; then
+    msg_warn "virt-resize is not available; the guest filesystem keeps its original size"
+    return 1
+  fi
+
+  read -r before part < <(_vm_root_fs "$src")
+
+  # virt-resize --expand takes a partition. An LVM logical volume would need
+  # --lv-expand instead, so leave those alone rather than guess.
+  if [[ ! "${part:-}" =~ ^/dev/[a-z]+[0-9]+$ ]]; then
+    msg_warn "Could not identify the root partition to expand; leaving the image as it is"
+    return 1
+  fi
+
+  out="${src%.*}-expanded.${src##*.}"
+  if ! qemu-img create -f qcow2 "$out" "$size" >/dev/null 2>&1; then
+    msg_warn "Could not allocate the expanded image; leaving the original"
+    return 1
+  fi
+  if ! virt-resize --expand "$part" "$src" "$out" >/dev/null 2>&1; then
+    rm -f "$out"
+    msg_warn "virt-resize failed on ${part}; the guest filesystem keeps its original size"
+    return 1
+  fi
+
+  # Ask the result whether it actually grew. virt-resize reporting success is
+  # not the same fact: expanding the wrong partition succeeds too, and that is
+  # how the ESP came to be resized on Debian while root stayed at its original
+  # size on a much larger disk.
+  read -r after _ < <(_vm_root_fs "$out")
+  if [[ -z "${after:-}" ]] || ((after <= before)); then
+    rm -f "$out"
+    msg_warn "Root filesystem did not grow; keeping the original image"
+    return 1
+  fi
+
+  mv -f "$out" "$src"
+  msg_ok "Expanded ${CL}${BL}${part}${CL} ${GN}to ${size}"
+  return 0
+}
+
 function get_valid_nextid() {
   local try_id
   try_id=$(pvesh get /cluster/nextid)
@@ -398,6 +460,10 @@ function msg_ok() {
 function msg_error() {
   local msg="$1"
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
+}
+function msg_warn() {
+  local msg="$1"
+  echo -e "${BFR}${INFO}${YW}${msg}${CL}"
 }
 function check_root() {
   if [[ "$(id -u)" -ne 0 || $(ps -o comm= -p $PPID) == "sudo" ]]; then
@@ -779,9 +845,23 @@ CACHE_FILE="$CACHE_DIR/$(basename "$URL")"
 mkdir -p "$CACHE_DIR"
 msg_ok "${CL}${BL}${URL}${CL}"
 
+# A valid Debian qcow2 cloud image is several hundred MB; anything smaller
+# is a truncated download or an HTML error page.
+MIN_IMAGE_BYTES=$((100 * 1024 * 1024))
+
+if [[ -s "$CACHE_FILE" ]] && [ "$(stat -c%s "$CACHE_FILE")" -lt "$MIN_IMAGE_BYTES" ]; then
+  msg_error "Cached image $(basename "$CACHE_FILE") is smaller than 100MB, discarding and re-downloading"
+  rm -f "$CACHE_FILE"
+fi
+
 if [[ ! -s "$CACHE_FILE" ]]; then
   curl -f#SL -o "$CACHE_FILE" "$URL"
   echo -en "\e[1A\e[0K"
+  if [ "$(stat -c%s "$CACHE_FILE")" -lt "$MIN_IMAGE_BYTES" ]; then
+    msg_error "Downloaded image is smaller than 100MB - download failed or incomplete."
+    rm -f "$CACHE_FILE"
+    exit 115
+  fi
   msg_ok "Downloaded ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
 else
   msg_ok "Using cached image ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
@@ -819,6 +899,13 @@ msg_info "Preparing ${OS_DISPLAY} image with Docker"
 
 WORK_FILE=$(mktemp --suffix=.qcow2)
 cp "$CACHE_FILE" "$WORK_FILE"
+
+# qm resize only grows the block device. Without cloud-init nothing grows the
+# guest partition, so expand the working copy offline first.
+if [ "${USE_CLOUD_INIT:-no}" != "yes" ]; then
+  msg_info "Expanding the root filesystem to ${DISK_SIZE}"
+  vm_expand_image "$WORK_FILE" "$DISK_SIZE" || true
+fi
 
 export LIBGUESTFS_BACKEND_SETTINGS=dns=8.8.8.8,1.1.1.1
 
@@ -952,8 +1039,8 @@ WantedBy=multi-user.target
 DOCKERSERVICE
 systemctl enable install-docker.service' >/dev/null 2>&1 || true
   else
-    msg_error "virt-customize failed for this image. Docker must be installed manually after first boot:"
-    msg_error "  curl -fsSL https://get.docker.com | sh"
+    msg_warn "virt-customize failed for this image. Docker must be installed manually after first boot:"
+    msg_warn "  curl -fsSL https://get.docker.com | sh"
   fi
 fi
 
