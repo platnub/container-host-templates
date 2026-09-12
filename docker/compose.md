@@ -24,7 +24,8 @@
     14. volumes
     13. environment
     15. command
-    16. labels
-    17. healthcheck
-    18. depends_on
-    19. deploy
+    16. devices
+    17. labels
+    18. healthcheck
+    19. depends_on
+    20. deploy
