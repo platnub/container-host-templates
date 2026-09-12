@@ -12,15 +12,16 @@
     2. image
     3. restart
     4. privileged
-    5. security_opt
-    6. cap_add
-    7. read_only
-    8. tmpfs
-    9. user
-    10. hostname
-    11. networks
-    12. ports
-    13. volumes
+    5. <<: *lockdown
+    6. security_opt
+    7. cap_add
+    8. read_only
+    9. tmpfs
+    10. user
+    11. hostname
+    12. networks
+    13. ports
+    14. volumes
     13. environment
     15. command
     16. labels
