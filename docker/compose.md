@@ -25,3 +25,4 @@
     16. labels
     17. healthcheck
     18. depends_on
+    19. deploy
