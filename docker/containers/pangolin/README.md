@@ -1,4 +1,4 @@
-[04-09-2025]
+[12-09-2026]
 ## Requirements
  - Komodo core server
  - Domain managed through Cloudflare
@@ -17,6 +17,12 @@
    - dockerd - komodo engine user with docker group
  - Disables IPv6
 
+> [!NOTE]
+> **<ins>Socket proxy permissions:</ins>**
+> - POST=1
+> - CONTAINERS=1
+> - ALLOW_ARCHIVE=1
+> - EXEC=1
 
 > [!TIP]
 > Incase anything goes wrong, example files are in the config folder.
