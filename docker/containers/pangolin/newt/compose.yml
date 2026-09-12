@@ -16,7 +16,6 @@ services:
     image: fosrl/newt
     restart: always
     <<: *lockdown
-    read_only: true
     user: ${PUID}:${PGID}
     networks:
       - <container>
