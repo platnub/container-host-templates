@@ -5,6 +5,7 @@
     3. Container newt
  - VOLUMES
     1. Whatever
+ - NAME
  - SERVICES
     1. container_name
     2. image
