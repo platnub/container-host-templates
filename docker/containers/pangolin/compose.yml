@@ -1,27 +1,23 @@
-name: pangolin
-
 ########################### NETWORKS
 networks:
   default:
     driver: bridge
     name: pangolin_frontend
+  socket-proxy-crowdsec-manager:
+    external: true
 
 ########################### VOLUMES
 volumes:
-  pangolin-data: null
+  crowdsec-db:
+  crowdsec-config:
 
 ########################### SERVICES
+name: pangolin
 services:
   pangolin:
-    image: docker.io/fosrl/pangolin:ee-1.21.1
     container_name: pangolin
+    image: docker.io/fosrl/pangolin:ee-1.21.1
     restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 2g
-        reservations:
-          memory: 512m
     volumes:
       - ./appdata/config:/app/config
     healthcheck:
@@ -29,20 +25,15 @@ services:
       interval: "10s"
       timeout: "10s"
       retries: 15
+    deploy:
+      resources:
+        reservations:
+          memory: 512m
 
   gerbil:
-    image: docker.io/fosrl/gerbil:1.4.3
     container_name: gerbil
+    image: docker.io/fosrl/gerbil:1.4.3
     restart: always
-    depends_on:
-      pangolin:
-        condition: service_healthy
-    command:
-      - --reachableAt=http://gerbil:3004
-      - --generateAndSaveKeyTo=/var/config/key
-      - --remoteConfig=http://pangolin:3001/api/v1/
-    volumes:
-      - ./appdata/config:/var/config
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -52,33 +43,64 @@ services:
       - 443:443
       - 443:443/udp # For http3 QUIC if desired
       - 80:80
-
-  traefik:
-    image: docker.io/traefik:v3.7
-    container_name: traefik
-    restart: always
-    network_mode: service:gerbil # Ports appear on the gerbil service
+    volumes:
+      - ./appdata/config:/var/config
+    command:
+      - --reachableAt=http://gerbil:3004
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/
     depends_on:
       pangolin:
         condition: service_healthy
-    environment:
-      CLOUDFLARE_DNS_API_TOKEN: $CLOUDFLARE_DNS_API_TOKEN
-    command:
-      - --configFile=/etc/traefik/traefik_config.yml
+    deploy:
+      resources:
+        reservations:
+          memory: 512m
+
+  traefik:
+    container_name: traefik
+    image: docker.io/traefik:v3.7
+    restart: always
+    network_mode: service:gerbil # Ports appear on the gerbil service
     volumes:
-      - ./appdata/config/traefik:/etc/traefik:ro # Volume to store the Traefik configuration
+      - ./appdata/config/traefik:/etc/traefik # Volume to store the Traefik configuration
       - ./appdata/config/letsencrypt:/letsencrypt # Volume to store the Let's Encrypt certificates
       - ./appdata/config/traefik/logs:/var/log/traefik # Volume to store Traefik logs
+    environment:
+      CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_DNS_API_TOKEN}
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          memory: 512m
 
   crowdsec:
-    command: -t
     container_name: crowdsec
+    image: docker.io/crowdsecurity/crowdsec:latest-debian
+    restart: always
+    networks:
+      default:
+#    ports:
+#      - 6060:6060
+    volumes:
+      - ./appdata/config/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - crowdsec-db:/var/lib/crowdsec/data
+      - crowdsec-config:/etc/crowdsec
+      - ./appdata/config/traefik/logs:/var/log/traefik:ro
+      - /var/log/journal:/var/log/host:ro
     environment:
       COLLECTIONS: crowdsecurity/traefik crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/linux crowdsecurity/iptables
       ENROLL_INSTANCE_NAME: pangolin-crowdsec
       ENROLL_TAGS: docker
       GID: "1000"
       PARSERS: crowdsecurity/whitelists
+    command: -t
+    labels:
+      - traefik.enable=false
     healthcheck:
       interval: 10s
       retries: 3
@@ -89,38 +111,56 @@ services:
         - lapi
         - status
       timeout: 5s
-    image: docker.io/crowdsecurity/crowdsec:latest-debian
-    labels:
-      - traefik.enable=false
-    ports:
-      - 6060:6060
-    restart: always
-    volumes:
-      - ./appdata/config/crowdsec:/etc/crowdsec
-      - ./appdata/config/crowdsec/db:/var/lib/crowdsec/data
-      - ./appdata/config/traefik/logs:/var/log/traefik:ro
-      - /var/log/journal:/var/log/host:ro
+    deploy:
+      resources:
+        reservations:
+          memory: 512m
 
   crowdsec-manager:
-    image: hhftechnology/crowdsec-manager:latest
     container_name: crowdsec-manager
+    image: hhftechnology/crowdsec-manager:latest
     restart: always
-    environment:
-      - PORT=8080
-      - ENVIRONMENT=production
-      - TRAEFIK_DYNAMIC_CONFIG=/etc/traefik/dynamic_config.yml
-      - TRAEFIK_CONTAINER_NAME=traefik
-      - TRAEFIK_STATIC_CONFIG=/etc/traefik/traefik_config.yml
-      - CROWDSEC_METRICS_URL=http://crowdsec:6060/metrics
-      - ALERT_LIST_LIMIT=5000
+    networks:
+      default:
+      socket-proxy-crowdsec-manager:
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /root/config:/app/config # pangolin config folder
-      - /root/docker-compose.yml:/app/docker-compose.yml # pangolin compose yml
+#      - /var/run/docker.sock:/var/run/docker.sock
+      - ./appdata/config:/app/config # pangolin config folder
+      - ./compose.yaml:/app/docker-compose.yml # pangolin compose yml
+      - ./appdata/crowdsec-manager/logs:/app/logs
+      - ./appdata/config/traefik/logs:/var/log/traefik:ro
       - ./appdata/crowdsec-manager/backups:/app/backups
       - ./appdata/crowdsec-manager/data:/app/data
       # Optional GeoIP database for enriched dashboard location data
       - ./appdata/geoip/GeoLite2-City.mmdb:/app/geoip/GeoLite2-City.mmdb:ro
+    environment:
+      - PORT=8080
+      - ENVIRONMENT=production
+      - TRAEFIK_CONTAINER_NAME=traefik
+      - CROWDSEC_METRICS_URL=http://crowdsec:6060/metrics
+      - ALERT_LIST_LIMIT=5000
+      - DOCKER_HOST=tcp://socket-proxy-crowdsec-manager:2375
+
+      - LOG_LEVEL=info
+      - LOG_FILE=/app/logs/crowdsec-manager.log
+      - COMPOSE_FILE=/app/docker-compose.yml
+      - PANGOLIN_DIR=/app
+      - CONFIG_DIR=/app/config
+      - DATABASE_PATH=/app/data/settings.db
+      - TRAEFIK_DYNAMIC_CONFIG=/etc/traefik/dynamic_config.yml
+      - TRAEFIK_STATIC_CONFIG=/etc/traefik/traefik_config.yml
+      - TRAEFIK_ACCESS_LOG=/var/log/traefik/access.log
+      - TRAEFIK_ERROR_LOG=/var/log/traefik/traefik.log
+      - CROWDSEC_ACQUIS_FILE=/etc/crowdsec/acquis.yaml
+      - BACKUP_DIR=/app/backups
+      - RETENTION_DAYS=60
+      - INCLUDE_CROWDSEC=true
     depends_on:
       crowdsec:
         condition: service_healthy
+      traefik:
+        condition: service_started
+    deploy:
+      resources:
+        reservations:
+          memory: 512m
