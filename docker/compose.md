@@ -20,8 +20,8 @@
     11. networks
     12. ports
     13. volumes
-    14. command
-    15. environment
+    13. environment
+    15. command
     16. labels
     17. healthcheck
     18. depends_on
