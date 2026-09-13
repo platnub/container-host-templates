@@ -41,6 +41,14 @@ services:
       - /nfs/media:/media
     devices:
       - /dev/dri:/dev/dri
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1.5G
+        reservations:
+          cpus: '0.20'
+          memory: 500M
 
   tdarr-node:
     container_name: tdarr-node
@@ -48,7 +56,7 @@ services:
     restart: unless-stopped
     network_mode: service:tdarr
     environment:
-      - TZ=Europe/London
+      - TZ=${TZ}
       - PUID=${PUID:-1000}
       - PGID=${PGID:-1000}
       - UMASK_SET=002
@@ -77,3 +85,11 @@ services:
       - /nfs/media:/media
     devices:
       - /dev/dri:/dev/dri
+    deploy:
+      resources:
+        limits:
+          cpus: '3.00'
+          memory: 2.5G
+        reservations:
+          cpus: '1.00'
+          memory: 1.0G
