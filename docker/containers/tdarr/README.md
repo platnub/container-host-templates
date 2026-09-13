@@ -1,5 +1,5 @@
 > [!IMPORTANT]
-> Documentation and implementation is for a maximum of 1080p content
+> Documentation and implementation is for a maximum of 1080p content and is written for use with [TRaSH guides](https://trash-guides.info/)
 
 # Links
  - [Tdarr Environment Variables](https://docs.tdarr.io/docs/installation/variables)
