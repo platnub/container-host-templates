@@ -1,5 +1,7 @@
 ########################### NETWORKS
 networks:
+  egress:
+    driver: bridge
   <container>:
     name: <container>
 
@@ -18,7 +20,12 @@ services:
     <<: *lockdown
     user: ${PUID}:${PGID}
     networks:
-      - <container>
+      egress:
+        gw_priority: 1
+      <container>:
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     environment:
       PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT}
       NEWT_ID: ${NEWT_ID}
