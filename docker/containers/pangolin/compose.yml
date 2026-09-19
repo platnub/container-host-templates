@@ -16,7 +16,7 @@ name: pangolin
 services:
   pangolin:
     container_name: pangolin
-    image: docker.io/fosrl/pangolin:ee-1.21.1
+    image: docker.io/fosrl/pangolin:ee-1.23
     restart: always
     volumes:
       - ./appdata/config:/app/config
