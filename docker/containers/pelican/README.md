@@ -31,7 +31,7 @@
        - Resource Type: 'Raw TCP/UDP Resource'
        - Protocol: 'TCP'
        - Method: http
-       - IP / Hostname: LAN IP
+       - IP / Hostname: LAN IP of the server host
        - Port: 8080
        - After creation disable 'Platform SSO' under Authentication
 3. Open the Pelican admin panel
