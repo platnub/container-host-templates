@@ -16,9 +16,8 @@
    chmod 750 -R /opt/docker/pelican-panel/appdata
    ```
 3. Deploy the container
-4. Go to '/opt/docker/pelican-panel', use `docker compose logs panel | grep 'Generated app key:'` and **save the key**!!
-5. Redeploy the container.
-6. Navigate to the instance '1.2.3.4/installer' and finish the setup
+4. In Komodo, go to the container sh terminal and run `cat /pelican-data/.env`. **Save the APP_KEY!!**
+5. Create Pangolin public resource and go to https://pelican.example.com and finish the setup
      - Create admin username same as the Authentik admin username
 
 ## Install and connect a node
