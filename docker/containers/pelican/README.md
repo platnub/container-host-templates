@@ -25,7 +25,7 @@
 > [!NOTE]
 > Either create a new Virtual Machine for the node, or do it on the same host.
 
-1. Make sure the host is prepare as per [the usual configuration](https://github.com/platnub/container-host-templates/tree/main/virtual-machines) with a Pangolin Site Newt tunnel active
+1. Make sure the host is prepared as per [the usual configuration](https://github.com/platnub/container-host-templates/tree/main/virtual-machines) with a Pangolin Site Newt tunnel active
 2. Open Pangolin admin panel
     1. Create a new resource
        - Resource Type: 'Raw TCP/UDP Resource'
