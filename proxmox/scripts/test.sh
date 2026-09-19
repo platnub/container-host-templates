@@ -1074,11 +1074,22 @@ if [ "$USE_CLOUD_INIT" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxAuthTries .*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxSessions .*/MaxSessions 2/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   #virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*UsePAM .*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
-  virt-customize -q -a "$WORK_FILE" --run-command "echo '\nChallengeResponseAuthentication no' >> /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  # Only disable password authentication when SSH keys were actually provisioned.
+  # With no keys AND no password auth, the VM would be impossible to log into over SSH.
+  if [ -n "${CLOUDINIT_SSH_KEYS:-}" ]; then
+    virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*UsePAM .*/UsePAM no/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+    virt-customize -q -a "$WORK_FILE" --run-command "echo '\nChallengeResponseAuthentication no' >> /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  else
+    msg_warn "No SSH keys provisioned - keeping password authentication enabled so the VM stays reachable"
+  fi
   virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*AllowTcpForwarding .*/AllowTcpForwarding No/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
 else
+  # UFW below only opens ${SSH_PORT}, so sshd must listen there too —
+  # otherwise SSH is unreachable on both 22 (filtered) and ${SSH_PORT} (nothing listening).
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*Port .*/Port ${SSH_PORT}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxAuthTries .*/MaxAuthTries ${MAX_AUTH_TRIES}/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "$WORK_FILE" --run-command "sed -i 's/^#*\s*MaxSessions .*/MaxSessions 2/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
   # Configure auto-login for nocloud images (no Cloud-Init)
   virt-customize -q -a "$WORK_FILE" --run-command "mkdir -p /etc/systemd/system/serial-getty@ttyS0.service.d" >/dev/null 2>&1 || true
   virt-customize -q -a "$WORK_FILE" --run-command 'cat > /etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf << EOF
@@ -1301,13 +1312,14 @@ fi
 if [ "$CONFIGURE_DOCKER_ROOTLESS" = "yes" ]; then
   virt-customize -q -a "$WORK_FILE" --firstboot-command "machinectl shell dockerd@ /bin/sh -c 'dockerd-rootless-setuptool.sh install --force' &&\
   systemctl --user -M dockerd@ enable docker.service &&\
-  systemctl --user -M dockerd@ restart docker.service
-  reboot -f" >/dev/null 2>&1 || true
+  systemctl --user -M dockerd@ restart docker.service" >/dev/null 2>&1 || true
   if [ "$CONFIGURE_KOMODO" = "yes" ]; then
     virt-customize -q -a "$WORK_FILE" --firstboot-command "sed -i '0,/^Environment=/ { /^Environment=/ s#\$# DOCKER_HOST=unix:///run/user/1337/docker.sock# }' /home/dockerd/.config/systemd/user/periphery.service &&\
     systemctl --user -M dockerd@ daemon-reload &&\
     systemctl --user -M dockerd@ restart periphery.service" >/dev/null 2>&1 || true
   fi
+  # Reboot last so it doesn't cut off the remaining firstboot scripts
+  virt-customize -q -a "$WORK_FILE" --firstboot-command "reboot -f" >/dev/null 2>&1 || true
 fi
 
 # ==============================================================================
