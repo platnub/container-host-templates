@@ -33,7 +33,7 @@
        - Method: http
        - IP / Hostname: LAN IP
        - Port: 8080
-       - After creation disable 'Use Platform SSO' under Authentication
+       - After creation disable 'Platform SSO' under Authentication
 3. Open the Pelican admin panel
     1. New Node
        - `pelican-node.example.com` This should be the URL set in the Pangolin resource
