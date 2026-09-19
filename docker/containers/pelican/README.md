@@ -46,10 +46,8 @@
     1. Follow instructions from the [Pelican docs](https://pelican.dev/docs/wings/install)
        ```
        sudo mkdir -p /etc/pelican /var/run/wings
-       sudo curl -L -o /usr/local/bin/wings "https://github.com/pelican-dev/wings/releases/latest/download/wings_linux_$([[ "$(uname -m)" == "x86_64" ]] && echo "amd64" || echo "arm64")"
+       sudo curl -L -o /usr/local/bin/wings "https://github.com/pelican/wings/releases/latest/download/wings_linux_$([[ "$(uname -m)" == "x86_64" ]] && echo "amd64" || echo "arm64")"
        sudo chmod u+x /usr/local/bin/wings
-       sudo echo -e "[Unit]\nDescription=Wings Daemon\nAfter=docker.service\nRequires=docker.service\nPartOf=docker.service\n\n[Service]\nUser=root\nWorkingDirectory=/etc/pelican\nLimitNOFILE=4096\nPIDFile=/var/run/wings/daemon.pid\nExecStart=/usr/local/bin/wings\nRestart=on-failure\nStartLimitInterval=180\nStartLimitBurst=30\nRestartSec=5s\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/wings.service
-       sudo systemctl enable --now wings
        ```
     2. Edit the config file
        ```
