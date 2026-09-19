@@ -8,9 +8,11 @@
      - Make sure to modify the local LAN subnet correctly!
 2. Connect to the host using SSH with sudo access and create the Caddyfile. Replace [UPSTREAM IP] with reverse proxy public IP address.
    ```
+   mkdir -p /opt/docker/pelican-panel/appdata
    curl "https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/pelican/Caddyfile" --create-dirs -o /opt/docker/pelican-panel/appdata/Caddyfile
    nano /opt/docker/pelican-panel/appdata/Caddyfile
-   chown dockerd:dockerd -R /opt/docker/pelican-panel/appdata
+   chown dockerd:dockerd -R /opt/docker/pelican-panel
+   chmod 700 -R /opt/docker
    chmod 750 -R /opt/docker/pelican-panel/appdata
    ```
 3. Deploy the container
