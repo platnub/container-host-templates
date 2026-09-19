@@ -13,7 +13,7 @@
    nano /opt/docker/pelican-panel/appdata/Caddyfile
    chown dockerd:dockerd -R /opt/docker/pelican-panel
    chmod 700 -R /opt/docker
-   chmod 744 -R /opt/docker/pelican-panel/appdata
+   chmod 744 /opt/docker/pelican-panel/appdata/Caddyfile
    ```
 3. Deploy the container
 4. In Komodo, go to the container sh terminal and run `cat /pelican-data/.env`. **Save the APP_KEY!!**
