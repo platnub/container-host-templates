@@ -3,29 +3,34 @@ networks:
   default:
     ipam:
       config:
-        - subnet: 10.0.90.0/24
+        - subnet: 172.20.0.0/16
   pelican:
+    name: pangolin_pelican
     external: true
 
 ########################### VOLUMES
 volumes:
-  pelican-data:
-  pelican-logs:
+  data:
+  logs:
 
 ########################### SERVICES
 services:
   panel:
-    image: ghcr.io/pelican-dev/panel:latest
+    container_name: pelican-panel
+    image: ghcr.io/pelican/panel:latest
     restart: always
     hostname: pelican-panel
     networks:
       - default
       - pelican
+#    ports:
+#      - 80:80
+#      - 443:443
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - pelican-data:/pelican-data
-      - pelican-logs:/var/www/html/storage/logs
+      - data:/pelican-data
+      - logs:/var/www/html/storage/logs
       - ./appdata/Caddyfile:/etc/caddy/Caddyfile
     environment:
       XDG_DATA_HOME: /pelican-data
