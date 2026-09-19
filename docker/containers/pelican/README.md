@@ -10,7 +10,7 @@
    ```
    curl "https://raw.githubusercontent.com/platnub/container-host-templates/refs/heads/main/docker/containers/pelican/Caddyfile" --create-dirs -o /opt/docker/pelican-panel/appdata/Caddyfile
    nano /opt/docker/pelican-panel/appdata/Caddyfile
-   chown komodo:komodo -R /opt/docker/pelican-panel/appdata
+   chown dockerd:dockerd -R /opt/docker/pelican-panel/appdata
    chmod 750 -R /opt/docker/pelican-panel/appdata
    ```
 3. Deploy the container
