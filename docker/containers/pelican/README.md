@@ -50,15 +50,7 @@
        sudo chmod u+x /usr/local/bin/wings
        ```
     2. Run the Auto Deploy command from the Pelican Panel.
-    3. Edit the config file
-       ```
-       sed -i 's|    IPv6: true|    IPv6: false|g' /etc/pelican/config.yml
-       sed -i 's|    is_internal: false|    is_internal: true|g' /etc/pelican/config.yml
-       ```
-    4. Edit the same config file and modify `remote` to the public URL of the PANEL!!
-       ```
-       nano /etc/pelican/config.yml
-       ```
+5. In the Nodes section in Pelican the node should now connect and come online
 
 ## Edit Settings
 
