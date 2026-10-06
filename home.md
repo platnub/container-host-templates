@@ -42,7 +42,7 @@ dateCreated: 2026-04-05T21:01:51.322Z
 - media-download vlan 22
    - 1 media-download
 - media-frontend vlan 21
-   - 1 media-jellyfin
+   - 1 media-frontend
 - Services vlan 20
    - 10 authentik
    - 20 nextcloud
