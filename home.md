@@ -39,6 +39,8 @@ dateCreated: 2026-04-05T21:01:51.322Z
    - pangolin-core
 - DMZ vlan 90
    - dmz-public
+- gaming vlan 23
+   - 1 pelican
 - media-download vlan 22
    - 1 media-download
 - media-frontend vlan 21
@@ -50,7 +52,6 @@ dateCreated: 2026-04-05T21:01:51.322Z
    - 40 automation
    - 41 automation-backend
    - 50 information
-   - 60 gaming
 - Komodo vlan 6
    - komodo-core
 - Proxmox vlan 5
